@@ -1,0 +1,23 @@
+spring:
+  #  sql:
+  #    init:
+  #      mode: always
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  #    defer-datasource-initialization: true
+  datasource:
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/cinema
+
+app:
+  auth:
+    token-secret: lNLp8m5m86mRQLgNU7UnhGqfBbNdNYAM45YOFwZmP1w=
+    refreshTokenExpirationMilliseconds: 1209600000
+    accessTokenExpirationMilliseconds: 86400000
+    resetTokenExpirationMilliseconds: 300000
+    registerTokenExpirationMilliseconds: 300000

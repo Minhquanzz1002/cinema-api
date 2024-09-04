@@ -1,0 +1,13 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: cinema-api
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+  profiles:
+    active: dev
