@@ -22,7 +22,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import vn.edu.iuh.security.JwtFilter;
 
-import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +33,8 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final UserDetailsService userDetailsService;
     public static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/api-docs/**",
             "/actuator/**",
             "/v1/auth/register",
             "/v1/auth/login",

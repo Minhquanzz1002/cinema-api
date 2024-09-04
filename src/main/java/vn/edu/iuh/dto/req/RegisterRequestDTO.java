@@ -2,16 +2,14 @@ package vn.edu.iuh.dto.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequestDTO {
     @NotNull(message = "Tên là bắt buộc")

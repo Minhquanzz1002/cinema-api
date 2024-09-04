@@ -13,7 +13,7 @@ public class DataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (roleRepository.count() == 0) {
             roleRepository.save(new Role("ROLE_ADMIN"));
             roleRepository.save(new Role("ROLE_CLIENT"));
