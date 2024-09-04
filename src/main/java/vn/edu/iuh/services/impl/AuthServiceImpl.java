@@ -1,6 +1,7 @@
 package vn.edu.iuh.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,16 @@ import vn.edu.iuh.repositories.RoleRepository;
 import vn.edu.iuh.repositories.UserRepository;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
+import vn.edu.iuh.services.EmailService;
 import vn.edu.iuh.utils.JwtUtil;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -45,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(UserStatus.PENDING);
         userRepository.save(user);
+
+        emailService.sendVerificationEmail(user.getEmail(), "Link xác thực của bạn là...");
+        log.info("[Auth Service] Registration successful!");
         return new SuccessResponse<>(200, "success", "Tạo tài khoản thành công", null);
     }
 
