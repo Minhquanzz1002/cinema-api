@@ -41,3 +41,19 @@ Feature normal: `feature/login`
 + feature: A new feature
 + fix: A bug fix
 + hotfix: hotfix bug
+
+## GET STARTED
+### Setup mail sender
+1. Open a new tab
+2. Open Gmail account
+3. Click on Manage account
+4. Under security tab, Turn on the 2-step verification if not already done.
+5. Search for 'App password' in the search option provided at the top.
+6. It will ask you to login again with your password. Login with the password.
+7. Now, You should be able to see the App password page.
+
+### Setup project
+
+Create a file named `application-secret.yml` using the template provided in `application-secret.example.yml`.
+
+### Start project
