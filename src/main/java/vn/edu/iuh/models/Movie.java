@@ -1,36 +1,40 @@
 package vn.edu.iuh.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.usertype.UserType;
 
+import java.sql.*;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "movies")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Movie {
+public class Movie extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true, nullable = false)
+    private String code;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
     private String imageLandscape;
     @Column(nullable = false)
     private String imagePortrait;
+    @Column(nullable = false)
     private String trailer;
     @Column(nullable = false)
     private String slug;
     @Column(nullable = false)
     private int duration;
-    @Column(nullable = false)
     private String summary;
     @Column(nullable = false)
     private float rating;
@@ -48,3 +52,4 @@ public class Movie {
     @ManyToMany
     private List<Actor> actors;
 }
+

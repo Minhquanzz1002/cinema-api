@@ -31,4 +31,6 @@ public abstract class BaseEntity {
     private UUID createdBy;
     @LastModifiedBy
     private UUID updatedBy;
+    @Column(nullable = false)
+    private boolean deleted = false;
 }
