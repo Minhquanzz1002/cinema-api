@@ -28,7 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (roleRepository.count() == 0) {
-            roleRepository.save(new Role("ROLE_ADMIN"));
+            Role roleAdmin = roleRepository.save(new Role("ROLE_ADMIN"));
             Role roleClient = roleRepository.save(new Role("ROLE_CLIENT"));
 
             if (userRepository.count() == 0) {
@@ -40,6 +40,17 @@ public class DataInitializer implements CommandLineRunner {
                         .password(passwordEncoder.encode("Cinema123123@"))
                         .gender(true)
                         .role(roleClient)
+                        .status(UserStatus.ACTIVE)
+                        .build());
+
+                userRepository.save(User.builder()
+                        .name("Nguyễn Minh Quân")
+                        .phone("0354927402")
+                        .birthday(LocalDate.of(2002, 10, 10))
+                        .email("quannguyenminh1001@gmail.com")
+                        .password(passwordEncoder.encode("Cinema123123@"))
+                        .gender(true)
+                        .role(roleAdmin)
                         .status(UserStatus.ACTIVE)
                         .build());
             }
