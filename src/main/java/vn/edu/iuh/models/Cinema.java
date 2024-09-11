@@ -1,26 +1,39 @@
 package vn.edu.iuh.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "cinemas")
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class Cinema {
+@AllArgsConstructor
+@Table(name = "cinemas")
+public class Cinema extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String address;
+    @Column(nullable = false)
+    private String ward;
+    @Column(nullable = false)
+    private String district;
+    @Column(nullable = false)
+    private String city;
+    @Column(columnDefinition = "TEXT[]")
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    private List<String> images;
+    private String hotline;
     @OneToMany
     private List<Room> rooms;
 }
