@@ -1,5 +1,6 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -32,5 +33,6 @@ public abstract class BaseEntity {
     @LastModifiedBy
     private UUID updatedBy;
     @Column(nullable = false)
+    @JsonIgnore
     private boolean deleted = false;
 }

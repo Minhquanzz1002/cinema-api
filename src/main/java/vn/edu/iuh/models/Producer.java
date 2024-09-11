@@ -3,28 +3,25 @@ package vn.edu.iuh.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import vn.edu.iuh.models.enums.BaseStatus;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Builder
-@Table(name = "actors")
-@AllArgsConstructor
+@ToString
 @NoArgsConstructor
-public class Actor extends BaseEntity {
+@AllArgsConstructor
+@Table(name = "producers")
+public class Producer extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(nullable = false)
     private String name;
-    private Date birthday;
-    private String country;
-    private String image;
-    private String bio;
-    @ManyToMany(mappedBy = "actors")
+    private BaseStatus status;
+    @ManyToMany(mappedBy = "producers")
     @JsonBackReference
     private List<Movie> movies;
 }

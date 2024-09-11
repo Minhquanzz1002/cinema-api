@@ -1,13 +1,11 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Type;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.usertype.UserType;
+import vn.edu.iuh.models.enums.MovieStatus;
 
-import java.sql.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -31,7 +29,7 @@ public class Movie extends BaseEntity {
     private String imagePortrait;
     @Column(nullable = false)
     private String trailer;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String slug;
     @Column(nullable = false)
     private int duration;
@@ -41,15 +39,21 @@ public class Movie extends BaseEntity {
     @Column(nullable = false)
     private String country;
     @Column(nullable = false)
-    private String producer;
-    @Column(nullable = false)
     private int age;
-    private Date releaseDate;
+    private LocalDate releaseDate;
+    @Enumerated(EnumType.STRING)
+    private MovieStatus status;
     @ManyToMany
+    @JsonManagedReference
+    private List<Producer> producers;
+    @ManyToMany
+    @JsonManagedReference
     private List<Genre> genres;
     @ManyToMany
+    @JsonManagedReference
     private List<Director> directors;
     @ManyToMany
+    @JsonManagedReference
     private List<Actor> actors;
 }
 
