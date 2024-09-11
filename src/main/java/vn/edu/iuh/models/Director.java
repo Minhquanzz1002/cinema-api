@@ -1,21 +1,20 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-@Table(name = "director")
 @Entity
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class Director {
+@AllArgsConstructor
+@Table(name = "directors")
+public class Director extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -25,6 +24,7 @@ public class Director {
     private String image;
     private String country;
     private String bio;
-    @ManyToMany
+    @ManyToMany(mappedBy = "directors")
+    @JsonBackReference
     private List<Movie> movies;
 }

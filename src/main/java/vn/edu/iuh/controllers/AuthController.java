@@ -19,8 +19,8 @@ import vn.edu.iuh.services.AuthService;
 public class AuthController {
     private final AuthService authService;
 
-    @GetMapping("/register/confirm")
-    public String confirmRegistration(@RequestParam("token") String token) {
+    @PostMapping("/register/confirm")
+    public String confirmRegistration(@RequestBody String token) {
         return null;
     }
 

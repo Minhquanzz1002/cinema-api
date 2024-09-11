@@ -38,6 +38,10 @@ public class SecurityConfig {
             "/actuator/**",
             "/v1/auth/register",
             "/v1/auth/login",
+            "/v1/movies",
+            "/v1/movies/{slug}",
+            "/v1/genres",
+            "/v1/cinemas"
     };
 
     @Bean
