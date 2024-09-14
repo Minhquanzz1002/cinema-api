@@ -1,17 +1,18 @@
 package vn.edu.iuh.dto.res;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import vn.edu.iuh.models.Role;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponseDTO {
-    private String accessToken;
-    private String refreshToken;
+public class UserResponseDTO {
     private String name;
     private String email;
     private String phone;

@@ -1,6 +1,7 @@
 package vn.edu.iuh.security;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,12 +10,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import vn.edu.iuh.models.User;
 import vn.edu.iuh.models.enums.UserStatus;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
     private UUID id;
@@ -22,6 +25,7 @@ public class UserPrincipal implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private UserStatus status;
+    private LocalDateTime invalidateBefore;
 
     public static UserPrincipal create(User user) {
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName());
@@ -30,7 +34,8 @@ public class UserPrincipal implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 Collections.singleton(authority),
-                user.getStatus()
+                user.getStatus(),
+                user.getInvalidateBefore()
         );
     }
 

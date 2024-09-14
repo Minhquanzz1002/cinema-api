@@ -23,6 +23,7 @@ import vn.edu.iuh.utils.enums.JwtType;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 
 @Slf4j
 @Component
@@ -44,7 +45,9 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("JWT: {}", token);
         if (StringUtils.hasText(token) && !jwtUtil.isTokenExpired(token) && jwtUtil.extractTokenType(token).equals(JwtType.ACCESS_TOKEN)) {
             String username = jwtUtil.extractUsername(token);
-            log.info("Phone number: {}", username);
+            log.info("Email: {}", username);
+            Date issuedAt = jwtUtil.extractIssuedAt(token);
+
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
