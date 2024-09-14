@@ -41,6 +41,8 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public Date extractIssuedAt(String token) { return extractClaim(token, Claims::getIssuedAt);}
+
     public JwtType extractTokenType(String token) {
         final Claims claims = extractAllClaims(token);
         return JwtType.valueOf((String) claims.get("type"));

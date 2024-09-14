@@ -9,11 +9,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import vn.edu.iuh.dto.res.ErrorResponse;
 
-import java.time.LocalDateTime;
-
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(value = {BadRequestException.class, OTPMismatchException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse<?> handleBadRequestException(RuntimeException exception) {
+        return new ErrorResponse<>(
+                500,
+                "error",
+                exception.getMessage(),
+                null
+        );
+    }
+
     @ExceptionHandler(value = {InternalServerErrorException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse<?> handleBadCredentialsException() {

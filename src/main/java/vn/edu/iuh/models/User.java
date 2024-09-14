@@ -5,12 +5,14 @@ import lombok.*;
 import vn.edu.iuh.models.enums.UserStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
 @Builder
+@ToString
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,10 +29,13 @@ public class User {
     private String phone;
     @Column(nullable = false)
     private String password;
+    @Builder.Default
+    @Column(nullable = false)
+    private LocalDateTime invalidateBefore = LocalDateTime.now();
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)
     private UserStatus status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Role role;
 }

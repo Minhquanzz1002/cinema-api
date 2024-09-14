@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.services.EmailService;
+import vn.edu.iuh.services.OTPService;
 
 @Slf4j
 @Service
@@ -16,11 +17,11 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendVerificationEmail(String to, String verificationLink) {
+    public void sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setSubject("[Galaxy Cinema] Xác thực tài khoản");
-        message.setText(verificationLink);
+        message.setSubject("[Galaxy Cinema] " + subject);
+        message.setText(text);
         javaMailSender.send(message);
         log.info("[Email Service] Successfully sent the email");
     }
