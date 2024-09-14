@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@ToString
 @Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
