@@ -5,21 +5,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.dto.res.SuccessResponse;
-import vn.edu.iuh.models.Cinema;
-import vn.edu.iuh.projections.CinemaProjection;
-import vn.edu.iuh.services.CinemaService;
+import vn.edu.iuh.projections.CityProjection;
+import vn.edu.iuh.services.CityService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/cinemas")
+@RequestMapping("/v1/cities")
 @RequiredArgsConstructor
-public class CinemaController {
-    private final CinemaService cinemaService;
+public class CityController {
+    private final CityService cityService;
 
     @GetMapping
-    public SuccessResponse<List<CinemaProjection>> getCinemas() {
-        return cinemaService.getCinemas();
+    public SuccessResponse<List<CityProjection>> getCities() {
+        return cityService.getCities();
     }
-
 }

@@ -7,15 +7,13 @@ import lombok.*;
 @Setter
 @Entity
 @Builder
-@Table(name = "rooms")
+@Table(name = "cities")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+public class City extends BaseEntity
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(nullable = false)
     private String name;
-    @ManyToOne
-    private Cinema cinema;
 }
