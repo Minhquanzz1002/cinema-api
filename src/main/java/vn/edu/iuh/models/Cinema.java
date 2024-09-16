@@ -6,6 +6,7 @@ import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
+import vn.edu.iuh.models.enums.BaseStatus;
 
 import java.util.List;
 
@@ -28,12 +29,15 @@ public class Cinema extends BaseEntity {
     private String ward;
     @Column(nullable = false)
     private String district;
-    @Column(nullable = false)
-    private String city;
+    @ManyToOne
+    private City city;
     @Column(columnDefinition = "TEXT[]")
     @JdbcTypeCode(SqlTypes.ARRAY)
     private List<String> images;
     private String hotline;
+    @Column(nullable = false, unique = true)
+    private String slug;
     @OneToMany
     private List<Room> rooms;
+    private BaseStatus status;
 }

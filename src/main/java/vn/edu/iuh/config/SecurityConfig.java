@@ -41,9 +41,11 @@ public class SecurityConfig {
             "/v1/auth/register/validate-otp",
             "/v1/auth/forgot-password",
             "/v1/movies",
+            "/v1/cities",
             "/v1/movies/{slug}",
             "/v1/genres",
-            "/v1/cinemas"
+            "/v1/cinemas",
+            "/v1/show-times"
     };
 
     @Bean

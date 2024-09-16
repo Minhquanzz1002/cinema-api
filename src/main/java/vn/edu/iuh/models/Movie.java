@@ -33,6 +33,7 @@ public class Movie extends BaseEntity {
     private String slug;
     @Column(nullable = false)
     private int duration;
+    @Column(columnDefinition = "TEXT")
     private String summary;
     @Column(nullable = false)
     private float rating;
