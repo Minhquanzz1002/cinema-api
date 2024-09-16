@@ -109,6 +109,8 @@ public class AuthServiceImpl implements AuthService {
         String newPassword = generateRandomPassword();
 
         user.setPassword(passwordEncoder.encode(newPassword));
+        user.setInvalidateBefore(LocalDateTime.now());
+        userRepository.save(user);
         emailService.sendEmail(email, "Reset Password", "Password: " + newPassword);
         return new SuccessResponse<>(200, "success", "Email khôi phục lại mật khẩu đã được gởi lại thành công tới " + email, null);
     }
