@@ -1,5 +1,7 @@
 package vn.edu.iuh.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +14,15 @@ import vn.edu.iuh.services.CinemaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/cinemas")
 @RequiredArgsConstructor
+@RequestMapping("/v1/cinemas")
+@Tag(name = "Cinema Controller", description = "Quản rạp chiếu phim")
 public class CinemaController {
     private final CinemaService cinemaService;
 
+    @Operation(
+            summary = "Danh sách rạp chiếu phim"
+    )
     @GetMapping
     public SuccessResponse<List<CinemaProjection>> getCinemas() {
         return cinemaService.getCinemas();
