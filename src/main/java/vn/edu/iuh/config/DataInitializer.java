@@ -89,7 +89,7 @@ public class DataInitializer implements CommandLineRunner {
             );
 
             if (cinemaRepository.count() == 0) {
-                cinemaRepository.save(
+                Cinema nguyenDuCinema = cinemaRepository.save(
                         Cinema.builder()
                                 .name("Galaxy Nguyễn Du")
                                 .address("116 Nguyễn Du")
@@ -99,6 +99,34 @@ public class DataInitializer implements CommandLineRunner {
                                 .hotline("19002224")
                                 .images(List.of("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media", "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media", "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media", "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media", "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"))
                                 .slug("galaxy-nguyen-du")
+                                .build()
+                );
+
+                Room room1NguyenDuCinema = roomRepository.save(
+                        Room.builder()
+                                .name("Rạp 1")
+                                .cinema(nguyenDuCinema)
+                                .build()
+                );
+
+                Room room2NguyenDuCinema = roomRepository.save(
+                        Room.builder()
+                                .name("Rạp 2")
+                                .cinema(nguyenDuCinema)
+                                .build()
+                );
+
+                Room room3NguyenDuCinema = roomRepository.save(
+                        Room.builder()
+                                .name("Rạp 3")
+                                .cinema(nguyenDuCinema)
+                                .build()
+                );
+
+                Room room4NguyenDuCinema = roomRepository.save(
+                        Room.builder()
+                                .name("Rạp 2")
+                                .cinema(nguyenDuCinema)
                                 .build()
                 );
 
@@ -937,6 +965,51 @@ public class DataInitializer implements CommandLineRunner {
                                             .cinema(quangTrungCinema)
                                             .movie(lamGiauVoiMaMovie)
                                             .room(room3QuangTrungCinema)
+                                            .startDate(currentDate)
+                                            .startTime(LocalTime.of(22, 15))
+                                            .endTime(LocalTime.of(0, 15))
+                                            .build()
+                            );
+
+                            // movie in Nguyen Du Cinema
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(nguyenDuCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room2NguyenDuCinema)
+                                            .startDate(currentDate)
+                                            .startTime(LocalTime.of(19, 0))
+                                            .endTime(LocalTime.of(21, 0))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(nguyenDuCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room1NguyenDuCinema)
+                                            .startDate(currentDate)
+                                            .startTime(LocalTime.of(20, 0))
+                                            .endTime(LocalTime.of(22, 0))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(nguyenDuCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room3NguyenDuCinema)
+                                            .startDate(currentDate)
+                                            .startTime(LocalTime.of(21, 0))
+                                            .endTime(LocalTime.of(23, 0))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(nguyenDuCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room4NguyenDuCinema)
                                             .startDate(currentDate)
                                             .startTime(LocalTime.of(22, 15))
                                             .endTime(LocalTime.of(0, 15))

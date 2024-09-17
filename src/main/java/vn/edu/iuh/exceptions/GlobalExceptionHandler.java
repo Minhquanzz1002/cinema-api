@@ -6,17 +6,38 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import vn.edu.iuh.dto.res.ErrorResponse;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        String name = exception.getName();
+        String type = Objects.requireNonNull(exception.getRequiredType()).getSimpleName();
+        Object value = exception.getValue();
+        String message = String.format("'%s' phải là '%s' và '%s' là không hợp lệ",
+                name, type, value);
+        log.error(message);
+        return new ErrorResponse<>(
+                400,
+                "error",
+                "Truyền giá trị không hợp lệ",
+                message
+        );
+    }
+
     @ExceptionHandler(value = {BadRequestException.class, OTPMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse<?> handleBadRequestException(RuntimeException exception) {
         return new ErrorResponse<>(
-                500,
+                400,
                 "error",
                 exception.getMessage(),
                 null
@@ -38,7 +59,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse<?> handleDataNotFoundException(DataNotFoundException exception) {
         return new ErrorResponse<>(
-                500,
+                404,
                 "error",
                 exception.getMessage(),
                 null
