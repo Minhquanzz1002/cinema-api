@@ -3,6 +3,7 @@ package vn.edu.iuh.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Builder
+@SuperBuilder
 @Table(name = "actors")
 @AllArgsConstructor
 @NoArgsConstructor

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/cities")
 @RequiredArgsConstructor
-@Tag(name = "Location Controller", description = "Quản thành phố")
+@Tag(name = "Location Controller", description = "Quản lý thành phố")
 public class CityController {
     private final CityService cityService;
 

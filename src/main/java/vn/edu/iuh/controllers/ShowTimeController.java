@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/show-times")
-@Tag(name = "Show Time Controller", description = "Quản lịch chiếu phim")
+@Tag(name = "Show Time Controller", description = "Quản lý lịch chiếu phim")
 public class ShowTimeController {
     private final ShowTimeService showTimeService;
 
@@ -30,7 +30,6 @@ public class ShowTimeController {
             @RequestParam int movieId,
             @Parameter(description = "Nếu không truyền thì mặc định sẽ lấy ngày hiện tại (yyy-MM-dd)") @RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate date,
             @Parameter(description = "Nếu không truyền thì mặc định sẽ lấy tất cả rạp") @RequestParam(required = false) Integer cinemaId) {
-
         return showTimeService.getShowTimes(movieId, date, cinemaId);
     }
 }
