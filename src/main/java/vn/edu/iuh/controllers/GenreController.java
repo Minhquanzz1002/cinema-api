@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/genres")
 @RequiredArgsConstructor
-@Tag(name = "Genre Controller", description = "Quản danh mục phim")
+@Tag(name = "Genre Controller", description = "Quản lý danh mục phim")
 public class GenreController {
     private final GenreService genreService;
 

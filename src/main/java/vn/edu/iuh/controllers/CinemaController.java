@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/cinemas")
-@Tag(name = "Cinema Controller", description = "Quản rạp chiếu phim")
+@Tag(name = "Cinema Controller", description = "Quản lý rạp chiếu phim")
 public class CinemaController {
     private final CinemaService cinemaService;
 
@@ -27,5 +27,4 @@ public class CinemaController {
     public SuccessResponse<List<CinemaProjection>> getCinemas() {
         return cinemaService.getCinemas();
     }
-
 }

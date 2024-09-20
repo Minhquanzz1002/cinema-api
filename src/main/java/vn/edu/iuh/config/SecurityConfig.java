@@ -45,7 +45,9 @@ public class SecurityConfig {
             "/v1/movies/{slug}",
             "/v1/genres",
             "/v1/cinemas",
-            "/v1/show-times"
+            "/v1/show-times",
+            "/v1/rooms/{roomId}/layout",
+            "/v1/products"
     };
 
     @Bean
