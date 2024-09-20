@@ -1,19 +1,19 @@
 package vn.edu.iuh.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.edu.iuh.models.*;
-import vn.edu.iuh.models.enums.BaseStatus;
-import vn.edu.iuh.models.enums.MovieStatus;
-import vn.edu.iuh.models.enums.UserStatus;
+import vn.edu.iuh.models.enums.*;
 import vn.edu.iuh.repositories.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.*;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -29,11 +29,17 @@ public class DataInitializer implements CommandLineRunner {
     private final CityRepository cityRepository;
     private final ShowTimeRepository showTimeRepository;
     private final RoomRepository roomRepository;
+    private final RoomLayoutRepository roomLayoutRepository;
+    private final RowSeatRepository rowSeatRepository;
+    private final SeatRepository seatRepository;
+    private final ProductRepository productRepository;
+    private final ProductPriceRepository productPriceRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final LocalDate currentDate = LocalDate.now();
 
     @Override
     public void run(String... args) {
-        LocalDate currentDate = LocalDate.now();
 
         if (cityRepository.count() == 0) {
             City hcmCity = cityRepository.save(
@@ -188,6 +194,31 @@ public class DataInitializer implements CommandLineRunner {
                                 .cinema(quangTrungCinema)
                                 .build()
                 );
+
+                int[][] seatMatrixLayoutOne = {
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1}
+                };
+
+                Map<String, Short> rowIndexMappingLayoutOne = new HashMap<>();
+                rowIndexMappingLayoutOne.put("A", (short) 8);
+                rowIndexMappingLayoutOne.put("B", (short) 7);
+                rowIndexMappingLayoutOne.put("C", (short) 6);
+                rowIndexMappingLayoutOne.put("D", (short) 5);
+                rowIndexMappingLayoutOne.put("E", (short) 4);
+                rowIndexMappingLayoutOne.put("F", (short) 3);
+                rowIndexMappingLayoutOne.put("G", (short) 2);
+                rowIndexMappingLayoutOne.put("H", (short) 1);
+                rowIndexMappingLayoutOne.put("I", (short) 0);
+
+                insertLayout(room1QuangTrungCinema, seatMatrixLayoutOne, rowIndexMappingLayoutOne);
 
                 Room room2QuangTrungCinema = roomRepository.save(
                         Room.builder()
@@ -859,17 +890,16 @@ public class DataInitializer implements CommandLineRunner {
                         );
 
 
-
                         if (showTimeRepository.count() == 0) {
                             showTimeRepository.save(
-                                ShowTime.builder()
-                                        .cinema(quangTrungCinema)
-                                        .movie(lamGiauVoiMaMovie)
-                                        .room(room2QuangTrungCinema)
-                                        .startDate(currentDate)
-                                        .startTime(LocalTime.of(9, 30))
-                                        .endTime(LocalTime.of(11, 30))
-                                        .build()
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room2QuangTrungCinema)
+                                            .startDate(currentDate)
+                                            .startTime(LocalTime.of(9, 30))
+                                            .endTime(LocalTime.of(11, 30))
+                                            .build()
                             );
 
                             showTimeRepository.save(
@@ -1049,5 +1079,161 @@ public class DataInitializer implements CommandLineRunner {
                         .build());
             }
         }
+
+        insertProducts();
+    }
+
+    private void insertLayout(Room room, int[][] seatMatrix, Map<String, Short> rowIndexMapping) {
+        List<Map.Entry<String, Short>> sortedRows = new ArrayList<>(rowIndexMapping.entrySet());
+        sortedRows.sort(Map.Entry.<String, Short>comparingByValue().reversed());
+        RoomLayout layout = roomLayoutRepository.save(
+                RoomLayout.builder()
+                        .room(room)
+                        .maxRow(sortedRows.size())
+                        .maxColumn(Arrays.stream(seatMatrix).mapToInt(row -> row.length).max().orElse(0))
+                        .build()
+        );
+
+        RowSeat row;
+        for (int i = 0; i < sortedRows.size(); i++) {
+            Map.Entry<String, Short> entry = sortedRows.get(i);
+            String rowName = entry.getKey();
+            short rowIndex = entry.getValue();
+            int[] columns = seatMatrix[i];
+
+            row = rowSeatRepository.save(
+                    RowSeat.builder()
+                            .index(rowIndex)
+                            .name(rowName)
+                            .layout(layout)
+                            .build()
+            );
+            insertSeatsForRow(columns, row);
+        }
+    }
+
+    private void insertSeatsForRow(int[] columns, RowSeat row) {
+        for (short columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            int seatType = columns[columnIndex];
+            if (seatType > 0) {
+                seatRepository.save(
+                        Seat.builder()
+                                .area((short) 1)
+                                .rowIndex(row.getIndex())
+                                .columnIndex((short) (columnIndex + 1))
+                                .type(SeatType.NORMAL)
+                                .row(row)
+                                .build()
+                );
+            }
+        }
+    }
+
+    private void insertProducts() {
+        Product combo1 = productRepository.save(
+                Product.builder()
+                        .code("CB000001")
+                        .name("iCombo 1 Big Extra STD")
+                        .description("1 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack")
+                        .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo1-min_1711699834430.jpg?alt=media")
+                        .status(ProductStatus.ACTIVE)
+                        .type(ProductType.COMBO)
+                        .build()
+        );
+
+        productPriceRepository.save(
+                ProductPrice.builder()
+                        .price(109000)
+                        .product(combo1)
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusYears(1))
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        productPriceRepository.save(
+                ProductPrice.builder()
+                        .price(100000)
+                        .product(combo1)
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusYears(1))
+                        .status(BaseStatus.INACTIVE)
+                        .build()
+        );
+
+        productPriceRepository.save(
+                ProductPrice.builder()
+                        .price(110000)
+                        .product(combo1)
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusYears(1))
+                        .status(BaseStatus.ACTIVE)
+                        .deleted(true)
+                        .build()
+        );
+
+        Product combo2 = productRepository.save(
+                Product.builder()
+                        .code("CB000002")
+                        .name("iCombo 1 Big STD")
+                        .description("01 Ly nước ngọt size L + 01 Hộp bắp")
+                        .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo1-copy-min_1711699814762.jpg?alt=media")
+                        .status(ProductStatus.ACTIVE)
+                        .type(ProductType.COMBO)
+                        .build()
+        );
+
+        productPriceRepository.save(
+                ProductPrice.builder()
+                        .price(89000)
+                        .product(combo2)
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusYears(1))
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        Product combo3 = productRepository.save(
+                Product.builder()
+                        .code("CB000003")
+                        .name("iCombo 2 Big Extra STD")
+                        .description("02 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack")
+                        .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo2-min_1711699866349.jpg?alt=media")
+                        .status(ProductStatus.ACTIVE)
+                        .type(ProductType.COMBO)
+                        .build()
+        );
+
+        productPriceRepository.save(
+                ProductPrice.builder()
+                        .price(129000)
+                        .product(combo3)
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusYears(1))
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        Product combo4 = productRepository.save(
+                Product.builder()
+                        .code("CB000004")
+                        .name("iCombo 2 Big STD")
+                        .description("02 Ly nước ngọt size L + 01 Hộp bắp")
+                        .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo2-copy-min_1711699849615.jpg?alt=media")
+                        .status(ProductStatus.ACTIVE)
+                        .type(ProductType.COMBO)
+                        .build()
+        );
+
+        productPriceRepository.save(
+                ProductPrice.builder()
+                        .price(109000)
+                        .product(combo4)
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusYears(1))
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
     }
 }

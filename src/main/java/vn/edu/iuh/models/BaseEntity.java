@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -21,6 +20,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class BaseEntity {
     @CreatedDate
     @Column(updatable = false)
@@ -33,6 +35,7 @@ public abstract class BaseEntity {
     @LastModifiedBy
     private UUID updatedBy;
     @Column(nullable = false)
+    @Builder.Default
     @JsonIgnore
     private boolean deleted = false;
 }
