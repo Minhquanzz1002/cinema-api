@@ -5,6 +5,8 @@ import lombok.*;
 import vn.edu.iuh.models.enums.SeatStatus;
 import vn.edu.iuh.models.enums.SeatType;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -16,6 +18,8 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(columnDefinition = "VARCHAR(3)", nullable = false)
+    private String name;
     @Column(nullable = false)
     private short area;
     @Column(nullable = false)
@@ -31,4 +35,6 @@ public class Seat {
     private SeatStatus status = SeatStatus.ACTIVE;
     @ManyToOne
     private RowSeat row;
+    @OneToMany(mappedBy = "seat")
+    private List<GroupSeat> groupSeats;
 }
