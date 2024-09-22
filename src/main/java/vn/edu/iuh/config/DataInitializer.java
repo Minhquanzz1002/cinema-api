@@ -34,9 +34,12 @@ public class DataInitializer implements CommandLineRunner {
     private final SeatRepository seatRepository;
     private final ProductRepository productRepository;
     private final ProductPriceRepository productPriceRepository;
+    private final GroupSeatRepository groupSeatRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final LocalDate currentDate = LocalDate.now();
+    private final LocalDate tomorrowDate = LocalDate.now().plusDays(1);
+    private final LocalDate todayPlus2Days = LocalDate.now().plusDays(2);
 
     @Override
     public void run(String... args) {
@@ -95,6 +98,53 @@ public class DataInitializer implements CommandLineRunner {
             );
 
             if (cinemaRepository.count() == 0) {
+                int[][][] layout3 = {
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                };
+
+                int[][][] layout2 = {
+                        {{8}, {7}, {0}, {6, 5}, {5, 6}, {0}, {4}, {3}, {0}, {2, 1}, {1, 2}},
+                        {},
+                        {{7, 6}, {6, 7}, {0}, {5}, {0}, {0}, {4, 3}, {3, 4}, {0}, {2}, {1}},
+                        {},
+                        {{7}, {0}, {6, 5}, {5, 6}, {0}, {0}, {4}, {3}, {0}, {2, 1}, {1, 2}},
+                        {},
+                        {{7, 6}, {6, 7}, {0}, {5}, {0}, {0}, {4, 3}, {3, 4}, {0}, {2}, {1}}
+                };
+
+                int[][][] layout1 = {
+                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                };
+
+                int[][][] layout4 = {
+                        {{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+
+                };
+
                 Cinema nguyenDuCinema = cinemaRepository.save(
                         Cinema.builder()
                                 .name("Galaxy Nguyễn Du")
@@ -115,12 +165,16 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
+                insertLayout(layout4, room1NguyenDuCinema);
+
                 Room room2NguyenDuCinema = roomRepository.save(
                         Room.builder()
                                 .name("Rạp 2")
                                 .cinema(nguyenDuCinema)
                                 .build()
                 );
+
+                insertLayout(layout3, room2NguyenDuCinema);
 
                 Room room3NguyenDuCinema = roomRepository.save(
                         Room.builder()
@@ -129,12 +183,16 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
+                insertLayout(layout2, room3NguyenDuCinema);
+
                 Room room4NguyenDuCinema = roomRepository.save(
                         Room.builder()
                                 .name("Rạp 2")
                                 .cinema(nguyenDuCinema)
                                 .build()
                 );
+
+                insertLayout(layout1, room4NguyenDuCinema);
 
                 cinemaRepository.save(
                         Cinema.builder()
@@ -195,30 +253,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                int[][] seatMatrixLayoutOne = {
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1}
-                };
-
-                Map<String, Short> rowIndexMappingLayoutOne = new HashMap<>();
-                rowIndexMappingLayoutOne.put("A", (short) 8);
-                rowIndexMappingLayoutOne.put("B", (short) 7);
-                rowIndexMappingLayoutOne.put("C", (short) 6);
-                rowIndexMappingLayoutOne.put("D", (short) 5);
-                rowIndexMappingLayoutOne.put("E", (short) 4);
-                rowIndexMappingLayoutOne.put("F", (short) 3);
-                rowIndexMappingLayoutOne.put("G", (short) 2);
-                rowIndexMappingLayoutOne.put("H", (short) 1);
-                rowIndexMappingLayoutOne.put("I", (short) 0);
-
-                insertLayout(room1QuangTrungCinema, seatMatrixLayoutOne, rowIndexMappingLayoutOne);
+                insertLayout(layout1, room1QuangTrungCinema);
 
                 Room room2QuangTrungCinema = roomRepository.save(
                         Room.builder()
@@ -227,6 +262,8 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
+                insertLayout(layout2, room2QuangTrungCinema);
+
                 Room room3QuangTrungCinema = roomRepository.save(
                         Room.builder()
                                 .name("Rạp 3")
@@ -234,12 +271,16 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
+                insertLayout(layout3, room3QuangTrungCinema);
+
                 Room room4QuangTrungCinema = roomRepository.save(
                         Room.builder()
                                 .name("Rạp 2")
                                 .cinema(quangTrungCinema)
                                 .build()
                 );
+
+                insertLayout(layout1, room4QuangTrungCinema);
 
                 cinemaRepository.save(
                         Cinema.builder()
@@ -847,6 +888,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .producers(List.of(galaxyPlayProducer, galaxyStudioProducer, thuTrangEntertainmentProducer))
                                         .build()
                         );
+
                         movieRepository.save(
                                 Movie.builder()
                                         .code("MV000000007")
@@ -891,6 +933,8 @@ public class DataInitializer implements CommandLineRunner {
 
 
                         if (showTimeRepository.count() == 0) {
+                            /* Today */
+                            // Galaxy Quang Trung
                             showTimeRepository.save(
                                     ShowTime.builder()
                                             .cinema(quangTrungCinema)
@@ -1045,6 +1089,123 @@ public class DataInitializer implements CommandLineRunner {
                                             .endTime(LocalTime.of(0, 15))
                                             .build()
                             );
+
+                            /* Tomorrow */
+                            // Quang Trung Cinema
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room2QuangTrungCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(10, 0))
+                                            .endTime(LocalTime.of(12, 0))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room2QuangTrungCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(12, 15))
+                                            .endTime(LocalTime.of(14, 15))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room3QuangTrungCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(14, 30))
+                                            .endTime(LocalTime.of(16, 30))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room3QuangTrungCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(16, 45))
+                                            .endTime(LocalTime.of(18, 45))
+                                            .build()
+                            );
+
+                            // Nguyen Du Cinema
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(nguyenDuCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room1NguyenDuCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(11, 45))
+                                            .endTime(LocalTime.of(13, 45))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(nguyenDuCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room2NguyenDuCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(15, 0))
+                                            .endTime(LocalTime.of(17, 0))
+                                            .build()
+                            );
+
+                            /* Today plus 2 */
+                            // Quang Trung Cinema
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room2QuangTrungCinema)
+                                            .startDate(todayPlus2Days)
+                                            .startTime(LocalTime.of(10, 0))
+                                            .endTime(LocalTime.of(12, 0))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room2QuangTrungCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(12, 15))
+                                            .endTime(LocalTime.of(14, 15))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room3QuangTrungCinema)
+                                            .startDate(tomorrowDate)
+                                            .startTime(LocalTime.of(14, 30))
+                                            .endTime(LocalTime.of(16, 30))
+                                            .build()
+                            );
+
+                            // Nguyen Du Cinema
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(nguyenDuCinema)
+                                            .movie(lamGiauVoiMaMovie)
+                                            .room(room1NguyenDuCinema)
+                                            .startDate(todayPlus2Days)
+                                            .startTime(LocalTime.of(11, 30))
+                                            .endTime(LocalTime.of(13, 30))
+                                            .build()
+                            );
+
                         }
                     }
                 }
@@ -1121,10 +1282,95 @@ public class DataInitializer implements CommandLineRunner {
                                 .area((short) 1)
                                 .rowIndex(row.getIndex())
                                 .columnIndex((short) (columnIndex + 1))
+                                .name(String.valueOf(columnIndex))
                                 .type(SeatType.NORMAL)
                                 .row(row)
                                 .build()
                 );
+            }
+        }
+    }
+
+    private void insertLayout(int[][][] layout, Room room) {
+        int maxRow = layout.length;
+        int maxColumn = layout[0].length;
+        RoomLayout roomLayout = roomLayoutRepository.save(
+                RoomLayout.builder()
+                        .room(room)
+                        .maxRow(maxRow)
+                        .maxColumn(maxColumn)
+                        .build()
+        );
+
+        RowSeat row;
+        Seat seat;
+        int count = 0;
+        int maxRowData = 0;
+
+        for (int[][] ints : layout) {
+            if (ints.length != 0) {
+                maxRowData++;
+            }
+        }
+
+        for (int i = 0; i < maxRow; i++) {
+            if (layout[i].length == 0) {
+                continue;
+            }
+
+            row = rowSeatRepository.save(
+                    RowSeat.builder()
+                            .index((short) i)
+                            .name(String.valueOf((char) ('A' + maxRowData - 1 - (count++))))
+                            .layout(roomLayout)
+                            .build()
+            );
+
+            for (int j = 0; j < maxColumn; j++) {
+                if (layout[i][j][0] == 0) {
+                    continue;
+                }
+                seat = seatRepository.save(
+                        Seat.builder()
+                                .area((short) layout[i][j].length)
+                                .name(String.valueOf(layout[i][j][0]))
+                                .rowIndex((short) i)
+                                .columnIndex((short) j)
+                                .type(SeatType.NORMAL)
+                                .row(row)
+                                .build()
+                );
+
+                if (layout[i][j].length > 1) {
+                    groupSeatRepository.save(
+                            GroupSeat.builder()
+                                    .area((short) 1)
+                                    .columnIndex((short) j)
+                                    .rowIndex((short) i)
+                                    .seat(seat)
+                                    .build()
+                    );
+
+                    if (layout[i][j][1] > layout[i][j][0]) {
+                        groupSeatRepository.save(
+                                GroupSeat.builder()
+                                        .area((short) 1)
+                                        .columnIndex((short) (j - 1))
+                                        .rowIndex((short) i)
+                                        .seat(seat)
+                                        .build()
+                        );
+                    } else {
+                        groupSeatRepository.save(
+                                GroupSeat.builder()
+                                        .area((short) 1)
+                                        .columnIndex((short) (j + 1))
+                                        .rowIndex((short) i)
+                                        .seat(seat)
+                                        .build()
+                        );
+                    }
+                }
             }
         }
     }

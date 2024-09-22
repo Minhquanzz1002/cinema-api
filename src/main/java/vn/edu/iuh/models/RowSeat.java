@@ -20,13 +20,13 @@ public class RowSeat {
     private int id;
     @Column(nullable = false)
     private short index;
-    @Column(nullable = false, columnDefinition = "CHAR(1)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(3)")
     private String name;
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private RoomLayout layout;
-    @OrderBy(value = "columnIndex asc")
+    @OrderBy(value = "name desc")
     @OneToMany(mappedBy = "row")
     private List<Seat> seats = new ArrayList<>();
 }
