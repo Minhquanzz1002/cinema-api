@@ -36,4 +36,6 @@ public class Product extends BaseEntity {
     private ProductStatus status = ProductStatus.INACTIVE;
     @OneToMany(mappedBy = "product")
     private List<ProductPrice> productPrices;
+    @OneToMany(mappedBy = "product")
+    private List<Order> orders;
 }

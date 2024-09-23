@@ -1,21 +1,38 @@
 package vn.edu.iuh.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.cglib.core.Local;
+import vn.edu.iuh.models.enums.OrderStatus;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
-@Table(name = "orders")
 @Entity
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class Order {
+@AllArgsConstructor
+@Table(name = "orders")
+public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(nullable = false, unique = true, updatable = false)
+    private String code;
+    @Column(nullable = false)
+    private float totalPrice;
+    @Column(nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime orderDate = LocalDateTime.now();
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
+    @ManyToOne
+    @Column(nullable = false)
+    private ShowTime showTime;
 }
