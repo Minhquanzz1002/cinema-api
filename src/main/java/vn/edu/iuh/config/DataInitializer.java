@@ -35,6 +35,9 @@ public class DataInitializer implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final ProductPriceRepository productPriceRepository;
     private final GroupSeatRepository groupSeatRepository;
+    private final TicketPriceRepository ticketPriceRepository;
+    private final TicketPriceLineRepository ticketPriceLineRepository;
+    private final TicketPriceDetailRepository ticketPriceDetailRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final LocalDate currentDate = LocalDate.now();
@@ -1242,53 +1245,111 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         insertProducts();
+        insertTicketPrices();
     }
 
-    private void insertLayout(Room room, int[][] seatMatrix, Map<String, Short> rowIndexMapping) {
-        List<Map.Entry<String, Short>> sortedRows = new ArrayList<>(rowIndexMapping.entrySet());
-        sortedRows.sort(Map.Entry.<String, Short>comparingByValue().reversed());
-        RoomLayout layout = roomLayoutRepository.save(
-                RoomLayout.builder()
-                        .room(room)
-                        .maxRow(sortedRows.size())
-                        .maxColumn(Arrays.stream(seatMatrix).mapToInt(row -> row.length).max().orElse(0))
+    private void insertTicketPrices() {
+        TicketPrice month9_TicketPrice = ticketPriceRepository.save(
+                TicketPrice.builder()
+                        .startDate(currentDate)
+                        .endDate(LocalDate.of(2024, 12, 31))
+                        .name("Giá vé 2024")
                         .build()
         );
 
-        RowSeat row;
-        for (int i = 0; i < sortedRows.size(); i++) {
-            Map.Entry<String, Short> entry = sortedRows.get(i);
-            String rowName = entry.getKey();
-            short rowIndex = entry.getValue();
-            int[] columns = seatMatrix[i];
+        TicketPriceLine ticketPriceLine1 = ticketPriceLineRepository.save(
+                TicketPriceLine.builder()
+                        .ticketPrice(month9_TicketPrice)
+                        .applyForDays(List.of(DayType.MONDAY, DayType.WEDNESDAY, DayType.FRIDAY))
+                        .startTime(LocalTime.of(0, 0))
+                        .endTime(LocalTime.of(17, 0))
+                        .audienceType(AudienceType.ADULT)
+                        .build()
+        );
 
-            row = rowSeatRepository.save(
-                    RowSeat.builder()
-                            .index(rowIndex)
-                            .name(rowName)
-                            .layout(layout)
-                            .build()
-            );
-            insertSeatsForRow(columns, row);
-        }
+        insertTicketPriceDetails(ticketPriceLine1, new float[]{75000, 90000, 130000, 200000});
+
+        TicketPriceLine ticketPriceLine2 = ticketPriceLineRepository.save(
+                TicketPriceLine.builder()
+                        .ticketPrice(month9_TicketPrice)
+                        .applyForDays(List.of(DayType.MONDAY, DayType.WEDNESDAY, DayType.FRIDAY))
+                        .startTime(LocalTime.of(17, 1))
+                        .endTime(LocalTime.of(23, 59))
+                        .audienceType(AudienceType.ADULT)
+                        .build()
+        );
+
+        insertTicketPriceDetails(ticketPriceLine2, new float[]{80000, 100000, 150000, 220000});
+
+        TicketPriceLine ticketPriceLine3 = ticketPriceLineRepository.save(
+                TicketPriceLine.builder()
+                        .ticketPrice(month9_TicketPrice)
+                        .applyForDays(List.of(DayType.TUESDAY))
+                        .startTime(LocalTime.of(0, 0))
+                        .endTime(LocalTime.of(23, 59))
+                        .audienceType(AudienceType.ADULT)
+                        .build()
+        );
+
+        insertTicketPriceDetails(ticketPriceLine3, new float[]{55000, 60000, 100000, 150000});
+
+        TicketPriceLine ticketPriceLine4 = ticketPriceLineRepository.save(
+                TicketPriceLine.builder()
+                        .ticketPrice(month9_TicketPrice)
+                        .applyForDays(List.of(DayType.FRIDAY, DayType.SATURDAY, DayType.SUNDAY))
+                        .startTime(LocalTime.of(0, 0))
+                        .endTime(LocalTime.of(17, 0))
+                        .audienceType(AudienceType.ADULT)
+                        .build()
+        );
+
+        insertTicketPriceDetails(ticketPriceLine4, new float[]{85000, 95000, 160000, 240000});
+
+        TicketPriceLine ticketPriceLine5 = ticketPriceLineRepository.save(
+                TicketPriceLine.builder()
+                        .ticketPrice(month9_TicketPrice)
+                        .applyForDays(List.of(DayType.FRIDAY, DayType.SATURDAY, DayType.SUNDAY))
+                        .startTime(LocalTime.of(17, 1))
+                        .endTime(LocalTime.of(23, 59))
+                        .audienceType(AudienceType.ADULT)
+                        .build()
+        );
+
+        insertTicketPriceDetails(ticketPriceLine5, new float[]{95000, 105000, 180000, 270000});
     }
 
-    private void insertSeatsForRow(int[] columns, RowSeat row) {
-        for (short columnIndex = 0; columnIndex < columns.length; columnIndex++) {
-            int seatType = columns[columnIndex];
-            if (seatType > 0) {
-                seatRepository.save(
-                        Seat.builder()
-                                .area((short) 1)
-                                .rowIndex(row.getIndex())
-                                .columnIndex((short) (columnIndex + 1))
-                                .name(String.valueOf(columnIndex))
-                                .type(SeatType.NORMAL)
-                                .row(row)
-                                .build()
-                );
-            }
-        }
+    private void insertTicketPriceDetails(TicketPriceLine line, float[] prices) {
+        ticketPriceDetailRepository.save(
+                TicketPriceDetail.builder()
+                        .seatType(SeatType.NORMAL)
+                        .ticketPriceLine(line)
+                        .price(prices[0])
+                        .build()
+        );
+
+        ticketPriceDetailRepository.save(
+                TicketPriceDetail.builder()
+                        .seatType(SeatType.VIP)
+                        .ticketPriceLine(line)
+                        .price(prices[1])
+                        .build()
+        );
+
+        ticketPriceDetailRepository.save(
+                TicketPriceDetail.builder()
+                        .seatType(SeatType.COUPLE)
+                        .ticketPriceLine(line)
+                        .price(prices[2])
+                        .build()
+        );
+
+        ticketPriceDetailRepository.save(
+                TicketPriceDetail.builder()
+                        .seatType(SeatType.TRIPLE)
+                        .ticketPriceLine(line)
+                        .price(prices[3])
+                        .build()
+        );
     }
 
     private void insertLayout(int[][][] layout, Room room) {
@@ -1330,18 +1391,19 @@ public class DataInitializer implements CommandLineRunner {
                 if (layout[i][j][0] == 0) {
                     continue;
                 }
-                seat = seatRepository.save(
-                        Seat.builder()
-                                .area((short) layout[i][j].length)
-                                .name(String.valueOf(layout[i][j][0]))
-                                .rowIndex((short) i)
-                                .columnIndex((short) j)
-                                .type(SeatType.NORMAL)
-                                .row(row)
-                                .build()
-                );
 
                 if (layout[i][j].length > 1) {
+                    seat = seatRepository.save(
+                            Seat.builder()
+                                    .area((short) layout[i][j].length)
+                                    .name(String.valueOf(layout[i][j][0]))
+                                    .rowIndex((short) i)
+                                    .columnIndex((short) j)
+                                    .type(SeatType.COUPLE)
+                                    .row(row)
+                                    .build()
+                    );
+
                     groupSeatRepository.save(
                             GroupSeat.builder()
                                     .area((short) 1)
@@ -1370,6 +1432,17 @@ public class DataInitializer implements CommandLineRunner {
                                         .build()
                         );
                     }
+                } else {
+                    seat = seatRepository.save(
+                            Seat.builder()
+                                    .area((short) layout[i][j].length)
+                                    .name(String.valueOf(layout[i][j][0]))
+                                    .rowIndex((short) i)
+                                    .columnIndex((short) j)
+                                    .type(SeatType.NORMAL)
+                                    .row(row)
+                                    .build()
+                    );
                 }
             }
         }

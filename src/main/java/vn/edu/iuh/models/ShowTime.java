@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -36,4 +37,6 @@ public class ShowTime extends BaseEntity {
     @Builder.Default
     @Column(nullable = false)
     private int bookedSeat = 0;
+    @OneToMany(mappedBy = "showTime")
+    private List<Order> orders;
 }

@@ -8,7 +8,7 @@ import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.enums.MovieStatus;
-import vn.edu.iuh.projections.MovieProjection;
+import vn.edu.iuh.projections.v1.MovieProjection;
 import vn.edu.iuh.repositories.MovieRepository;
 import vn.edu.iuh.services.MovieService;
 

@@ -1,4 +1,4 @@
-package vn.edu.iuh.controllers;
+package vn.edu.iuh.controllers.v1;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.dto.res.SuccessResponse;
-import vn.edu.iuh.projections.CityProjection;
+import vn.edu.iuh.projections.v1.CityProjection;
 import vn.edu.iuh.services.CityService;
 
 import java.util.List;

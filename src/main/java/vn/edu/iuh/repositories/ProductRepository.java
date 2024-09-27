@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import vn.edu.iuh.models.Product;
 import vn.edu.iuh.models.enums.ProductStatus;
 import vn.edu.iuh.models.enums.ProductType;
-import vn.edu.iuh.projections.ProductProjection;
+import vn.edu.iuh.projections.v1.ProductProjection;
 
 import java.util.List;
 
