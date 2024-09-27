@@ -3,9 +3,7 @@ package vn.edu.iuh.models;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import vn.edu.iuh.models.enums.BaseStatus;
-
-import java.time.LocalDate;
+import vn.edu.iuh.models.enums.SeatType;
 
 @Getter
 @Setter
@@ -14,22 +12,17 @@ import java.time.LocalDate;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product_prices")
-public class ProductPrice extends BaseEntity {
+@Table(name = "ticket_price_details")
+public class TicketPriceDetail extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(nullable = false)
-    private LocalDate startDate;
-    @Column(nullable = false)
-    private LocalDate endDate;
+    @Enumerated(EnumType.STRING)
+    private SeatType seatType;
     @Column(nullable = false)
     private float price;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private BaseStatus status = BaseStatus.INACTIVE;
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Product product;
+    private TicketPriceLine ticketPriceLine;
 }

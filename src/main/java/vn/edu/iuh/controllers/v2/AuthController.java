@@ -1,4 +1,4 @@
-package vn.edu.iuh.controllers;
+package vn.edu.iuh.controllers.v2;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -9,34 +9,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.req.*;
-import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
 @Slf4j
-@RestController
+@RestController("authControllerV2")
 @RequiredArgsConstructor
-@RequestMapping("/v1/auth")
-@Tag(name = "Authentication", description = "Xác thực người dùng")
+@RequestMapping("/v2/auth")
+@Tag(name = "Authentication V2", description = "Xác thực người dùng")
 public class AuthController {
     private final AuthService authService;
-
-    @Operation(
-            summary = "Xác thực đăng ký"
-    )
-    @PostMapping("/register/validate-otp")
-    public SuccessResponse<?> confirmRegistration(@RequestBody RegistrationConfirmationRequestDTO confirmationRequestDTO) {
-        return authService.confirmRegister(confirmationRequestDTO);
-    }
-
-    @Operation(
-            summary = "Đăng ký"
-    )
-    @PostMapping("/register")
-    public SuccessResponse<?> register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO) {
-        return authService.register(registerRequestDTO);
-    }
 
     @Operation(
             summary = "Đăng nhập"
@@ -77,10 +61,7 @@ public class AuthController {
 
     @Operation(
             summary = "Đổi mật khẩu",
-            security = {
-                    @SecurityRequirement(name = "bearerAuth")
-            }
-    )
+            security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping("/change-password")
     public SuccessResponse<UserAuthResponseDTO> changePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
