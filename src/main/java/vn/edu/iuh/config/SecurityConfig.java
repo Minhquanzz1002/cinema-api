@@ -46,6 +46,7 @@ public class SecurityConfig {
             "/v1/genres",
             "/v1/cinemas",
             "/v1/show-times",
+            "/v1/show-times/{showTimeId}/seat-layout",
             "/v1/rooms/{roomId}/layout",
             "/v1/products"
     };
