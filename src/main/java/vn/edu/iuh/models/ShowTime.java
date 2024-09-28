@@ -12,9 +12,9 @@ import java.util.UUID;
 @Setter
 @Entity
 @Builder
-@Table(name = "showTimes")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "showTimes")
 public class ShowTime extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -20,7 +20,7 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false, columnDefinition = "CHAR(10)")
     private String code;
     @Column(nullable = false)
     private float totalPrice;
@@ -35,4 +35,7 @@ public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(nullable = false)
     private ShowTime showTime;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
 }

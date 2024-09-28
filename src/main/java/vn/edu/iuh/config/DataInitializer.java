@@ -10,8 +10,9 @@ import vn.edu.iuh.models.enums.*;
 import vn.edu.iuh.repositories.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -38,11 +39,15 @@ public class DataInitializer implements CommandLineRunner {
     private final TicketPriceRepository ticketPriceRepository;
     private final TicketPriceLineRepository ticketPriceLineRepository;
     private final TicketPriceDetailRepository ticketPriceDetailRepository;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final LocalDate currentDate = LocalDate.now();
     private final LocalDate tomorrowDate = LocalDate.now().plusDays(1);
     private final LocalDate todayPlus2Days = LocalDate.now().plusDays(2);
+    private ShowTime showTime;
+    private Product product;
 
     @Override
     public void run(String... args) {
@@ -938,7 +943,7 @@ public class DataInitializer implements CommandLineRunner {
                         if (showTimeRepository.count() == 0) {
                             /* Today */
                             // Galaxy Quang Trung
-                            showTimeRepository.save(
+                            showTime = showTimeRepository.save(
                                     ShowTime.builder()
                                             .cinema(quangTrungCinema)
                                             .movie(lamGiauVoiMaMovie)
@@ -1215,12 +1220,14 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
+        insertProducts();
+
         if (roleRepository.count() == 0) {
             Role roleAdmin = roleRepository.save(new Role("ROLE_ADMIN"));
             Role roleClient = roleRepository.save(new Role("ROLE_CLIENT"));
 
             if (userRepository.count() == 0) {
-                userRepository.save(User.builder()
+                User user1 =  userRepository.save(User.builder()
                         .name("Lê Hữu Bằng")
                         .phone("0837699806")
                         .birthday(LocalDate.of(2002, 10, 10))
@@ -1231,7 +1238,7 @@ public class DataInitializer implements CommandLineRunner {
                         .status(UserStatus.ACTIVE)
                         .build());
 
-                userRepository.save(User.builder()
+                User user2 = userRepository.save(User.builder()
                         .name("Nguyễn Minh Quân")
                         .phone("0354927402")
                         .birthday(LocalDate.of(2002, 10, 10))
@@ -1241,11 +1248,59 @@ public class DataInitializer implements CommandLineRunner {
                         .role(roleAdmin)
                         .status(UserStatus.ACTIVE)
                         .build());
+
+                insertOrders(user1, "HD0001", 404, 405);
+                insertOrders(user2, "HD0002", 406, null);
             }
         }
-
-        insertProducts();
         insertTicketPrices();
+    }
+
+    private void insertOrders(User user, String orderCode, int seatId1, Integer seatId2) {
+        Order order = orderRepository.save(
+                Order.builder()
+                        .orderDate(LocalDateTime.now())
+                        .code(orderCode)
+                        .totalPrice(100000)
+                        .showTime(showTime)
+                        .user(user)
+                        .status(OrderStatus.COMPLETED)
+                        .build()
+        );
+
+        orderDetailRepository.save(
+            OrderDetail.builder()
+                    .product(product)
+                    .price(109000)
+                    .quantity(1)
+                    .order(order)
+                    .type(OrderDetailType.PRODUCT)
+                    .build()
+        );
+
+        Seat seat1 = seatRepository.findById(seatId1).get();
+
+        orderDetailRepository.save(
+                OrderDetail.builder()
+                        .price(100000)
+                        .seat(seat1)
+                        .order(order)
+                        .type(OrderDetailType.TICKET)
+                        .build()
+        );
+
+        if (seatId2 != null) {
+            Seat seat2 = seatRepository.findById(seatId2).get();
+            orderDetailRepository.save(
+                    OrderDetail.builder()
+                            .price(100000)
+                            .seat(seat2)
+                            .order(order)
+                            .type(OrderDetailType.TICKET)
+                            .build()
+            );
+        }
+
     }
 
     private void insertTicketPrices() {
@@ -1379,10 +1434,12 @@ public class DataInitializer implements CommandLineRunner {
                 continue;
             }
 
+            String name = String.valueOf((char) ('A' + maxRowData - 1 - (count++)));
+
             row = rowSeatRepository.save(
                     RowSeat.builder()
                             .index((short) i)
-                            .name(String.valueOf((char) ('A' + maxRowData - 1 - (count++))))
+                            .name(name)
                             .layout(roomLayout)
                             .build()
             );
@@ -1396,7 +1453,8 @@ public class DataInitializer implements CommandLineRunner {
                     seat = seatRepository.save(
                             Seat.builder()
                                     .area((short) layout[i][j].length)
-                                    .name(String.valueOf(layout[i][j][0]))
+                                    .name((short) layout[i][j][0])
+                                    .fullName(name + layout[i][j][0] + " " + name + layout[i][j][1])
                                     .rowIndex((short) i)
                                     .columnIndex((short) j)
                                     .type(SeatType.COUPLE)
@@ -1433,10 +1491,11 @@ public class DataInitializer implements CommandLineRunner {
                         );
                     }
                 } else {
-                    seat = seatRepository.save(
+                    seatRepository.save(
                             Seat.builder()
                                     .area((short) layout[i][j].length)
-                                    .name(String.valueOf(layout[i][j][0]))
+                                    .name((short) layout[i][j][0])
+                                    .fullName(name + layout[i][j][0])
                                     .rowIndex((short) i)
                                     .columnIndex((short) j)
                                     .type(SeatType.NORMAL)
@@ -1456,7 +1515,6 @@ public class DataInitializer implements CommandLineRunner {
                         .description("1 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack")
                         .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo1-min_1711699834430.jpg?alt=media")
                         .status(ProductStatus.ACTIVE)
-                        .type(ProductType.COMBO)
                         .build()
         );
 
@@ -1498,7 +1556,6 @@ public class DataInitializer implements CommandLineRunner {
                         .description("01 Ly nước ngọt size L + 01 Hộp bắp")
                         .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo1-copy-min_1711699814762.jpg?alt=media")
                         .status(ProductStatus.ACTIVE)
-                        .type(ProductType.COMBO)
                         .build()
         );
 
@@ -1519,7 +1576,6 @@ public class DataInitializer implements CommandLineRunner {
                         .description("02 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack")
                         .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo2-min_1711699866349.jpg?alt=media")
                         .status(ProductStatus.ACTIVE)
-                        .type(ProductType.COMBO)
                         .build()
         );
 
@@ -1533,21 +1589,20 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
-        Product combo4 = productRepository.save(
+        product = productRepository.save(
                 Product.builder()
                         .code("CB000004")
                         .name("iCombo 2 Big STD")
                         .description("02 Ly nước ngọt size L + 01 Hộp bắp")
                         .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo2-copy-min_1711699849615.jpg?alt=media")
                         .status(ProductStatus.ACTIVE)
-                        .type(ProductType.COMBO)
                         .build()
         );
 
         productPriceRepository.save(
                 ProductPrice.builder()
                         .price(109000)
-                        .product(combo4)
+                        .product(product)
                         .startDate(currentDate)
                         .endDate(currentDate.plusYears(1))
                         .status(BaseStatus.ACTIVE)

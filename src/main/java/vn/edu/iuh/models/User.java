@@ -6,6 +6,7 @@ import vn.edu.iuh.models.enums.UserStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -38,4 +39,6 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 }

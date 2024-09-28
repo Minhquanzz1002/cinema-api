@@ -18,8 +18,10 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(columnDefinition = "VARCHAR(3)", nullable = false)
-    private String name;
+    @Column(nullable = false)
+    private short name;
+    @Column(nullable = false)
+    private String fullName;
     @Column(nullable = false)
     private short area;
     @Column(nullable = false)
@@ -37,4 +39,6 @@ public class Seat {
     private RowSeat row;
     @OneToMany(mappedBy = "seat")
     private List<GroupSeat> groupSeats;
+    @OneToMany(mappedBy = "seat")
+    private List<OrderDetail> orderDetails;
 }
