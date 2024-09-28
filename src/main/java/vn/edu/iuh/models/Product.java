@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import vn.edu.iuh.models.enums.ProductStatus;
-import vn.edu.iuh.models.enums.ProductType;
+import vn.edu.iuh.models.enums.OrderDetailType;
 
 import java.util.List;
 
@@ -28,9 +28,6 @@ public class Product extends BaseEntity {
     private String description;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String image;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ProductType type;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.INACTIVE;

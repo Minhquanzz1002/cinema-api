@@ -124,7 +124,7 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
 
     }
 
-    private DayType convertToDayType(DayOfWeek dayOfWeek) {
+    public static DayType convertToDayType(DayOfWeek dayOfWeek) {
         return DayType.valueOf(dayOfWeek.name());
     }
 }

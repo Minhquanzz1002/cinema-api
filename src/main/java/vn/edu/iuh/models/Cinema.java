@@ -2,9 +2,7 @@ package vn.edu.iuh.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 import vn.edu.iuh.models.enums.BaseStatus;
 

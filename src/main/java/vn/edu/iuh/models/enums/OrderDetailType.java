@@ -1,6 +1,6 @@
 package vn.edu.iuh.models.enums;
 
-public enum ProductType {
+public enum OrderDetailType {
     TICKET,
-    COMBO,
+    PRODUCT,
 }
