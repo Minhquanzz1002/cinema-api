@@ -12,7 +12,9 @@ import vn.edu.iuh.repositories.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -41,6 +43,9 @@ public class DataInitializer implements CommandLineRunner {
     private final TicketPriceDetailRepository ticketPriceDetailRepository;
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final PromotionRepository promotionRepository;
+    private final PromotionLineRepository promotionLineRepository;
+    private final PromotionDetailRepository promotionDetailRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final LocalDate currentDate = LocalDate.now();
@@ -1254,6 +1259,88 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
         insertTicketPrices();
+        insertPromotion();
+    }
+
+    private void insertPromotion() {
+        Promotion promotion = promotionRepository.save(
+                Promotion.builder()
+                        .name("Khuyến mãi tháng " + LocalDate.now().getMonthValue() + " năm " + LocalDate.now().getYear())
+                        .startDate(currentDate.withDayOfMonth(1))
+                        .endDate(YearMonth.now().atEndOfMonth())
+                        .imagePortrait("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/promotions%2Fshopee-pay-3_1725853141172.jpg?alt=media")
+                        .code("KM" + currentDate.getMonthValue() + currentDate.getYear())
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        PromotionLine promotionLine = promotionLineRepository.save(
+                PromotionLine.builder()
+                        .promotion(promotion)
+                        .name("Giảm giá chào đón thành viên mới")
+                        .code("CHAOBANMOI")
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusMonths(1))
+                        .type(PromotionLineType.CASH_REBATE)
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        promotionDetailRepository.save(
+                PromotionDetail.builder()
+                        .promotionLine(promotionLine)
+                        .discountValue(50000)
+                        .minOrderValue(100000)
+                        .maxUsageCount(50)
+                        .currentUsageCount(0)
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        PromotionLine promotionLine1 = promotionLineRepository.save(
+                PromotionLine.builder()
+                        .promotion(promotion)
+                        .name("Tri ân khách hàng")
+                        .code("SALE15")
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusMonths(2))
+                        .type(PromotionLineType.PRICE_DISCOUNT)
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        promotionDetailRepository.save(
+                PromotionDetail.builder()
+                        .promotionLine(promotionLine1)
+                        .discountValue(10)
+                        .minOrderValue(100000)
+                        .maxUsageCount(50)
+                        .currentUsageCount(0)
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        PromotionLine promotionLine2 = promotionLineRepository.save(
+                PromotionLine.builder()
+                        .promotion(promotion)
+                        .name("Tri ân khách hàng")
+                        .code("1VETANG1VE")
+                        .startDate(currentDate)
+                        .endDate(currentDate.plusMonths(1))
+                        .type(PromotionLineType.BUY_ONE_GET_ONE_FREE)
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
+
+        promotionDetailRepository.save(
+                PromotionDetail.builder()
+                        .promotionLine(promotionLine2)
+                        .discountValue(10)
+                        .maxUsageCount(50)
+                        .currentUsageCount(0)
+                        .status(BaseStatus.ACTIVE)
+                        .build()
+        );
     }
 
     private void insertOrders(User user, String orderCode, int seatId1, Integer seatId2) {
