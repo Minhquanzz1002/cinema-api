@@ -48,7 +48,8 @@ public class SecurityConfig {
             "/v1/show-times",
             "/v1/show-times/{showTimeId}/seat-layout",
             "/v1/rooms/{roomId}/layout",
-            "/v1/products"
+            "/v1/products",
+            "/v1/promotions"
     };
 
     @Bean
