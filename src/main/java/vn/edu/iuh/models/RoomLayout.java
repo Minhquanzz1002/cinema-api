@@ -18,7 +18,11 @@ public class RoomLayout {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
+    private int totalSeat;
+    @Column(nullable = false)
     private int maxColumn;
+    @Column(nullable = false)
     private int maxRow;
     @ManyToOne
     @ToString.Exclude
