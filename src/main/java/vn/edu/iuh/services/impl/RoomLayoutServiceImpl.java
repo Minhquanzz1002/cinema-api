@@ -6,22 +6,18 @@ import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.res.RoomLayoutResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.DataNotFoundException;
+import vn.edu.iuh.models.Seat;
 import vn.edu.iuh.models.ShowTime;
-import vn.edu.iuh.models.TicketPrice;
-import vn.edu.iuh.models.TicketPriceDetail;
-import vn.edu.iuh.models.TicketPriceLine;
 import vn.edu.iuh.models.enums.DayType;
 import vn.edu.iuh.models.enums.SeatType;
 import vn.edu.iuh.projections.v1.*;
 import vn.edu.iuh.repositories.RoomLayoutRepository;
+import vn.edu.iuh.repositories.SeatRepository;
 import vn.edu.iuh.repositories.TicketPriceLineRepository;
 import vn.edu.iuh.services.RoomLayoutService;
 import vn.edu.iuh.services.ShowTimeService;
-import vn.edu.iuh.services.TicketPriceService;
 
 import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,20 +30,20 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
     private final RoomLayoutRepository roomLayoutRepository;
     private final TicketPriceLineRepository ticketPriceLineRepository;
     private final ShowTimeService showTimeService;
+    private final SeatRepository seatRepository;
 
     @Override
     public SuccessResponse<RoomLayoutResponseDTO> getByShowTimeId(UUID showTimeId) {
         ShowTime showTime = showTimeService.getById(showTimeId);
+        List<Seat> bookedSeats = seatRepository.findBookedSeatsByShowTimeAndType(showTime);
         RoomLayoutProjection layout = roomLayoutRepository.findByRoom(showTime.getRoom(), RoomLayoutProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy layout"));
-        RoomLayoutResponseDTO roomLayoutResponseDTO = mapToResponseDTO(layout, showTime);
+        RoomLayoutResponseDTO roomLayoutResponseDTO = mapToResponseDTO(layout, showTime, bookedSeats);
         return new SuccessResponse<>(200, "success", "Thành công", roomLayoutResponseDTO);
     }
 
-    private RoomLayoutResponseDTO mapToResponseDTO(RoomLayoutProjection layout, ShowTime showTime) {
+    private RoomLayoutResponseDTO mapToResponseDTO(RoomLayoutProjection layout, ShowTime showTime, List<Seat> bookedSeats) {
         DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
         List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTime(dayType.name(), showTime.getStartDate(), showTime.getStartTime());
-
-//        Map<SeatType, Float> priceMap = createPriceMap(ticketPrice, dayType, showTime.getStartTime());
 
         Map<SeatType, Float> priceMap = prices.stream().collect(Collectors.toMap(
                 TicketPriceLineProjection::getSeatType,
@@ -58,28 +54,29 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
                 .id(layout.getId())
                 .maxColumn(layout.getMaxColumn())
                 .maxRow(layout.getMaxRow())
-                .rows(mapRows(layout.getRows(), priceMap))
+                .rows(mapRows(layout.getRows(), priceMap, bookedSeats))
                 .build();
     }
 
-    private List<RoomLayoutResponseDTO.RowSeatDTO> mapRows(List<RowSeatProjection> rows, Map<SeatType, Float> priceMap) {
+    private List<RoomLayoutResponseDTO.RowSeatDTO> mapRows(List<RowSeatProjection> rows, Map<SeatType, Float> priceMap, List<Seat> bookedSeats) {
         return rows.stream()
                 .map(row -> RoomLayoutResponseDTO.RowSeatDTO.builder()
                         .index(row.getIndex())
                         .name(row.getName())
-                        .seats(mapSeats(row.getSeats(), priceMap))
+                        .seats(mapSeats(row.getSeats(), priceMap, bookedSeats))
                         .build()
                 )
                 .toList();
     }
 
-    private List<RoomLayoutResponseDTO.SeatDTO> mapSeats(List<SeatProjection> seats, Map<SeatType, Float> priceMap) {
+    private List<RoomLayoutResponseDTO.SeatDTO> mapSeats(List<SeatProjection> seats, Map<SeatType, Float> priceMap, List<Seat> bookedSeats) {
         return seats.stream()
-                .map(seat -> mapSeatToDTO(seat, priceMap))
+                .map(seat -> mapSeatToDTO(seat, priceMap, bookedSeats))
                 .toList();
     }
 
-    private RoomLayoutResponseDTO.SeatDTO mapSeatToDTO(SeatProjection seat, Map<SeatType, Float> priceMap) {
+    private RoomLayoutResponseDTO.SeatDTO mapSeatToDTO(SeatProjection seat, Map<SeatType, Float> priceMap, List<Seat> bookedSeats) {
+        boolean isBooked = bookedSeats.stream().anyMatch(bookedSeat -> bookedSeat.getId() == seat.getId());
         return RoomLayoutResponseDTO.SeatDTO.builder()
                 .id(seat.getId())
                 .name(seat.getName())
@@ -88,7 +85,7 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
                 .columnIndex(seat.getColumnIndex())
                 .rowIndex(seat.getRowIndex())
                 .type(seat.getType())
-                .booked(false)
+                .booked(isBooked)
                 .price(priceMap.getOrDefault(seat.getType(), (float) 0))
                 .groupSeats(mapGroupSeats(seat.getGroupSeats()))
                 .build();
@@ -103,25 +100,6 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
                         .build()
                 )
                 .toList();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    private Map<SeatType, Float> createPriceMap(TicketPrice ticketPrice, DayType dayType, LocalTime showStartTime) {
-        return ticketPrice.getTicketPriceLines().stream()
-                .filter(line -> line.getApplyForDays().contains(dayType))
-                .filter(line -> !showStartTime.isBefore(line.getStartTime()) && !showStartTime.isAfter(line.getEndTime()))
-                .findFirst()
-                .map(TicketPriceLine::getTicketPriceDetails)
-                .orElse(Collections.emptyList())
-                .stream()
-                .collect(Collectors.toMap(
-                        TicketPriceDetail::getSeatType,
-                        TicketPriceDetail::getPrice
-                ));
-
     }
 
     public static DayType convertToDayType(DayOfWeek dayOfWeek) {
