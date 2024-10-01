@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Component
@@ -155,7 +154,6 @@ public class DataInitializer implements CommandLineRunner {
                         {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
                         {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
                         {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-
                 };
 
                 Cinema nguyenDuCinema = cinemaRepository.save(
@@ -178,7 +176,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout4, room1NguyenDuCinema);
+                insertLayout(layout4, room1NguyenDuCinema, 59);
 
                 Room room2NguyenDuCinema = roomRepository.save(
                         Room.builder()
@@ -187,7 +185,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout3, room2NguyenDuCinema);
+                insertLayout(layout3, room2NguyenDuCinema, 112);
 
                 Room room3NguyenDuCinema = roomRepository.save(
                         Room.builder()
@@ -196,7 +194,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout2, room3NguyenDuCinema);
+                insertLayout(layout2, room3NguyenDuCinema, 21);
 
                 Room room4NguyenDuCinema = roomRepository.save(
                         Room.builder()
@@ -205,7 +203,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout1, room4NguyenDuCinema);
+                insertLayout(layout1, room4NguyenDuCinema, 77);
 
                 cinemaRepository.save(
                         Cinema.builder()
@@ -266,7 +264,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout1, room1QuangTrungCinema);
+                insertLayout(layout1, room1QuangTrungCinema, 77);
 
                 Room room2QuangTrungCinema = roomRepository.save(
                         Room.builder()
@@ -275,7 +273,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout2, room2QuangTrungCinema);
+                insertLayout(layout2, room2QuangTrungCinema, 21);
 
                 Room room3QuangTrungCinema = roomRepository.save(
                         Room.builder()
@@ -284,7 +282,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout3, room3QuangTrungCinema);
+                insertLayout(layout3, room3QuangTrungCinema, 112);
 
                 Room room4QuangTrungCinema = roomRepository.save(
                         Room.builder()
@@ -293,7 +291,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
 
-                insertLayout(layout1, room4QuangTrungCinema);
+                insertLayout(layout1, room4QuangTrungCinema, 77);
 
                 cinemaRepository.save(
                         Cinema.builder()
@@ -1232,7 +1230,7 @@ public class DataInitializer implements CommandLineRunner {
             Role roleClient = roleRepository.save(new Role("ROLE_CLIENT"));
 
             if (userRepository.count() == 0) {
-                User user1 =  userRepository.save(User.builder()
+                User user1 = userRepository.save(User.builder()
                         .name("Lê Hữu Bằng")
                         .phone("0837699806")
                         .birthday(LocalDate.of(2002, 10, 10))
@@ -1356,13 +1354,13 @@ public class DataInitializer implements CommandLineRunner {
         );
 
         orderDetailRepository.save(
-            OrderDetail.builder()
-                    .product(product)
-                    .price(109000)
-                    .quantity(1)
-                    .order(order)
-                    .type(OrderDetailType.PRODUCT)
-                    .build()
+                OrderDetail.builder()
+                        .product(product)
+                        .price(109000)
+                        .quantity(1)
+                        .order(order)
+                        .type(OrderDetailType.PRODUCT)
+                        .build()
         );
 
         Seat seat1 = seatRepository.findById(seatId1).get();
@@ -1386,6 +1384,12 @@ public class DataInitializer implements CommandLineRunner {
                             .type(OrderDetailType.TICKET)
                             .build()
             );
+
+            showTime.setBookedSeat(showTime.getBookedSeat() + 2);
+            showTimeRepository.save(showTime);
+        } else {
+            showTime.setBookedSeat(showTime.getBookedSeat() + 1);
+            showTimeRepository.save(showTime);
         }
 
     }
@@ -1494,7 +1498,7 @@ public class DataInitializer implements CommandLineRunner {
         );
     }
 
-    private void insertLayout(int[][][] layout, Room room) {
+    private void insertLayout(int[][][] layout, Room room, int totalSeat) {
         int maxRow = layout.length;
         int maxColumn = layout[0].length;
         RoomLayout roomLayout = roomLayoutRepository.save(
@@ -1502,6 +1506,7 @@ public class DataInitializer implements CommandLineRunner {
                         .room(room)
                         .maxRow(maxRow)
                         .maxColumn(maxColumn)
+                        .totalSeat(totalSeat)
                         .build()
         );
 
