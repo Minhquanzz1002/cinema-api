@@ -1406,7 +1406,7 @@ public class DataInitializer implements CommandLineRunner {
         TicketPriceLine ticketPriceLine1 = ticketPriceLineRepository.save(
                 TicketPriceLine.builder()
                         .ticketPrice(month9_TicketPrice)
-                        .applyForDays(List.of(DayType.MONDAY, DayType.WEDNESDAY, DayType.FRIDAY))
+                        .applyForDays(List.of(DayType.MONDAY, DayType.WEDNESDAY, DayType.THURSDAY))
                         .startTime(LocalTime.of(0, 0))
                         .endTime(LocalTime.of(17, 0))
                         .audienceType(AudienceType.ADULT)
@@ -1418,7 +1418,7 @@ public class DataInitializer implements CommandLineRunner {
         TicketPriceLine ticketPriceLine2 = ticketPriceLineRepository.save(
                 TicketPriceLine.builder()
                         .ticketPrice(month9_TicketPrice)
-                        .applyForDays(List.of(DayType.MONDAY, DayType.WEDNESDAY, DayType.FRIDAY))
+                        .applyForDays(List.of(DayType.MONDAY, DayType.WEDNESDAY, DayType.THURSDAY))
                         .startTime(LocalTime.of(17, 1))
                         .endTime(LocalTime.of(23, 59))
                         .audienceType(AudienceType.ADULT)

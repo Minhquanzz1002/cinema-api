@@ -27,13 +27,13 @@ public interface TicketPriceLineRepository extends JpaRepository<TicketPriceLine
 //        AND :type MEMBER OF tpl.applyForDays
 //    """)
     @Query(value = """
-        SELECT tpd.price AS price,tpd.seat_type as seatType
-        FROM ticket_price_lines AS tpl
-            JOIN ticket_price_details AS tpd ON tpl.id = tpd.ticket_price_line_id
-            JOIN ticket_prices AS tp ON tpl.ticket_price_id = tp.id
-        WHERE (:date BETWEEN tp.start_date AND tp.end_date)
-    	    AND (:time BETWEEN tpl.start_time AND tpl.end_time)
-    	    AND :type = ANY(tpl.apply_for_days)
-    """, nativeQuery = true)
+                 SELECT tpd.price AS price,tpd.seat_type as seatType
+                 FROM ticket_price_lines AS tpl
+                     JOIN ticket_price_details AS tpd ON tpl.id = tpd.ticket_price_line_id
+                     JOIN ticket_prices AS tp ON tpl.ticket_price_id = tp.id
+                 WHERE (:date BETWEEN tp.start_date AND tp.end_date)
+             	    AND (:time BETWEEN tpl.start_time AND tpl.end_time)
+             	    AND :type = ANY(tpl.apply_for_days)
+            """, nativeQuery = true)
     List<TicketPriceLineProjection> findByDayTypeAndDateAndTime(@Param("type") String dayType, @Param("date") LocalDate date, @Param("time") LocalTime time);
 }
