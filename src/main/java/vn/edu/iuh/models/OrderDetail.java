@@ -18,6 +18,9 @@ public class OrderDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private int quantity;
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isGift = false;
     @Column(nullable = false)
     private float price;
     @ManyToOne

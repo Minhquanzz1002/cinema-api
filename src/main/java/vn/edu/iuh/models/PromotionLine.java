@@ -3,6 +3,7 @@ package vn.edu.iuh.models;
 import jakarta.persistence.*;
 import lombok.*;
 import vn.edu.iuh.models.enums.BaseStatus;
+import vn.edu.iuh.models.enums.PromotionApplyLimitType;
 import vn.edu.iuh.models.enums.PromotionLineType;
 
 import java.time.LocalDate;
@@ -30,6 +31,10 @@ public class PromotionLine extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PromotionLineType type;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private PromotionApplyLimitType applyLimitType = PromotionApplyLimitType.MIN;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BaseStatus status;
