@@ -12,6 +12,8 @@ public interface OrderProjection {
     String getCode();
 
     float getTotalPrice();
+    float getFinalAmount();
+    float getTotalDiscount();
 
     LocalDateTime getOrderDate();
 

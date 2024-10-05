@@ -3,6 +3,7 @@ package vn.edu.iuh.models;
 import jakarta.persistence.*;
 import lombok.*;
 import vn.edu.iuh.models.enums.BaseStatus;
+import vn.edu.iuh.models.enums.SeatType;
 
 @Data
 @Entity
@@ -17,10 +18,26 @@ public class PromotionDetail extends BaseEntity {
     private int id;
     private float discountValue;
     private float maxDiscountValue;
-    private float minOrderValue;
-    private int maxUsageCount;
-    private int currentUsageCount;
-    private int minProductQuantity;
+    @Builder.Default
+    @Column(nullable = false)
+    private float minOrderValue = 0;
+    @Column(nullable = false)
+    private int usageLimit;
+    @Builder.Default
+    @Column(nullable = false)
+    private int currentUsageCount = 0;
+    private int giftQuantity;
+    @ManyToOne
+    private Product requiredProduct;
+    private int requiredProductQuantity;
+    @Enumerated(EnumType.STRING)
+    private SeatType requiredSeatType;
+    private int requiredSeatQuantity;
+    @Enumerated(EnumType.STRING)
+    private SeatType giftSeatType;
+    private int giftSeatQuantity;
+    @ManyToOne
+    private Product giftProduct;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BaseStatus status;
