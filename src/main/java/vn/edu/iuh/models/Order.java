@@ -2,7 +2,6 @@ package vn.edu.iuh.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 import vn.edu.iuh.models.enums.OrderStatus;
 
 import java.time.LocalDateTime;
@@ -24,6 +23,10 @@ public class Order extends BaseEntity {
     private String code;
     @Column(nullable = false)
     private float totalPrice;
+    private float finalAmount;
+    @Column(nullable = false)
+    @Builder.Default
+    private float totalDiscount = 0;
     @Column(nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime orderDate = LocalDateTime.now();
@@ -38,4 +41,6 @@ public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(nullable = false)
     private User user;
+    @ManyToOne
+    private PromotionLine promotionLine;
 }

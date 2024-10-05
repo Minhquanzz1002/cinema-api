@@ -35,4 +35,6 @@ public class Product extends BaseEntity {
     private List<ProductPrice> productPrices;
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> orderDetails;
+    @OneToMany(mappedBy = "giftProduct")
+    private List<PromotionDetail> promotionDetails;
 }

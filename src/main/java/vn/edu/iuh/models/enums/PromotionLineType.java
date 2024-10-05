@@ -2,10 +2,23 @@ package vn.edu.iuh.models.enums;
 
 public enum PromotionLineType {
     /**
-     * Mua 1 tặng 1
+     * Mua vé tặng vé
      * Buy one, get one free
      */
-    BUY_ONE_GET_ONE_FREE,
+    BUY_PRODUCTS_GET_PRODUCTS,
+    /**
+     * Mua sản phẩm tặng sản phẩm
+     */
+    BUY_TICKETS_GET_TICKETS,
+    /**
+     * Mua sản phẩm tặng vé
+     * Buy one, get one free
+     */
+    BUY_PRODUCTS_GET_TICKETS,
+    /**
+     * Mua vé tặng sản phẩm
+     */
+    BUY_TICKETS_GET_PRODUCTS,
     /**
      * Chiếc khấu
      */
