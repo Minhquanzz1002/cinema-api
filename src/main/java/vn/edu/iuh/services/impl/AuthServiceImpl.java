@@ -9,10 +9,7 @@ import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.req.ChangePasswordRequestDTO;
-import vn.edu.iuh.dto.req.LoginRequestDTO;
-import vn.edu.iuh.dto.req.RegisterRequestDTO;
-import vn.edu.iuh.dto.req.RegistrationConfirmationRequestDTO;
+import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.dto.res.UserResponseDTO;
@@ -103,6 +100,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public SuccessResponse<UserResponseDTO> updateProfile(UserPrincipal userPrincipal, UpdateProfileRequestDTO updateProfileRequestDTO) {
+        User user = getUserByEmail(userPrincipal.getEmail());
+        user.setName(updateProfileRequestDTO.getName());
+        user.setPhone(updateProfileRequestDTO.getPhone());
+        user.setGender(updateProfileRequestDTO.getGender());
+        user.setBirthday(updateProfileRequestDTO.getBirthday());
+        user = userRepository.save(user);
+        UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
+        return new SuccessResponse<>(200, "success", "Cập nhật thông tin thành công", userResponseDTO);
+    }
+
+    @Override
     public SuccessResponse<?> forgotPassword(String email) {
         User user = getUserByEmail(email);
 
@@ -141,11 +150,11 @@ public class AuthServiceImpl implements AuthService {
     private String generateOTP() {
         Random random = new Random();
         return String.valueOf(random.nextInt(10)) +
-                random.nextInt(10) +
-                random.nextInt(10) +
-                random.nextInt(10) +
-                random.nextInt(10) +
-                random.nextInt(10);
+               random.nextInt(10) +
+               random.nextInt(10) +
+               random.nextInt(10) +
+               random.nextInt(10) +
+               random.nextInt(10);
     }
 
     private User getUserByEmail(String email) {

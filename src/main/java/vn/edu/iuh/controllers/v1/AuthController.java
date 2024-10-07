@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.res.UserResponseDTO;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
@@ -56,6 +57,20 @@ public class AuthController {
     @GetMapping("/profile")
     public SuccessResponse<?> profile(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return authService.getProfile(userPrincipal);
+    }
+
+    @Operation(
+            summary = "Cập nhật thông tin người dùng",
+            description = """
+                    Quy ước: Nam là `true`, Nữ là `false`
+                    """,
+            security = {
+                    @SecurityRequirement(name = "bearerAuth")
+            }
+    )
+    @PutMapping("/profile")
+    public SuccessResponse<UserResponseDTO> changeProfile(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid UpdateProfileRequestDTO updateProfileRequestDTO) {
+        return authService.updateProfile(userPrincipal, updateProfileRequestDTO);
     }
 
     @Operation(
