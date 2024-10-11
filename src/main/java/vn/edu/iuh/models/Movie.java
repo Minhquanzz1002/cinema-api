@@ -3,6 +3,7 @@ package vn.edu.iuh.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.MovieStatus;
 
 import java.time.LocalDate;
@@ -41,6 +42,10 @@ public class Movie extends BaseEntity {
     private String country;
     @Column(nullable = false)
     private int age;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private AgeRating ageRating = AgeRating.T18;
     private LocalDate releaseDate;
     @Enumerated(EnumType.STRING)
     private MovieStatus status;

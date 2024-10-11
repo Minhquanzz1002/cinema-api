@@ -801,6 +801,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .title("Deadpool & Wolverine")
                                         .duration(127)
                                         .summary("Deadpool 3 sẽ mang đến rất nhiều biến thể khác nhau của Wade Wilson, và không loại trừ khả năng một trong số họ đến từ dòng thời gian chính của MCU. Có không ít tin đồn liên quan đến việc Lady Deadpool cũng sẽ xuất hiện trong bom tấn này và do bà xã của Ryan Reynolds, Blake Lively thủ vai.")
+                                        .ageRating(AgeRating.T18)
                                         .age(18)
                                         .country("Mỹ")
                                         .rating(0)
@@ -864,6 +865,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .duration(103)
                                         .summary("Xuyên Không Cải Mệnh Gia Tộc xoay quanh Kie (Mint Ranchrawee), một sinh viên ngành khảo cổ học, sinh ra trong một gia đình gốc Hoa tại khu phố Tàu. Ngay từ nhỏ, Kie đã chứng kiến gia đình liên tục dính xui xẻo, ngồi không cũng gặp chuyện. Trong một lần cầu nguyện giải xui tại ngôi đền trong xóm, cô được thầy cúng tại đây cho biết, vận xui gia đình cô là nghiệp chướng do Kung (Alek Teeradetch) - ông tổ nhà cô gây ra. Dù không tin lắm vào trò mê tín, Kie nhờ thầy cúng giúp mình thực hiện nghi lễ thanh tẩy nghiệp chướng, cô vô tình bị đẩy về quá khứ và nhập xác vào người anh em thân thiết nhất của ông cố mình - Tai do March Chutavuth thủ vai. Từ đây, hàng loạt tình huống giở khóc giở cười liên tục ập đến, đồng thời những bí mật đen tối từ quá khứ đã dần được hé lộ.")
                                         .age(16)
+                                        .ageRating(AgeRating.T16)
                                         .country("Thái Lan")
                                         .rating(0)
                                         .imageLandscape("")
@@ -882,6 +884,7 @@ public class DataInitializer implements CommandLineRunner {
                                 Movie.builder()
                                         .code("MV000000006")
                                         .title("Con Nhót Mót Chồng")
+                                        .ageRating(AgeRating.T16)
                                         .duration(112)
                                         .summary("Lấy cảm hứng từ web drama Chuyện Xóm Tui, phiên bản điện ảnh sẽ mang một màu sắc hoàn toàn khác: hài hước hơn, gần gũi và nhiều cảm xúc hơn. Bộ phim là câu chuyện của Nhót - người phụ nữ “chưa kịp già” đã sắp bị mãn kinh, vội vàng đi tìm chồng. Nhưng sâu thẳm trong cô là khao khát muốn có một đứa con, và luôn muốn hàn gắn với người cha suốt ngày say xỉn của mình.")
                                         .age(16)
@@ -907,6 +910,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .duration(98)
                                         .summary("Oddity/ Quỷ Án kể về vụ án người phụ nữ Dani bị sát hại dã man tại ngôi nhà mà vợ chồng cô đang sửa sang ở vùng nông thôn hẻo lánh. Chồng cô - Ted đang làm bác sĩ tại bệnh viện tâm thần. Mọi nghi ngờ đổ dồn vào một bệnh nhân tại đây. Không may, nghi phạm đã chết. Một năm sau, em gái mù của Dani ghé tới. Darcy là nhà ngoại cảm tự xưng, mang theo nhiều món đồ kì quái. Cô đến nhà Ted để tìm chân tướng về cái chết của chị gái.")
                                         .age(16)
+                                        .ageRating(AgeRating.T16)
                                         .country("Ireland")
                                         .rating(0)
                                         .imageLandscape("")
@@ -1252,8 +1256,8 @@ public class DataInitializer implements CommandLineRunner {
                         .status(UserStatus.ACTIVE)
                         .build());
 
-                insertOrders(user1, "HD0001", 404, 405);
-                insertOrders(user2, "HD0002", 406, null);
+                insertOrders(user1, "HD00000001", 404, 405, 309000);
+                insertOrders(user2, "HD00000002", 406, null, 290000);
             }
         }
         insertTicketPrices();
@@ -1379,7 +1383,7 @@ public class DataInitializer implements CommandLineRunner {
         );
     }
 
-    private void insertOrders(User user, String orderCode, int seatId1, Integer seatId2) {
+    private void insertOrders(User user, String orderCode, int seatId1, Integer seatId2, float totalPrice) {
         Order order = orderRepository.save(
                 Order.builder()
                         .orderDate(LocalDateTime.now())
@@ -1387,6 +1391,8 @@ public class DataInitializer implements CommandLineRunner {
                         .totalPrice(100000)
                         .finalAmount(100000)
                         .showTime(showTime)
+                        .totalPrice(totalPrice)
+                        .finalAmount(totalPrice)
                         .user(user)
                         .status(OrderStatus.COMPLETED)
                         .build()

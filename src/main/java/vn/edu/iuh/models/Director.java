@@ -3,6 +3,7 @@ package vn.edu.iuh.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import vn.edu.iuh.models.enums.BaseStatus;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,8 @@ public class Director extends BaseEntity {
     private String image;
     private String country;
     private String bio;
+    @Builder.Default
+    private BaseStatus status = BaseStatus.ACTIVE;
     @ManyToMany(mappedBy = "directors")
     @JsonBackReference
     private List<Movie> movies;

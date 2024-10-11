@@ -3,9 +3,10 @@ package vn.edu.iuh.services.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -13,6 +14,8 @@ import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.*;
 import vn.edu.iuh.models.enums.*;
+import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
+import vn.edu.iuh.projections.admin.v1.BaseOrderProjection;
 import vn.edu.iuh.projections.v1.OrderProjection;
 import vn.edu.iuh.projections.v1.ProductProjection;
 import vn.edu.iuh.projections.v1.TicketPriceLineProjection;
@@ -415,6 +418,16 @@ public class OrderServiceImpl implements OrderService {
 
         OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         return new SuccessResponse<>(201, "success", "Xóa khuyến mãi thành công", orderProjection);
+    }
+
+    @Override
+    public Page<BaseOrderProjection> getAllOrders(Pageable pageable) {
+        return orderRepository.findAllByStatusAndDeleted(OrderStatus.COMPLETED, false, pageable, BaseOrderProjection.class);
+    }
+
+    @Override
+    public AdminOrderOverviewProjection getOrderByCode(String code) {
+        return orderRepository.findByCode(code, AdminOrderOverviewProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
     }
 
     private String generateOrderCode() {
