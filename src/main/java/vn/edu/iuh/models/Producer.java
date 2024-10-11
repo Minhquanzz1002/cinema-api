@@ -20,7 +20,8 @@ public class Producer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private BaseStatus status;
+    @Builder.Default
+    private BaseStatus status = BaseStatus.ACTIVE;
     @ManyToMany(mappedBy = "producers")
     @JsonBackReference
     private List<Movie> movies;

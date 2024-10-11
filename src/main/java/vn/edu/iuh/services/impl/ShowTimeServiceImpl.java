@@ -1,12 +1,16 @@
 package vn.edu.iuh.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
 import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.ShowTime;
+import vn.edu.iuh.models.enums.BaseStatus;
+import vn.edu.iuh.projections.admin.v1.AdminShowTimeProjection;
 import vn.edu.iuh.projections.v1.ShowTimeProjection;
 import vn.edu.iuh.repositories.ShowTimeRepository;
 import vn.edu.iuh.services.ShowTimeService;
@@ -33,5 +37,10 @@ public class ShowTimeServiceImpl implements ShowTimeService {
             showTimes = showTimeRepository.findAllByMovieAndStartDateAndCinema(Movie.builder().id(movieId).build(), date, Cinema.builder().id(cinemaId).build(), ShowTimeProjection.class);
         }
         return new SuccessResponse<>(200, "success", "Thành công", showTimes);
+    }
+
+    @Override
+    public Page<AdminShowTimeProjection> getAllShowTimes(Pageable pageable) {
+        return showTimeRepository.findAllByStatusAndDeleted(BaseStatus.ACTIVE, false, pageable, AdminShowTimeProjection.class);
     }
 }

@@ -1,5 +1,7 @@
 package vn.edu.iuh.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.models.Order;
@@ -16,7 +18,11 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     <T> Optional<T> findById(UUID id, Class<T> classType);
 
+    <T> Optional<T> findByCode(String code, Class<T> classType);
+
     Optional<Order> findByIdAndUser(UUID id, User user);
 
     void deleteByIdAndUser(UUID uuid, User user);
+
+    <T> Page<T> findAllByStatusAndDeleted(OrderStatus status, boolean deleted, Pageable pageable, Class<T> classType);
 }

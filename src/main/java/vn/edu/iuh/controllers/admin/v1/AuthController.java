@@ -1,4 +1,4 @@
-package vn.edu.iuh.controllers.v2;
+package vn.edu.iuh.controllers.admin.v1;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
