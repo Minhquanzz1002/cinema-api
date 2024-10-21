@@ -1,8 +1,10 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.SeatType;
 
 @Getter
@@ -23,6 +25,11 @@ public class TicketPriceDetail extends BaseEntity {
     @Column(nullable = false)
     private float price;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(nullable = false)
     private TicketPriceLine ticketPriceLine;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private BaseStatus status = BaseStatus.ACTIVE;
 }

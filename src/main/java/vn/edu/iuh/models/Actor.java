@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import vn.edu.iuh.models.enums.BaseStatus;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @Entity
 @SuperBuilder
+@ToString
 @Table(name = "actors")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,9 +22,11 @@ public class Actor extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false, unique = true, length = 8)
+    private String code;
     @Column(nullable = false)
     private String name;
-    private Date birthday;
+    private LocalDate birthday;
     private String country;
     private String image;
     private String bio;
@@ -30,6 +34,7 @@ public class Actor extends BaseEntity {
     private BaseStatus status = BaseStatus.ACTIVE;
     @ManyToMany(mappedBy = "actors")
     @JsonBackReference
+    @ToString.Exclude
     private List<Movie> movies;
 
 }

@@ -6,12 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.res.MovieFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.enums.MovieStatus;
 import vn.edu.iuh.projections.admin.v1.AdminMovieProjection;
 import vn.edu.iuh.projections.v1.MovieProjection;
@@ -37,5 +35,11 @@ public class MovieController {
     public SuccessResponse<MovieFiltersResponseDTO> getMovieFilters() {
         MovieFiltersResponseDTO response = movieService.getMovieFilters();
         return new SuccessResponse<>(200, "success", "Thành công", response);
+    }
+
+    @GetMapping("/{code}")
+    public SuccessResponse<?> getMovieByCode(@PathVariable String code) {
+        Movie movie = movieService.getMovieByCode(code);
+        return new SuccessResponse<>(200, "success", "Thành công", movie);
     }
 }

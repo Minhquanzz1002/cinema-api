@@ -44,7 +44,7 @@ public class AuthController {
     )
     @PostMapping("/login")
     public SuccessResponse<UserAuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
-        return authService.login(loginRequestDTO);
+        return new SuccessResponse<>(200, "success", "Thành công", authService.login(loginRequestDTO, false));
     }
 
     @Operation(

@@ -539,84 +539,108 @@ public class DataInitializer implements CommandLineRunner {
                     /* Insert actors */
                     Actor hoaiLinhActor = actorRepository.save(
                             Actor.builder()
+                                    .code("DV000001")
                                     .name("Hoài Linh")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FHoai-Linh.jpg?alt=media")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor tuanTranActor = actorRepository.save(
                             Actor.builder()
                                     .name("Tuấn Trần")
+                                    .code("DV000002")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor leGiangActor = actorRepository.save(
                             Actor.builder()
                                     .name("Lê Giang")
+                                    .code("DV000003")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor diepBaoNgocActor = actorRepository.save(
                             Actor.builder()
                                     .name("Diệp Bảo Ngọc")
+                                    .code("DV000004")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor ryanReynoldsActor = actorRepository.save(
                             Actor.builder()
                                     .name("Ryan Reynolds")
+                                    .code("DV000005")
                                     .build()
                     );
 
                     Actor hughJackmanActor = actorRepository.save(
                             Actor.builder()
                                     .name("Hugh Jackman")
+                                    .code("DV000006")
                                     .build()
                     );
 
                     Actor patrickStewartActor = actorRepository.save(
                             Actor.builder()
                                     .name("Patrick Stewart")
+                                    .code("DV000007")
                                     .build()
                     );
 
                     Actor trucAnhActor = actorRepository.save(
                             Actor.builder()
                                     .name("Trúc Anh")
+                                    .code("DV000008")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor tranNghiaActor = actorRepository.save(
                             Actor.builder()
                                     .name("Trần Nghĩa")
+                                    .code("DV000009")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor thaiHoaActor = actorRepository.save(
                             Actor.builder()
                                     .name("Thái Hòa")
+                                    .code("DV000010")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor thuTrangActor = actorRepository.save(
                             Actor.builder()
                                     .name("Thu Trang")
+                                    .code("DV000011")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor tienLuatActor = actorRepository.save(
                             Actor.builder()
                                     .name("Tiến Luật")
+                                    .code("DV000012")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor teeradetchMetawarayutActor = actorRepository.save(
                             Actor.builder()
+                                    .code("DV000013")
                                     .name("Teeradetch Metawarayut")
                                     .build()
                     );
 
                     Actor chutavuthPattarakampolActor = actorRepository.save(
                             Actor.builder()
+                                    .code("DV000014")
                                     .name("Chutavuth Pattarakampol")
                                     .build()
                     );
@@ -624,29 +648,34 @@ public class DataInitializer implements CommandLineRunner {
                     Actor johnnyFrenchActor = actorRepository.save(
                             Actor.builder()
                                     .name("Johnny French")
+                                    .code("DV000015")
                                     .build()
                     );
 
                     Actor ranchraweeUakoolwarawatActor = actorRepository.save(
                             Actor.builder()
+                                    .code("DV000016")
                                     .name("Ranchrawee Uakoolwarawat")
                                     .build()
                     );
 
                     Actor carolynBrackenActor = actorRepository.save(
                             Actor.builder()
+                                    .code("DV000017")
                                     .name("Carolyn Bracken")
                                     .build()
                     );
 
                     Actor nicoleGarciaActor = actorRepository.save(
                             Actor.builder()
+                                    .code("DV000018")
                                     .name("Nicole Garcia")
                                     .build()
                     );
 
                     Actor gerardDepardieuActor = actorRepository.save(
                             Actor.builder()
+                                    .code("DV000019")
                                     .name("Gérard Depardieu")
                                     .build()
                     );
@@ -654,18 +683,24 @@ public class DataInitializer implements CommandLineRunner {
                     Actor vietHuongActor = actorRepository.save(
                             Actor.builder()
                                     .name("Việt Hương")
+                                    .code("DV000020")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor trungDanActor = actorRepository.save(
                             Actor.builder()
                                     .name("Trung Dân")
+                                    .code("DV000021")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
                     Actor nsutThanhLocActor = actorRepository.save(
                             Actor.builder()
                                     .name("NSUT Thành Lộc")
+                                    .code("DV000022")
+                                    .country("Việt Nam")
                                     .build()
                     );
 
@@ -776,7 +811,7 @@ public class DataInitializer implements CommandLineRunner {
                     if (movieRepository.count() == 0) {
                         Movie lamGiauVoiMaMovie = movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000001")
+                                        .code("MV000001")
                                         .title("Làm Giàu Với Ma")
                                         .duration(112)
                                         .summary("Phim mới Làm Giàu Với Ma kể về Lanh (Tuấn Trần) - con trai của ông Đạo làm nghề mai táng (Hoài Linh), lâm vào đường cùng vì cờ bạc. Trong cơn túng quẫn, “duyên tình” đẩy đưa anh gặp một ma nữ (Diệp Bảo Ngọc) và cùng nhau thực hiện những “kèo thơm\" để phục vụ mục đích của cả hai.")
@@ -797,7 +832,7 @@ public class DataInitializer implements CommandLineRunner {
                         );
                         movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000002")
+                                        .code("MV000002")
                                         .title("Deadpool & Wolverine")
                                         .duration(127)
                                         .summary("Deadpool 3 sẽ mang đến rất nhiều biến thể khác nhau của Wade Wilson, và không loại trừ khả năng một trong số họ đến từ dòng thời gian chính của MCU. Có không ít tin đồn liên quan đến việc Lady Deadpool cũng sẽ xuất hiện trong bom tấn này và do bà xã của Ryan Reynolds, Blake Lively thủ vai.")
@@ -819,7 +854,7 @@ public class DataInitializer implements CommandLineRunner {
                         );
                         movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000003")
+                                        .code("MV000003")
                                         .title("Mắt Biếc")
                                         .duration(117)
                                         .summary("Đạo diễn Victor Vũ trở lại với một tác phẩm chuyển thể từ truyện ngắn cùng tên nổi tiếng của nhà văn Nguyễn Nhật Ánh: Mắt Biếc. Phim kể về chuyện tình đơn phương của chàng thanh niên Ngạn dành cho cô bạn từ thuở nhỏ Hà Lan... Ngạn và Hà Lan vốn là hai người bạn từ thuở nhỏ, cùng ở làng Đo Đo an bình. Họ cùng nhau đi học, cùng trải qua quãng đời áo trắng ngây thơ vụng dại với những cảm xúc bồi hồi của tuổi thiếu niên. \"Ngày cô ấy đi theo chốn phồn hoa, chàng trai bơ vơ từ xa...\", Hà Lan lên thành phố học và sớm bị thành thị xa hoa làm cho quên lãng Đo Đo. Cô quên mất cậu bạn thân mà chạy theo gã lãng tử hào hoa Dũng. Để rồi...")
@@ -840,7 +875,7 @@ public class DataInitializer implements CommandLineRunner {
                         );
                         movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000004")
+                                        .code("MV000004")
                                         .title("Ông Chú Người Mỹ Của Tôi")
                                         .duration(125)
                                         .summary("My American Uncle/ Ông Chú Người Mỹ Của Tôi là phim hài tình cảm thập niên 80. Jean Le Gall xuất thân từ giai cấp tư sản. Anh tham vọng theo đuổi sự nghiệp chính trị và văn học. Jean bỏ rơi vợ con mình chạy theo nữ diễn viên Janine Garnier. Janine rời xa gia đình để sống cuộc đời riêng. Theo yêu cầu của vợ Jean, Janine rời bỏ anh, sau đó trở thành cố vấn cho một tập đoàn dệt may. Tại đây, cô phải giải quyết vụ án hóc búa của René Ragueneau – từ  con trai nông dântrở thành giám đốc nhà máy. Giáo sư Henri Laborit quan sát câu chuyện của họ, thông qua đó, giải thích về hành vi của con người.")
@@ -860,7 +895,7 @@ public class DataInitializer implements CommandLineRunner {
                         );
                         movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000005")
+                                        .code("MV000005")
                                         .title("Xuyên Không Cải Mệnh Gia Tộc")
                                         .duration(103)
                                         .summary("Xuyên Không Cải Mệnh Gia Tộc xoay quanh Kie (Mint Ranchrawee), một sinh viên ngành khảo cổ học, sinh ra trong một gia đình gốc Hoa tại khu phố Tàu. Ngay từ nhỏ, Kie đã chứng kiến gia đình liên tục dính xui xẻo, ngồi không cũng gặp chuyện. Trong một lần cầu nguyện giải xui tại ngôi đền trong xóm, cô được thầy cúng tại đây cho biết, vận xui gia đình cô là nghiệp chướng do Kung (Alek Teeradetch) - ông tổ nhà cô gây ra. Dù không tin lắm vào trò mê tín, Kie nhờ thầy cúng giúp mình thực hiện nghi lễ thanh tẩy nghiệp chướng, cô vô tình bị đẩy về quá khứ và nhập xác vào người anh em thân thiết nhất của ông cố mình - Tai do March Chutavuth thủ vai. Từ đây, hàng loạt tình huống giở khóc giở cười liên tục ập đến, đồng thời những bí mật đen tối từ quá khứ đã dần được hé lộ.")
@@ -882,7 +917,7 @@ public class DataInitializer implements CommandLineRunner {
                         );
                         movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000006")
+                                        .code("MV000006")
                                         .title("Con Nhót Mót Chồng")
                                         .ageRating(AgeRating.T16)
                                         .duration(112)
@@ -905,7 +940,7 @@ public class DataInitializer implements CommandLineRunner {
 
                         movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000007")
+                                        .code("MV000007")
                                         .title("Quỷ Án")
                                         .duration(98)
                                         .summary("Oddity/ Quỷ Án kể về vụ án người phụ nữ Dani bị sát hại dã man tại ngôi nhà mà vợ chồng cô đang sửa sang ở vùng nông thôn hẻo lánh. Chồng cô - Ted đang làm bác sĩ tại bệnh viện tâm thần. Mọi nghi ngờ đổ dồn vào một bệnh nhân tại đây. Không may, nghi phạm đã chết. Một năm sau, em gái mù của Dani ghé tới. Darcy là nhà ngoại cảm tự xưng, mang theo nhiều món đồ kì quái. Cô đến nhà Ted để tìm chân tướng về cái chết của chị gái.")
@@ -927,7 +962,7 @@ public class DataInitializer implements CommandLineRunner {
 
                         movieRepository.save(
                                 Movie.builder()
-                                        .code("MV000000008")
+                                        .code("MV000008")
                                         .title("Ma Da")
                                         .duration(94)
                                         .summary("Phim kể về hành trình của bà Lệ, người làm nghề vớt xác người chết trên sông để đưa về với gia đình. Trong quá trình làm nghề, bà Lệ đắc tội với Ma Da, một oan hồn sống dưới sông nước thường xuyên kéo chân người để thế mạng cho mình đi đầu thai. Ân oán của cả hai khiến cho Ma Da bắt mất bé Nhung, con gái của bà Lệ. Bà Lệ phải nhờ đến sự giúp đỡ của những người bên cạnh để cùng nhau lên đường tìm cách cứu bé Nhung và mở ra những bí mật đằng sau oan hồn Ma Da kia.")
@@ -1282,7 +1317,7 @@ public class DataInitializer implements CommandLineRunner {
                         .name("Giảm giá chào đón thành viên mới")
                         .code("CHAOBANMOI")
                         .startDate(currentDate)
-                        .endDate(currentDate.plusMonths(1))
+                        .endDate(YearMonth.now().atEndOfMonth())
                         .type(PromotionLineType.CASH_REBATE)
                         .status(BaseStatus.ACTIVE)
                         .build()
@@ -1316,7 +1351,7 @@ public class DataInitializer implements CommandLineRunner {
                         .name("Tri ân khách hàng")
                         .code("SALE10")
                         .startDate(currentDate)
-                        .endDate(currentDate.plusMonths(2))
+                        .endDate(YearMonth.now().atEndOfMonth())
                         .type(PromotionLineType.PRICE_DISCOUNT)
                         .status(BaseStatus.ACTIVE)
                         .build()
@@ -1340,7 +1375,7 @@ public class DataInitializer implements CommandLineRunner {
                         .name("Tri ân khách hàng")
                         .code("1VETANG1VE")
                         .startDate(currentDate)
-                        .endDate(currentDate.plusMonths(1))
+                        .endDate(YearMonth.now().atEndOfMonth())
                         .type(PromotionLineType.BUY_TICKETS_GET_TICKETS)
                         .status(BaseStatus.ACTIVE)
                         .build()
@@ -1363,7 +1398,7 @@ public class DataInitializer implements CommandLineRunner {
                         .name("Tri ân khách hàng")
                         .code("1VETANG1COMBO")
                         .startDate(currentDate)
-                        .endDate(currentDate.plusMonths(1))
+                        .endDate(YearMonth.now().atEndOfMonth())
                         .type(PromotionLineType.BUY_TICKETS_GET_PRODUCTS)
                         .status(BaseStatus.ACTIVE)
                         .build()
@@ -1669,20 +1704,9 @@ public class DataInitializer implements CommandLineRunner {
                 ProductPrice.builder()
                         .price(100000)
                         .product(combo1)
-                        .startDate(currentDate)
-                        .endDate(currentDate.plusYears(1))
+                        .startDate(currentDate.plusYears(1))
+                        .endDate(currentDate.plusYears(2))
                         .status(BaseStatus.INACTIVE)
-                        .build()
-        );
-
-        productPriceRepository.save(
-                ProductPrice.builder()
-                        .price(110000)
-                        .product(combo1)
-                        .startDate(currentDate)
-                        .endDate(currentDate.plusYears(1))
-                        .status(BaseStatus.ACTIVE)
-                        .deleted(true)
                         .build()
         );
 
@@ -1732,7 +1756,7 @@ public class DataInitializer implements CommandLineRunner {
                         .name("iCombo 2 Big STD")
                         .description("02 Ly nước ngọt size L + 01 Hộp bắp")
                         .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo2-copy-min_1711699849615.jpg?alt=media")
-                        .status(ProductStatus.ACTIVE)
+                        .status(ProductStatus.INACTIVE)
                         .build()
         );
 

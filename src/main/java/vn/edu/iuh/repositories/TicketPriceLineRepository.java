@@ -14,6 +14,7 @@ import vn.edu.iuh.projections.v1.TicketPriceLineProjection;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TicketPriceLineRepository extends JpaRepository<TicketPriceLine, Integer> {
@@ -36,4 +37,6 @@ public interface TicketPriceLineRepository extends JpaRepository<TicketPriceLine
              	    AND :type = ANY(tpl.apply_for_days)
             """, nativeQuery = true)
     List<TicketPriceLineProjection> findByDayTypeAndDateAndTime(@Param("type") String dayType, @Param("date") LocalDate date, @Param("time") LocalTime time);
+
+    Optional<TicketPriceLine> findByIdAndDeleted(int id, boolean deleted);
 }

@@ -15,19 +15,23 @@ import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
 @Slf4j
-@RestController("authControllerV2")
+@RestController("authControllerAdminV1")
 @RequiredArgsConstructor
-@RequestMapping("/v2/auth")
-@Tag(name = "Authentication V2", description = "Xác thực người dùng")
+@RequestMapping("/admin/v1/auth")
+@Tag(name = "Authentication Admin V1", description = "Xác thực người dùng")
 public class AuthController {
     private final AuthService authService;
 
     @Operation(
-            summary = "Đăng nhập"
+            summary = "Đăng nhập",
+            description = """
+                    Access token: 24 hours
+                    Refresh token: 14 days
+                    """
     )
     @PostMapping("/login")
     public SuccessResponse<UserAuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
-        return authService.login(loginRequestDTO);
+        return new SuccessResponse<>(200, "success", "Thành công", authService.login(loginRequestDTO, true));
     }
 
     @Operation(

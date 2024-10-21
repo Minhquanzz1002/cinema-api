@@ -8,10 +8,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.models.Product;
 import vn.edu.iuh.models.enums.ProductStatus;
+import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
 import vn.edu.iuh.projections.admin.v1.BaseProductWithPriceProjection;
 import vn.edu.iuh.projections.v1.ProductProjection;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
@@ -47,27 +49,66 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = """
                 SELECT p.id as id, p.code as code, p.name as name, p.description as description, p.image as image, p.status as status, pp.price as price
                 FROM Product p LEFT JOIN p.productPrices pp\s
-                WHERE pp.deleted = false\s
+                    ON pp.deleted = false\s
                     AND pp.status = 'ACTIVE'\s
                     AND pp.startDate <= CURRENT_DATE\s
                     AND pp.endDate >= CURRENT_DATE\s
-                    AND p.deleted = :deleted\s
+                WHERE p.deleted = :deleted\s
                     AND p.status = :status
+                    AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
+                    AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
             """,
             countQuery = """
                             SELECT COUNT(DISTINCT p.id)
                             FROM Product p\s
-                            LEFT JOIN p.productPrices pp\s
-                            WHERE pp.deleted = false\s
-                                AND pp.status = 'ACTIVE'\s
-                                AND pp.startDate <= CURRENT_DATE\s
-                                AND pp.endDate >= CURRENT_DATE\s
-                                AND p.deleted = :deleted\s
+                            WHERE p.deleted = :deleted
                                 AND p.status = :status
+                                AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
+                                AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
                     """)
-    Page<BaseProductWithPriceProjection> findWithPriceByStatusAndDeleted(@Param("status") ProductStatus status,
-                                                                         @Param("deleted") boolean deleted,
-                                                                         Pageable pageable);
+    Page<BaseProductWithPriceProjection> findAllWithPriceByCodeContainingAndNameContainingAndStatusAndDeleted(String code, String name,
+                                                                                                              @Param("status") ProductStatus status,
+                                                                                                              @Param("deleted") boolean deleted,
+                                                                                                              Pageable pageable);
+
+    @Query(value = """
+                SELECT p.id as id, p.code as code, p.name as name, p.description as description, p.image as image, p.status as status, pp.price as price
+                FROM Product p LEFT JOIN p.productPrices pp\s
+                    ON pp.deleted = false\s
+                    AND pp.status = 'ACTIVE'\s
+                    AND pp.startDate <= CURRENT_DATE\s
+                    AND pp.endDate >= CURRENT_DATE\s
+                WHERE p.deleted = :deleted\s
+                    AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
+                    AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+            """,
+            countQuery = """
+                            SELECT COUNT(DISTINCT p.id)
+                            FROM Product p\s
+                            WHERE p.deleted = :deleted
+                                AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
+                                AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+                    """)
+    Page<BaseProductWithPriceProjection> findAllWithPriceByCodeContainingAndNameContainingAndDeleted(String code, String name,
+                                                                                                     @Param("deleted") boolean deleted,
+                                                                                                     Pageable pageable);
+
+    @Query(value = """
+                SELECT p.id as id, p.code as code, p.name as name, p.description as description, p.image as image, p.status as status, pp.price as price
+                FROM Product p LEFT JOIN p.productPrices pp\s
+                    ON pp.deleted = false\s
+                    AND pp.status = 'ACTIVE'\s
+                    AND pp.startDate <= CURRENT_DATE\s
+                    AND pp.endDate >= CURRENT_DATE\s
+                WHERE p.deleted = :deleted
+                    AND p.code = :code
+            """)
+    Optional<BaseProductWithPriceProjection> findWithPriceByCodeAndDeleted(@Param("code") String code, @Param("deleted") boolean deleted);
 
     <T> Page<T> findAllByStatusAndDeleted(ProductStatus status, boolean deleted, Pageable pageable, Class<T> classType);
+    <T> Optional<T> findByCodeAndDeleted(String code, boolean deleted, Class<T> classType);
+
+    Optional<Product> findTopByOrderByCodeDesc();
+    Optional<Product> findByCodeAndDeleted(String code, boolean deleted);
+    boolean existsByCode(String code);
 }

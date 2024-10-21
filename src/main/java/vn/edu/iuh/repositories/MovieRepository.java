@@ -16,4 +16,5 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     <T> Page<T> findAllByStatusAndDeleted(Pageable pageable, MovieStatus status, boolean deleted, Class<T> classType);
 
     Optional<Movie> findBySlugAndDeleted(String slug, boolean deleted);
+    Optional<Movie> findByCodeAndDeleted(String code, boolean deleted);
 }
