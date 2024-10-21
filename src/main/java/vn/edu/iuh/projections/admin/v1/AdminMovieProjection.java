@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public interface AdminMovieProjection {
     Integer getId();
+    String getCode();
 
     String getTitle();
 

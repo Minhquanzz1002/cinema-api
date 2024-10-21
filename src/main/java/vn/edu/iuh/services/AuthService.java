@@ -8,10 +8,16 @@ import vn.edu.iuh.security.UserPrincipal;
 
 public interface AuthService {
     SuccessResponse<?> register(RegisterRequestDTO registerRequestDTO);
+
     SuccessResponse<?> confirmRegister(RegistrationConfirmationRequestDTO registrationConfirmationRequestDTO);
-    SuccessResponse<UserAuthResponseDTO> login(LoginRequestDTO loginRequestDTO);
+
+    UserAuthResponseDTO login(LoginRequestDTO loginRequestDTO, boolean isAdminLogin);
+
     SuccessResponse<UserResponseDTO> getProfile(UserPrincipal userPrincipal);
+
     SuccessResponse<UserResponseDTO> updateProfile(UserPrincipal userPrincipal, UpdateProfileRequestDTO updateProfileRequestDTO);
+
     SuccessResponse<?> forgotPassword(String email);
+
     SuccessResponse<UserAuthResponseDTO> changePassword(UserPrincipal userPrincipal, ChangePasswordRequestDTO changePasswordRequestDTO);
 }

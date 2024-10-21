@@ -67,4 +67,9 @@ public class MovieServiceImpl implements MovieService {
         }
         return movies;
     }
+
+    @Override
+    public Movie getMovieByCode(String code) {
+        return movieRepository.findByCodeAndDeleted(code, false).orElseThrow(() -> new DataNotFoundException(""));
+    }
 }

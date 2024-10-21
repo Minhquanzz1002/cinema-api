@@ -14,4 +14,5 @@ public interface MovieService {
     SuccessResponse<Movie> getMovie(String slug);
     MovieFiltersResponseDTO getMovieFilters();
     Page<AdminMovieProjection> getAllMovies(Pageable pageable, String title, MovieStatus status);
+    Movie getMovieByCode(String code);
 }

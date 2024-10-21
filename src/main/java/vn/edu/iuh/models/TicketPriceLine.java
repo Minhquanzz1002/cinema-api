@@ -1,12 +1,14 @@
 
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import vn.edu.iuh.models.enums.AudienceType;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.DayType;
 
 import java.time.LocalTime;
@@ -35,9 +37,14 @@ public class TicketPriceLine extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AudienceType audienceType = AudienceType.ADULT;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
     private TicketPrice ticketPrice;
     @OneToMany(mappedBy = "ticketPriceLine")
     private List<TicketPriceDetail> ticketPriceDetails;
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BaseStatus status = BaseStatus.ACTIVE;
 }

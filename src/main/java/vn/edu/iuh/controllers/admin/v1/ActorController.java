@@ -1,14 +1,14 @@
 package vn.edu.iuh.controllers.admin.v1;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.dto.admin.v1.req.CreateActorRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Actor;
 import vn.edu.iuh.services.ActorService;
@@ -22,9 +22,16 @@ public class ActorController {
     private final ActorService actorService;
 
     @GetMapping
-    public SuccessResponse<Page<Actor>> getActors(@PageableDefault(sort = "name") Pageable pageable) {
-        Page<Actor> actorPage = actorService.getAllActors(pageable);
+    public SuccessResponse<Page<Actor>> getActors(@PageableDefault(sort = "code") Pageable pageable,
+                                                  @RequestParam(defaultValue = "") String code,
+                                                  @RequestParam(defaultValue = "") String name) {
+        Page<Actor> actorPage = actorService.getAllActors(pageable, code, name);
         return new SuccessResponse<>(200, "success", "Thành công", actorPage);
+    }
+
+    @PostMapping
+    public SuccessResponse<Actor> createActor(@RequestBody @Valid CreateActorRequestDTO createActorRequestDTO) {
+        return new SuccessResponse<>(200, "success", "Thành công", actorService.createActor(createActorRequestDTO));
     }
 
 }
