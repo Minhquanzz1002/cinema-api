@@ -1,5 +1,6 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -31,5 +32,6 @@ public class ProductPrice extends BaseEntity {
     private BaseStatus status = BaseStatus.INACTIVE;
     @ManyToOne
     @JoinColumn(nullable = false)
+    @JsonIgnore
     private Product product;
 }

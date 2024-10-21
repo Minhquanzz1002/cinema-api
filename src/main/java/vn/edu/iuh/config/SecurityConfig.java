@@ -50,6 +50,7 @@ public class SecurityConfig {
             "/v1/rooms/{roomId}/layout",
             "/v1/products",
             "/v1/promotions",
+            "/admin/v1/auth/login",
             "/admin/v1/movies/**",
             "/admin/v1/actors/**",
             "/admin/v1/directors/**",

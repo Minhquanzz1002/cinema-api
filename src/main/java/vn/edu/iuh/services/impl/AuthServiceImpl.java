@@ -10,8 +10,8 @@ import org.passay.PasswordGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.req.*;
-import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.dto.res.UserResponseDTO;
 import vn.edu.iuh.exceptions.*;
 import vn.edu.iuh.models.Role;
@@ -22,7 +22,6 @@ import vn.edu.iuh.repositories.UserRepository;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 import vn.edu.iuh.services.EmailService;
-import vn.edu.iuh.services.JwtBlacklistService;
 import vn.edu.iuh.services.OTPService;
 import vn.edu.iuh.utils.JwtUtil;
 
@@ -40,7 +39,6 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final JwtBlacklistService jwtBlacklistService;
     private final OTPService otpService;
 
     @Override
@@ -82,14 +80,26 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public SuccessResponse<UserAuthResponseDTO> login(LoginRequestDTO loginRequestDTO) {
+    public UserAuthResponseDTO login(LoginRequestDTO loginRequestDTO, boolean isAdminLogin) {
         User user = getUserByEmail(loginRequestDTO.getEmail());
         validateUserStatus(user.getStatus());
 
         if (!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
             throw new UnauthorizedException("Tài khoản hoặc mật khẩu không đúng. Hãy nhập lại");
         }
-        return new SuccessResponse<>(200, "success", "Đăng nhập thành công", createAuthResponse(user));
+
+        boolean isAdminUser = user.getRole().getName().equals("ROLE_ADMIN");
+        if (isAdminLogin) {
+            if (!isAdminUser) {
+                throw new UnauthorizedException("Tài khoản không có quyền truy cập");
+            }
+        } else {
+            if (isAdminUser) {
+                throw new UnauthorizedException("Tài khoản không có quyền truy cập");
+            }
+        }
+
+        return createAuthResponse(user);
     }
 
     @Override

@@ -57,6 +57,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {ValidationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse<String> handleMethodArgumentTypeMismatchException(ValidationException exception) {
+        return new ErrorResponse<>(
+                400,
+                "error",
+                "Truyền giá trị không hợp lệ",
+                exception.getMessage()
+        );
+    }
+
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {

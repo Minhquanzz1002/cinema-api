@@ -1,0 +1,38 @@
+package vn.edu.iuh.services.impl;
+
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceDetailRequestDTO;
+import vn.edu.iuh.exceptions.BadRequestException;
+import vn.edu.iuh.exceptions.DataNotFoundException;
+import vn.edu.iuh.models.TicketPriceDetail;
+import vn.edu.iuh.models.TicketPriceLine;
+import vn.edu.iuh.repositories.TicketPriceDetailRepository;
+import vn.edu.iuh.repositories.TicketPriceLineRepository;
+import vn.edu.iuh.services.TicketPriceLineService;
+
+@Service
+@RequiredArgsConstructor
+public class TicketPriceLineServiceImpl implements TicketPriceLineService {
+    private final TicketPriceLineRepository ticketPriceLineRepository;
+    private final TicketPriceDetailRepository ticketPriceDetailRepository;
+    private final ModelMapper modelMapper;
+
+
+    @Override
+    public TicketPriceDetail createTicketPriceDetail(int lineId, CreateTicketPriceDetailRequestDTO createTicketPriceDetailRequestDTO) {
+        TicketPriceLine ticketPriceLine = ticketPriceLineRepository.findByIdAndDeleted(lineId, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy dòng giá vé"));
+
+        boolean seatTypeExists = ticketPriceLine.getTicketPriceDetails().stream()
+                .anyMatch(detail -> detail.getSeatType() == createTicketPriceDetailRequestDTO.getSeatType());
+
+        if (seatTypeExists) {
+            throw new BadRequestException("Loại ghế đã tồn tại");
+        }
+
+        TicketPriceDetail ticketPriceDetail = modelMapper.map(createTicketPriceDetailRequestDTO, TicketPriceDetail.class);
+        ticketPriceDetail.setTicketPriceLine(ticketPriceLine);
+        return ticketPriceDetailRepository.save(ticketPriceDetail);
+    }
+}
