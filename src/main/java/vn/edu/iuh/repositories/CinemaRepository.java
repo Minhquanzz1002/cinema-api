@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
     <T> List<T> findAllProjectionBy(Class<T> classType);
+    <T> List<T> findAllProjectionByDeleted(boolean deleted, Class<T> classType);
 }

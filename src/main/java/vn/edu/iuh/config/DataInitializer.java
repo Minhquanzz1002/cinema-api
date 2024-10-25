@@ -286,7 +286,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 Room room4QuangTrungCinema = roomRepository.save(
                         Room.builder()
-                                .name("Rạp 2")
+                                .name("Rạp 4")
                                 .cinema(quangTrungCinema)
                                 .build()
                 );
@@ -707,48 +707,56 @@ public class DataInitializer implements CommandLineRunner {
                     /* Insert directors */
                     Director shawnLevyDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000001")
                                     .name("Shawn Levy")
                                     .build()
                     );
 
                     Director trungLunDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000002")
                                     .name("Trung Lùn")
                                     .build()
                     );
 
                     Director victorVuDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000003")
                                     .name("Victor Vũ")
                                     .build()
                     );
 
                     Director jaturongMokjokDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000004")
                                     .name("Jaturong Mokjok")
                                     .build()
                     );
 
                     Director vuNgocDangDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000005")
                                     .name("Vũ Ngọc Đãng")
                                     .build()
                     );
 
                     Director damianMcCarthyDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000006")
                                     .name("Damian Mc Carthy")
                                     .build()
                     );
 
                     Director alainResnaisDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000007")
                                     .name("Alain Resnais")
                                     .build()
                     );
 
                     Director nguyenHuuHoangDirector = directorRepository.save(
                             Director.builder()
+                                    .code("DD000008")
                                     .name("Nguyễn Hữu Hoàng")
                                     .build()
                     );
@@ -830,7 +838,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .producers(List.of(bluebellsStudiosProducer))
                                         .build()
                         );
-                        movieRepository.save(
+                        Movie deadpoolMovie = movieRepository.save(
                                 Movie.builder()
                                         .code("MV000002")
                                         .title("Deadpool & Wolverine")
@@ -1092,6 +1100,17 @@ public class DataInitializer implements CommandLineRunner {
                                             .startDate(currentDate)
                                             .startTime(LocalTime.of(22, 15))
                                             .endTime(LocalTime.of(0, 15))
+                                            .build()
+                            );
+
+                            showTimeRepository.save(
+                                    ShowTime.builder()
+                                            .cinema(quangTrungCinema)
+                                            .movie(deadpoolMovie)
+                                            .room(room3QuangTrungCinema)
+                                            .startDate(currentDate)
+                                            .startTime(LocalTime.of(10, 30))
+                                            .endTime(LocalTime.of(12, 30))
                                             .build()
                             );
 

@@ -17,6 +17,7 @@ import vn.edu.iuh.dto.admin.v1.req.UpdateProductRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Product;
 import vn.edu.iuh.models.ProductPrice;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.ProductStatus;
 import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
 import vn.edu.iuh.projections.admin.v1.BaseProductWithPriceProjection;
@@ -32,10 +33,9 @@ public class ProductController {
 
     @GetMapping
     public SuccessResponse<Page<BaseProductWithPriceProjection>> getAllProducts(@PageableDefault Pageable pageable,
-                                                                                @RequestParam(defaultValue = "", required = false) String code,
-                                                                                @RequestParam(defaultValue = "", required = false) String name,
+                                                                                @RequestParam(defaultValue = "", required = false) String search,
                                                                                 @RequestParam(required = false) ProductStatus status) {
-        return new SuccessResponse<>(200, "success", "Thành công", productService.getAllProductsWithCurrentPrice(pageable, code, name, status));
+        return new SuccessResponse<>(200, "success", "Thành công", productService.getAllProductsWithCurrentPrice(pageable, search, status));
     }
 
     @GetMapping("/{code}")
@@ -59,12 +59,13 @@ public class ProductController {
                                                                        @PageableDefault @SortDefault.SortDefaults({
                                                                                @SortDefault(sort = "status", direction = Sort.Direction.ASC),
                                                                                @SortDefault(sort = "startDate", direction = Sort.Direction.DESC)
-                                                                       }) Pageable pageable) {
-        return new SuccessResponse<>(200, "success", "Thành công", productService.getProductPricesHistory(code, pageable));
+                                                                       }) Pageable pageable,
+                                                                       @RequestParam(required = false) BaseStatus status) {
+        return new SuccessResponse<>(200, "success", "Thành công", productService.getProductPricesHistory(code, status, pageable));
     }
 
     @PostMapping("/{code}/prices")
-    public SuccessResponse<ProductPrice> createProductPrice(@PathVariable String code ,@RequestBody @Valid CreateProductPriceRequestDTO createProductPriceRequestDTO) {
+    public SuccessResponse<ProductPrice> createProductPrice(@PathVariable String code, @RequestBody @Valid CreateProductPriceRequestDTO createProductPriceRequestDTO) {
         return new SuccessResponse<>(200, "success", "Thành công", productService.createProductPrice(code, createProductPriceRequestDTO));
     }
 

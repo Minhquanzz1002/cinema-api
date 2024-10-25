@@ -421,8 +421,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<BaseOrderProjection> getAllOrders(Pageable pageable) {
-        return orderRepository.findAllByStatusAndDeleted(OrderStatus.COMPLETED, false, pageable, BaseOrderProjection.class);
+    public Page<BaseOrderProjection> getAllOrders(String code, OrderStatus status, Pageable pageable) {
+        if (status == null) {
+            return orderRepository.findAllByCodeContainingAndDeleted(code, false, pageable, BaseOrderProjection.class);
+        }
+        return orderRepository.findAllByCodeContainingAndStatusAndDeleted(code, status, false, pageable, BaseOrderProjection.class);
     }
 
     @Override
