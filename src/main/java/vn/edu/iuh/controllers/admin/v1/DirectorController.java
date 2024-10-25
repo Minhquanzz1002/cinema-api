@@ -8,9 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Director;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.DirectorService;
 
 @Slf4j
@@ -22,8 +24,11 @@ public class DirectorController {
     private final DirectorService directorService;
 
     @GetMapping
-    public SuccessResponse<Page<Director>> getDirectors(@PageableDefault(sort = "name") Pageable pageable) {
-        Page<Director> directorPage = directorService.getAllDirectors(pageable);
+    public SuccessResponse<Page<Director>> getDirectors(@PageableDefault(sort = "code") Pageable pageable,
+                                                        @RequestParam(defaultValue = "", required = false) String search,
+                                                        @RequestParam(required = false, defaultValue = "") String country,
+                                                        @RequestParam(required = false) BaseStatus status) {
+        Page<Director> directorPage = directorService.getAllDirectors(search, status, country, pageable);
         return new SuccessResponse<>(200, "success", "Thành công", directorPage);
     }
 }

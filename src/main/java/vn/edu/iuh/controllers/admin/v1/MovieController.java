@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.dto.admin.v1.res.AdminMovieResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.MovieFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Movie;
+import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.MovieStatus;
 import vn.edu.iuh.projections.admin.v1.AdminMovieProjection;
 import vn.edu.iuh.projections.v1.MovieProjection;
@@ -24,10 +26,12 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
-    public SuccessResponse<Page<AdminMovieProjection>> getMovies(@PageableDefault(sort = "title") Pageable pageable,
-                                                                 @RequestParam(required = false) String title,
-                                                                 @RequestParam(required = false, defaultValue = "ACTIVE") MovieStatus status) {
-        Page<AdminMovieProjection> moviePage = movieService.getAllMovies(pageable, title, status);
+    public SuccessResponse<Page<AdminMovieResponseDTO>> getMovies(@PageableDefault(sort = "title") Pageable pageable,
+                                                                  @RequestParam(required = false) String search,
+                                                                  @RequestParam(required = false) String country,
+                                                                  @RequestParam(required = false) AgeRating ageRating,
+                                                                  @RequestParam(required = false, defaultValue = "ACTIVE") MovieStatus status) {
+        Page<AdminMovieResponseDTO> moviePage = movieService.getAllMovies(search, country, ageRating, status, pageable);
         return new SuccessResponse<>(200, "success", "Thành công", moviePage);
     }
 

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.admin.v1.req.CreateActorRequestDTO;
 import vn.edu.iuh.exceptions.BadRequestException;
@@ -12,6 +13,8 @@ import vn.edu.iuh.models.Actor;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.repositories.ActorRepository;
 import vn.edu.iuh.services.ActorService;
+import vn.edu.iuh.specifications.ActorSpecification;
+import vn.edu.iuh.specifications.GenericSpecifications;
 
 import java.util.Optional;
 
@@ -23,8 +26,13 @@ public class ActorServiceImpl implements ActorService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<Actor> getAllActors(Pageable pageable, String code, String name) {
-        return actorRepository.findAllByStatusAndDeletedAndCodeContainingIgnoreCaseAndNameContainingIgnoreCase(BaseStatus.ACTIVE, false, code, name, pageable, Actor.class);
+    public Page<Actor> getAllActors(String search, BaseStatus status, String country, Pageable pageable) {
+        Specification<Actor> specification = Specification.where(null);
+        specification = specification.and(ActorSpecification.withNameOrCode(search))
+                .and(ActorSpecification.withStatus(status))
+                .and(ActorSpecification.withCountry(country))
+                .and(GenericSpecifications.withDeleted(false));
+        return actorRepository.findAll(specification ,pageable);
     }
 
     @Override

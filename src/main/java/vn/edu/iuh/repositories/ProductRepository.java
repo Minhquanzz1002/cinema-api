@@ -55,18 +55,16 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
                     AND pp.endDate >= CURRENT_DATE\s
                 WHERE p.deleted = :deleted\s
                     AND p.status = :status
-                    AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
-                    AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+                    AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%')))
             """,
             countQuery = """
                             SELECT COUNT(DISTINCT p.id)
                             FROM Product p\s
                             WHERE p.deleted = :deleted
                                 AND p.status = :status
-                                AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
-                                AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+                                AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%')))
                     """)
-    Page<BaseProductWithPriceProjection> findAllWithPriceByCodeContainingAndNameContainingAndStatusAndDeleted(String code, String name,
+    Page<BaseProductWithPriceProjection> findAllWithPriceByCodeContainingOrNameContainingAndStatusAndDeleted(String code, String name,
                                                                                                               @Param("status") ProductStatus status,
                                                                                                               @Param("deleted") boolean deleted,
                                                                                                               Pageable pageable);
@@ -79,17 +77,15 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
                     AND pp.startDate <= CURRENT_DATE\s
                     AND pp.endDate >= CURRENT_DATE\s
                 WHERE p.deleted = :deleted\s
-                    AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
-                    AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+                    AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%')))\s
             """,
             countQuery = """
                             SELECT COUNT(DISTINCT p.id)
                             FROM Product p\s
                             WHERE p.deleted = :deleted
-                                AND LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%'))
-                                AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+                                AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.code) LIKE LOWER(CONCAT('%', :code, '%')))
                     """)
-    Page<BaseProductWithPriceProjection> findAllWithPriceByCodeContainingAndNameContainingAndDeleted(String code, String name,
+    Page<BaseProductWithPriceProjection> findAllWithPriceByCodeContainingOrNameContainingAndDeleted(String code, String name,
                                                                                                      @Param("deleted") boolean deleted,
                                                                                                      Pageable pageable);
 

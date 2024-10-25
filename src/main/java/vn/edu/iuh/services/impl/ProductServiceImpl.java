@@ -22,6 +22,7 @@ import vn.edu.iuh.projections.v1.ProductProjection;
 import vn.edu.iuh.repositories.ProductPriceRepository;
 import vn.edu.iuh.repositories.ProductRepository;
 import vn.edu.iuh.services.ProductService;
+import vn.edu.iuh.specifications.ProductPriceSpecifications;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,11 +41,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String code, String name, ProductStatus status) {
+    public Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String search, ProductStatus status) {
         if (status == null) {
-            return productRepository.findAllWithPriceByCodeContainingAndNameContainingAndDeleted(code, name, false, pageable);
+            return productRepository.findAllWithPriceByCodeContainingOrNameContainingAndDeleted(search, search, false, pageable);
         }
-        return productRepository.findAllWithPriceByCodeContainingAndNameContainingAndStatusAndDeleted(code, name, status, false, pageable);
+        return productRepository.findAllWithPriceByCodeContainingOrNameContainingAndStatusAndDeleted(search, search, status, false, pageable);
     }
 
     @Override
@@ -53,8 +54,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductPrice> getProductPricesHistory(String code, Pageable pageable) {
-        return productPriceRepository.findAllByProduct_CodeAndDeleted(code, false, pageable);
+    public Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, Pageable pageable) {
+        return productPriceRepository.findAll(ProductPriceSpecifications.withFilters(code, status, false), pageable);
     }
 
     @Override

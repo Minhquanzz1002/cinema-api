@@ -1,19 +1,24 @@
 package vn.edu.iuh.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.res.AdminMovieResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.MovieFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Movie;
+import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.MovieStatus;
 import vn.edu.iuh.projections.admin.v1.*;
 import vn.edu.iuh.projections.v1.MovieProjection;
 import vn.edu.iuh.repositories.*;
 import vn.edu.iuh.services.MovieService;
+import vn.edu.iuh.specifications.MovieSpecification;
 
 import java.util.List;
 
@@ -25,6 +30,7 @@ public class MovieServiceImpl implements MovieService {
     private final ProducerRepository producerRepository;
     private final ActorRepository actorRepository;
     private final DirectorRepository directorRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public SuccessResponse<Page<MovieProjection>> getMovies(Pageable pageable, String title, MovieStatus status) {
@@ -58,14 +64,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Page<AdminMovieProjection> getAllMovies(Pageable pageable, String title, MovieStatus status) {
-        Page<AdminMovieProjection> movies;
-        if (title == null || title.trim().isEmpty()) {
-            movies = movieRepository.findAllByStatusAndDeleted(pageable, status, false, AdminMovieProjection.class);
-        } else {
-            movies = movieRepository.findAllByStatusAndDeletedAndTitleContaining(pageable, status, false, title, AdminMovieProjection.class);
-        }
-        return movies;
+    public Page<AdminMovieResponseDTO> getAllMovies(String search, String country, AgeRating ageRating, MovieStatus status, Pageable pageable) {
+        Specification<Movie> spec = Specification.where(null);
+        spec = spec.and(MovieSpecification.withAgeRating(ageRating))
+                .and(MovieSpecification.withCountry(country))
+                .and(MovieSpecification.withStatus(status))
+                .and(MovieSpecification.withTitleOrCode(search))
+                .and(MovieSpecification.withDeleted(false));
+        Page<Movie> movies = movieRepository.findAll(spec, pageable);
+        return movies.map(movie -> modelMapper.map(movie, AdminMovieResponseDTO.class));
     }
 
     @Override

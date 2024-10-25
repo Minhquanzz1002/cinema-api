@@ -6,6 +6,7 @@ import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Order;
 import vn.edu.iuh.models.User;
+import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
 import vn.edu.iuh.projections.admin.v1.BaseOrderProjection;
 import vn.edu.iuh.projections.v1.OrderProjection;
@@ -24,6 +25,6 @@ public interface OrderService {
     SuccessResponse<OrderProjection> updateSeatsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO);
     SuccessResponse<OrderProjection> updateDiscountInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateDiscountDTO orderUpdateDiscountDTO);
     SuccessResponse<OrderProjection> clearDiscountInOrder(UserPrincipal userPrincipal, UUID orderId);
-    Page<BaseOrderProjection> getAllOrders(Pageable pageable);
+    Page<BaseOrderProjection> getAllOrders(String code, OrderStatus status, Pageable pageable);
     AdminOrderOverviewProjection getOrderByCode(String code);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateActorRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Actor;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.ActorService;
 
 @Slf4j
@@ -23,9 +24,10 @@ public class ActorController {
 
     @GetMapping
     public SuccessResponse<Page<Actor>> getActors(@PageableDefault(sort = "code") Pageable pageable,
-                                                  @RequestParam(defaultValue = "") String code,
-                                                  @RequestParam(defaultValue = "") String name) {
-        Page<Actor> actorPage = actorService.getAllActors(pageable, code, name);
+                                                  @RequestParam(defaultValue = "", required = false) String search,
+                                                  @RequestParam(required = false, defaultValue = "") String country,
+                                                  @RequestParam(required = false) BaseStatus status) {
+        Page<Actor> actorPage = actorService.getAllActors(search, status, country, pageable);
         return new SuccessResponse<>(200, "success", "Thành công", actorPage);
     }
 

@@ -24,5 +24,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     void deleteByIdAndUser(UUID uuid, User user);
 
-    <T> Page<T> findAllByStatusAndDeleted(OrderStatus status, boolean deleted, Pageable pageable, Class<T> classType);
+    <T> Page<T> findAllByCodeContainingAndStatusAndDeleted(String code, OrderStatus status, boolean deleted, Pageable pageable, Class<T> classType);
+    <T> Page<T> findAllByCodeContainingAndDeleted(String code, boolean deleted, Pageable pageable, Class<T> classType);
 }
