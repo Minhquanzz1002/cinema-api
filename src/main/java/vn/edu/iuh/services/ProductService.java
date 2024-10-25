@@ -8,6 +8,7 @@ import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateProductRequestDTO;
 import vn.edu.iuh.models.Product;
 import vn.edu.iuh.models.ProductPrice;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.ProductStatus;
 import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
 import vn.edu.iuh.projections.admin.v1.BaseProductWithPriceProjection;
@@ -17,9 +18,9 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductProjection> getProducts();
-    Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String code, String name, ProductStatus status);
+    Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String search, ProductStatus status);
     BaseProductWithPriceProjection getProductWithCurrentPriceByCode(String code);
-    Page<ProductPrice> getProductPricesHistory(String code, Pageable pageable);
+    Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, Pageable pageable);
 
     Product createProduct(CreateProductRequestDTO createProductRequestDTO);
     BaseProductProjection updateProduct(String code, UpdateProductRequestDTO updateProductRequestDTO);

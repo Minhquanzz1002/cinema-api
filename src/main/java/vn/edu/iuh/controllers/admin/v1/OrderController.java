@@ -7,11 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
 import vn.edu.iuh.projections.admin.v1.BaseOrderProjection;
 import vn.edu.iuh.services.OrderService;
@@ -25,8 +23,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public SuccessResponse<Page<BaseOrderProjection>> getOrders(@PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<BaseOrderProjection> orderPage = orderService.getAllOrders(pageable);
+    public SuccessResponse<Page<BaseOrderProjection>> getOrders(@PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                @RequestParam(required = false) String code, @RequestParam(required = false) OrderStatus status) {
+        Page<BaseOrderProjection> orderPage = orderService.getAllOrders(code, status, pageable);
         return new SuccessResponse<>(200, "success", "Thành công", orderPage);
     }
 
