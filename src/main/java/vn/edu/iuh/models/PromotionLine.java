@@ -1,7 +1,9 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.PromotionApplyLimitType;
 import vn.edu.iuh.models.enums.PromotionLineType;
@@ -38,9 +40,11 @@ public class PromotionLine extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BaseStatus status;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
     private Promotion promotion;
-    @OneToMany(mappedBy = "promotionLine")
+    @OneToMany(mappedBy = "promotionLine", orphanRemoval = true, cascade = CascadeType.ALL)
+    @SQLRestriction("deleted = false")
     private List<PromotionDetail> promotionDetails;
 }

@@ -3,11 +3,13 @@ package vn.edu.iuh.services.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
@@ -15,7 +17,6 @@ import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.*;
 import vn.edu.iuh.models.enums.*;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
-import vn.edu.iuh.projections.admin.v1.BaseOrderProjection;
 import vn.edu.iuh.projections.v1.OrderProjection;
 import vn.edu.iuh.projections.v1.ProductProjection;
 import vn.edu.iuh.projections.v1.TicketPriceLineProjection;
@@ -23,6 +24,8 @@ import vn.edu.iuh.repositories.*;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.OrderService;
 import vn.edu.iuh.services.ProductService;
+import vn.edu.iuh.specifications.GenericSpecifications;
+import vn.edu.iuh.specifications.OrderSpecifications;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -46,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
     private final PromotionDetailRepository promotionDetailRepository;
     private final TicketPriceLineRepository ticketPriceLineRepository;
     private final StringRedisTemplate redisTemplate;
+    private final ModelMapper modelMapper;
 
     public static final String ORDER_KEY_PREFIX = "order:";
 
@@ -421,11 +425,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<BaseOrderProjection> getAllOrders(String code, OrderStatus status, Pageable pageable) {
-        if (status == null) {
-            return orderRepository.findAllByCodeContainingAndDeleted(code, false, pageable, BaseOrderProjection.class);
-        }
-        return orderRepository.findAllByCodeContainingAndStatusAndDeleted(code, status, false, pageable, BaseOrderProjection.class);
+    public Page<AdminOrderResponseDTO> getAllOrders(String code, OrderStatus status, LocalDate fromDate, LocalDate toDate, Pageable pageable) {
+        Page<Order> orders = orderRepository.findAll(OrderSpecifications.withFilters(code, status, fromDate, toDate).and(GenericSpecifications.withDeleted(false)), pageable);
+        return orders.map(order -> modelMapper.map(order, AdminOrderResponseDTO.class));
     }
 
     @Override

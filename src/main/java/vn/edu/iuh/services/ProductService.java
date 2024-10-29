@@ -14,20 +14,29 @@ import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
 import vn.edu.iuh.projections.admin.v1.BaseProductWithPriceProjection;
 import vn.edu.iuh.projections.v1.ProductProjection;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ProductService {
     List<ProductProjection> getProducts();
+
     Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String search, ProductStatus status);
+
     BaseProductWithPriceProjection getProductWithCurrentPriceByCode(String code);
-    Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, Pageable pageable);
+
+    Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     Product createProduct(CreateProductRequestDTO createProductRequestDTO);
+
     BaseProductProjection updateProduct(String code, UpdateProductRequestDTO updateProductRequestDTO);
+
     Product getProductByCode(String code);
+
     void deleteProduct(String code);
 
     ProductPrice createProductPrice(String code, CreateProductPriceRequestDTO createProductPriceRequestDTO);
+
     void deleteProductPrice(String code, int id);
+
     ProductPrice updateProductPrice(String code, int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO);
 }

@@ -22,8 +22,10 @@ import vn.edu.iuh.projections.v1.ProductProjection;
 import vn.edu.iuh.repositories.ProductPriceRepository;
 import vn.edu.iuh.repositories.ProductRepository;
 import vn.edu.iuh.services.ProductService;
+import vn.edu.iuh.specifications.GenericSpecifications;
 import vn.edu.iuh.specifications.ProductPriceSpecifications;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +56,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, Pageable pageable) {
-        return productPriceRepository.findAll(ProductPriceSpecifications.withFilters(code, status, false), pageable);
+    public Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        return productPriceRepository.findAll(ProductPriceSpecifications.withFilters(code, status, false).and(GenericSpecifications.betweenDates(startDate, endDate)), pageable);
     }
 
     @Override

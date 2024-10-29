@@ -8,6 +8,7 @@ import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.TicketPriceDetail;
 import vn.edu.iuh.models.TicketPriceLine;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.repositories.TicketPriceDetailRepository;
 import vn.edu.iuh.repositories.TicketPriceLineRepository;
 import vn.edu.iuh.services.TicketPriceLineService;
@@ -34,5 +35,18 @@ public class TicketPriceLineServiceImpl implements TicketPriceLineService {
         TicketPriceDetail ticketPriceDetail = modelMapper.map(createTicketPriceDetailRequestDTO, TicketPriceDetail.class);
         ticketPriceDetail.setTicketPriceLine(ticketPriceLine);
         return ticketPriceDetailRepository.save(ticketPriceDetail);
+    }
+
+    @Override
+    public void deleteTicketPriceLine(int id) {
+        TicketPriceLine ticketPriceLine = ticketPriceLineRepository.findByIdAndDeleted(id, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá vé"));
+
+        if (ticketPriceLine.getTicketPrice().getStatus() == BaseStatus.ACTIVE) {
+            throw new BadRequestException("Không thể xóa giá vé đang hoạt động");
+        }
+
+        ticketPriceLine.setDeleted(true);
+        ticketPriceLine.getTicketPriceDetails().forEach(detail -> detail.setDeleted(true));
+        ticketPriceLineRepository.save(ticketPriceLine);
     }
 }

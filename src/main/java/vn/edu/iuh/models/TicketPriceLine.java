@@ -12,6 +12,7 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.DayType;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -41,10 +42,17 @@ public class TicketPriceLine extends BaseEntity {
     @ManyToOne
     @JoinColumn(nullable = false)
     private TicketPrice ticketPrice;
-    @OneToMany(mappedBy = "ticketPriceLine")
-    private List<TicketPriceDetail> ticketPriceDetails;
+    @OrderBy("seatType ASC")
+    @Builder.Default
+    @OneToMany(mappedBy = "ticketPriceLine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TicketPriceDetail> ticketPriceDetails = new ArrayList<>();
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BaseStatus status = BaseStatus.ACTIVE;
+
+    public void addTicketPriceDetail(TicketPriceDetail ticketPriceDetail) {
+        ticketPriceDetails.add(ticketPriceDetail);
+        ticketPriceDetail.setTicketPriceLine(this);
+    }
 }

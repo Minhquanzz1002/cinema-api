@@ -8,11 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
-import vn.edu.iuh.projections.admin.v1.BaseOrderProjection;
 import vn.edu.iuh.services.OrderService;
+
+import java.time.LocalDate;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,9 +25,10 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public SuccessResponse<Page<BaseOrderProjection>> getOrders(@PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable,
+    public SuccessResponse<Page<AdminOrderResponseDTO>> getOrders(@PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                @RequestParam(required = false) LocalDate fromDate, @RequestParam(required = false) LocalDate toDate,
                                                                 @RequestParam(required = false) String code, @RequestParam(required = false) OrderStatus status) {
-        Page<BaseOrderProjection> orderPage = orderService.getAllOrders(code, status, pageable);
+        Page<AdminOrderResponseDTO> orderPage = orderService.getAllOrders(code, status, fromDate, toDate, pageable);
         return new SuccessResponse<>(200, "success", "Thành công", orderPage);
     }
 
