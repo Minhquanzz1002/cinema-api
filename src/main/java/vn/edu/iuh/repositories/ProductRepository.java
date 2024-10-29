@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.models.Product;
 import vn.edu.iuh.models.enums.ProductStatus;
-import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
 import vn.edu.iuh.projections.admin.v1.BaseProductWithPriceProjection;
 import vn.edu.iuh.projections.v1.ProductProjection;
 

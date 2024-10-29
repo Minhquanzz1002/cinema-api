@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateActorRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.UpdateActorRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Actor;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -36,4 +37,19 @@ public class ActorController {
         return new SuccessResponse<>(200, "success", "Thành công", actorService.createActor(createActorRequestDTO));
     }
 
+    @GetMapping("/{code}")
+    public SuccessResponse<Actor> getActor(@PathVariable String code) {
+        return new SuccessResponse<>(200, "success", "Thành công", actorService.getActorByCode(code));
+    }
+
+    @PutMapping("/{id}")
+    public SuccessResponse<Actor> updateActor(@PathVariable int id, @RequestBody @Valid UpdateActorRequestDTO updateActorRequestDTO) {
+        return new SuccessResponse<>(200, "success", "Cập nhật diễn viên thành công", actorService.updateActor(id, updateActorRequestDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public SuccessResponse<?> deleteActor(@PathVariable int id) {
+        actorService.deleteActor(id);
+        return new SuccessResponse<>(200, "success", "Xóa thành công", null);
+    }
 }

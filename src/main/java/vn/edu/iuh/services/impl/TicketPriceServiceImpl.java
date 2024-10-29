@@ -1,13 +1,15 @@
 package vn.edu.iuh.services.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceDetailRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceLineRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.UpdateTicketPriceLineRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateTicketPriceRequestDTO;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
@@ -15,10 +17,13 @@ import vn.edu.iuh.models.TicketPrice;
 import vn.edu.iuh.models.TicketPriceDetail;
 import vn.edu.iuh.models.TicketPriceLine;
 import vn.edu.iuh.models.enums.BaseStatus;
+import vn.edu.iuh.models.enums.SeatType;
 import vn.edu.iuh.repositories.TicketPriceDetailRepository;
 import vn.edu.iuh.repositories.TicketPriceLineRepository;
 import vn.edu.iuh.repositories.TicketPriceRepository;
 import vn.edu.iuh.services.TicketPriceService;
+import vn.edu.iuh.specifications.GenericSpecifications;
+import vn.edu.iuh.specifications.TicketPriceSpecification;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,8 +44,21 @@ public class TicketPriceServiceImpl implements TicketPriceService {
     }
 
     @Override
-    public Page<TicketPrice> getAllTicketPrices(Pageable pageable) {
-        return ticketPriceRepository.findAll(pageable);
+    public Page<TicketPrice> getAllTicketPrices(String name, BaseStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        Specification<TicketPrice> specification = Specification.where(TicketPriceSpecification.withName(name));
+        specification = specification.and(GenericSpecifications.withStatus(status))
+                .and(TicketPriceSpecification.betweenDates(startDate, endDate));
+        Page<TicketPrice> ticketPrices = ticketPriceRepository.findAll(specification, pageable);
+
+        ticketPrices.getContent().forEach(ticketPrice -> {
+            if (ticketPrice.getTicketPriceLines() != null) {
+                List<TicketPriceLine> activeLines = ticketPrice.getTicketPriceLines().stream()
+                        .filter(line -> !line.isDeleted())
+                        .collect(Collectors.toList());
+                ticketPrice.setTicketPriceLines(activeLines);
+            }
+        });
+        return ticketPrices;
     }
 
     @Override
@@ -109,9 +127,10 @@ public class TicketPriceServiceImpl implements TicketPriceService {
 
     @Override
     public TicketPrice getTicketPriceById(int id) {
-        return ticketPriceRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá vé"));
+        return ticketPriceRepository.findByIdAndDeleted(id, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá vé"));
     }
 
+    @Transactional
     @Override
     public TicketPriceLine createTicketPriceLine(int ticketPriceId, CreateTicketPriceLineRequestDTO createTicketPriceLineRequestDTO) {
         TicketPrice ticketPrice = getTicketPriceById(ticketPriceId);
@@ -120,6 +139,62 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         }
         TicketPriceLine ticketPriceLine = modelMapper.map(createTicketPriceLineRequestDTO, TicketPriceLine.class);
         ticketPriceLine.setTicketPrice(ticketPrice);
+
+        ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
+                .price(createTicketPriceLineRequestDTO.getNormalPrice())
+                .seatType(SeatType.NORMAL)
+                .status(BaseStatus.ACTIVE)
+                .build());
+
+        ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
+                .price(createTicketPriceLineRequestDTO.getVipPrice())
+                .seatType(SeatType.VIP)
+                .status(BaseStatus.ACTIVE)
+                .build());
+
+        ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
+                .price(createTicketPriceLineRequestDTO.getCouplePrice())
+                .seatType(SeatType.COUPLE)
+                .status(BaseStatus.ACTIVE)
+                .build());
+
+        ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
+                .price(createTicketPriceLineRequestDTO.getTriplePrice())
+                .seatType(SeatType.TRIPLE)
+                .status(BaseStatus.ACTIVE)
+                .build());
+
+        return ticketPriceLineRepository.save(ticketPriceLine);
+    }
+
+    @Override
+    public TicketPriceLine updateTicketPriceLine(int ticketPriceId, int lineId, UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO) {
+        TicketPrice ticketPrice = getTicketPriceById(ticketPriceId);
+        if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
+            throw new BadRequestException("Không thể sửa giá vé đang hoạt động");
+        }
+
+        TicketPriceLine ticketPriceLine = ticketPriceLineRepository.findByIdAndDeleted(lineId, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy dòng giá vé"));
+        ticketPriceLine.setApplyForDays(updateTicketPriceLineRequestDTO.getApplyForDays());
+        ticketPriceLine.setStartTime(updateTicketPriceLineRequestDTO.getStartTime());
+        ticketPriceLine.setEndTime(updateTicketPriceLineRequestDTO.getEndTime());
+        ticketPriceLine.setStatus(updateTicketPriceLineRequestDTO.getStatus());
+        ticketPriceLine.getTicketPriceDetails().forEach(ticketPriceDetail -> {
+            switch (ticketPriceDetail.getSeatType()) {
+                case NORMAL:
+                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getNormalPrice());
+                    break;
+                case VIP:
+                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getVipPrice());
+                    break;
+                case COUPLE:
+                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getCouplePrice());
+                    break;
+                case TRIPLE:
+                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getTriplePrice());
+                    break;
+            }
+        });
         return ticketPriceLineRepository.save(ticketPriceLine);
     }
 }

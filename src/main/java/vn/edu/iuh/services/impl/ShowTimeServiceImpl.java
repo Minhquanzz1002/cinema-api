@@ -11,6 +11,7 @@ import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
 import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.ShowTime;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.projections.admin.v1.AdminCinemaFilterProjection;
 import vn.edu.iuh.projections.admin.v1.AdminMovieFilterProjection;
 import vn.edu.iuh.projections.admin.v1.AdminRoomNameOnlyProjection;
@@ -20,6 +21,7 @@ import vn.edu.iuh.repositories.MovieRepository;
 import vn.edu.iuh.repositories.RoomRepository;
 import vn.edu.iuh.repositories.ShowTimeRepository;
 import vn.edu.iuh.services.ShowTimeService;
+import vn.edu.iuh.specifications.GenericSpecifications;
 import vn.edu.iuh.specifications.ShowTimeSpecification;
 
 import java.time.LocalDate;
@@ -52,9 +54,12 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public AdminShowTimeResponseDTO getAllShowTimes(int cinemaId, LocalDate startDate) {
+    public AdminShowTimeResponseDTO getAllShowTimes(int cinemaId, LocalDate startDate, Integer movieId, BaseStatus status) {
         Specification<ShowTime> spec = Specification.where(ShowTimeSpecification.withCinema(cinemaId))
-                .and(ShowTimeSpecification.onDate(startDate));
+                .and(ShowTimeSpecification.onDate(startDate))
+                .and(ShowTimeSpecification.withMovie(movieId))
+                .and(GenericSpecifications.withStatus(status))
+                .and(GenericSpecifications.withDeleted(false));
         List<ShowTime> showTimes = showTimeRepository.findAll(spec);
         List<AdminShowTimeResponseDTO.ShowTimeDTO> showTimeProjections = showTimes.stream()
                 .map(showTime -> modelMapper.map(showTime, AdminShowTimeResponseDTO.ShowTimeDTO.class))

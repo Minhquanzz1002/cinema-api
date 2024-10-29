@@ -1,6 +1,7 @@
 package vn.edu.iuh.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TicketPriceRepository extends JpaRepository<TicketPrice, Integer> {
+public interface TicketPriceRepository extends JpaRepository<TicketPrice, Integer>, JpaSpecificationExecutor<TicketPrice> {
     @Query("SELECT tp FROM TicketPrice tp " +
            "WHERE tp.startDate <= :date AND tp.endDate >= :date " +
            "AND tp.status = :status " +
@@ -25,4 +26,6 @@ public interface TicketPriceRepository extends JpaRepository<TicketPrice, Intege
            "(tp.startDate BETWEEN :startDate AND :endDate)" +
            "AND tp.deleted = false")
     List<TicketPrice> findOverlappingTicketPrices(LocalDate startDate, LocalDate endDate);
+
+    Optional<TicketPrice> findByIdAndDeleted(int id, boolean deleted);
 }

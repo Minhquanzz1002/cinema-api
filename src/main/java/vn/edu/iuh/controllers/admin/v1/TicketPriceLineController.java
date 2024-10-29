@@ -19,4 +19,10 @@ public class TicketPriceLineController {
     public SuccessResponse<?> createTicketPriceDetail(@PathVariable int id, @RequestBody @Valid CreateTicketPriceDetailRequestDTO createTicketPriceDetailRequestDTO) {
         return new SuccessResponse<>(200, "success", "Thành công", ticketPriceLineService.createTicketPriceDetail(id, createTicketPriceDetailRequestDTO));
     }
+
+    @DeleteMapping("/{id}")
+    public SuccessResponse<?> deleteTicketPriceLine(@PathVariable int id) {
+        ticketPriceLineService.deleteTicketPriceLine(id);
+        return new SuccessResponse<>(200, "success", "Xóa giá vé thành công", null);
+    }
 }

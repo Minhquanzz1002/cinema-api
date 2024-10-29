@@ -1,5 +1,6 @@
 package vn.edu.iuh.projections.v1;
 
+import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.MovieStatus;
 
 import java.time.LocalDate;
@@ -24,9 +25,7 @@ public interface MovieProjection extends BaseEntityProjection {
     Float getRating();
 
     String getCountry();
-
-    Integer getAge();
-
+    AgeRating getAgeRating();
     LocalDate getReleaseDate();
 
     MovieStatus getStatus();

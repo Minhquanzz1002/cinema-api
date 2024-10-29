@@ -10,6 +10,15 @@ public class ShowTimeSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("cinema").get("id"), cinemaId);
     }
 
+    public static Specification<ShowTime> withMovie(Integer movieId) {
+        return (root, query, criteriaBuilder) -> {
+            if (movieId == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("movie").get("id"), movieId);
+        };
+    }
+
     public static Specification<ShowTime> onDate(LocalDate date) {
         return (root, query, criteriaBuilder) -> {
             LocalDate searchDate = date != null ? date : LocalDate.now();

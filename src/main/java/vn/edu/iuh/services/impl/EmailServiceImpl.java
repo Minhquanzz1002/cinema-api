@@ -7,7 +7,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.services.EmailService;
-import vn.edu.iuh.services.OTPService;
 
 @Slf4j
 @Service
