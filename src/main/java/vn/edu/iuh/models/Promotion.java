@@ -33,6 +33,6 @@ public class Promotion extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BaseStatus status;
-    @OneToMany(mappedBy = "promotion")
+    @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PromotionLine> promotionLines;
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.ShowTimeService;
 
 import java.time.LocalDate;
@@ -24,8 +25,10 @@ public class ShowTimeController {
 
     @GetMapping
     public SuccessResponse<AdminShowTimeResponseDTO> getAllShowTimes(@RequestParam int cinemaId,
-                                                                           @RequestParam(required = false) LocalDate startDate) {
-        return new SuccessResponse<>(200, "success", "Thành công", showTimeService.getAllShowTimes(cinemaId, startDate));
+                                                                     @RequestParam(required = false) LocalDate startDate,
+                                                                     @RequestParam(required = false) Integer movieId,
+                                                                     @RequestParam(required = false) BaseStatus status) {
+        return new SuccessResponse<>(200, "success", "Thành công", showTimeService.getAllShowTimes(cinemaId, startDate, movieId, status));
     }
 
     @GetMapping("/filters")

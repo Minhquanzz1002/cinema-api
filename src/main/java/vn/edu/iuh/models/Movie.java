@@ -37,11 +37,10 @@ public class Movie extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String summary;
     @Column(nullable = false)
-    private float rating;
+    @Builder.Default
+    private float rating = 0;
     @Column(nullable = false)
     private String country;
-    @Column(nullable = false)
-    private int age;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default

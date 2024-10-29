@@ -19,4 +19,6 @@ public interface ActorRepository extends JpaRepository<Actor, Integer>, JpaSpeci
 
     Optional<Actor> findTopByOrderByCodeDesc();
     Optional<Actor> findByCode(String code);
+    Optional<Actor> findByIdAndDeleted(int id, boolean deleted);
+    Optional<Actor> findByCodeAndDeleted(String code, boolean deleted);
 }

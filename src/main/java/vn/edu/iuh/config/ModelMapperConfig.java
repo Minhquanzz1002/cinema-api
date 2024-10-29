@@ -1,6 +1,7 @@
 package vn.edu.iuh.config;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
@@ -14,7 +15,9 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.getConfiguration()
+                .setSkipNullEnabled(true)
+                .setMatchingStrategy(MatchingStrategies.STRICT);
 
         modelMapper.typeMap(User.class, UserAuthResponseDTO.class).addMappings(mapper -> {
             mapper.map(src -> src.getRole().getName(), UserAuthResponseDTO::setRole);

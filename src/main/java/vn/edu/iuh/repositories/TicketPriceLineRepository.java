@@ -3,12 +3,8 @@ package vn.edu.iuh.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
-import vn.edu.iuh.models.TicketPrice;
 import vn.edu.iuh.models.TicketPriceLine;
-import vn.edu.iuh.models.enums.DayType;
-import vn.edu.iuh.models.enums.SeatType;
 import vn.edu.iuh.projections.v1.TicketPriceLineProjection;
 
 import java.time.LocalDate;

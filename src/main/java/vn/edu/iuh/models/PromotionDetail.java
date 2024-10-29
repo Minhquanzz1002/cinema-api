@@ -1,5 +1,6 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -40,7 +41,9 @@ public class PromotionDetail extends BaseEntity {
     private Product giftProduct;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private BaseStatus status;
+    @Builder.Default
+    private BaseStatus status = BaseStatus.ACTIVE;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
     private PromotionLine promotionLine;

@@ -23,6 +23,8 @@ import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
 import vn.edu.iuh.projections.admin.v1.BaseProductWithPriceProjection;
 import vn.edu.iuh.services.ProductService;
 
+import java.time.LocalDate;
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/admin/v1/products")
@@ -56,12 +58,14 @@ public class ProductController {
 
     @GetMapping("/{code}/price-histories")
     public SuccessResponse<Page<ProductPrice>> getProductPricesHistory(@PathVariable String code,
+                                                                       @RequestParam(required = false) LocalDate startDate,
+                                                                       @RequestParam(required = false) LocalDate endDate,
                                                                        @PageableDefault @SortDefault.SortDefaults({
                                                                                @SortDefault(sort = "status", direction = Sort.Direction.ASC),
                                                                                @SortDefault(sort = "startDate", direction = Sort.Direction.DESC)
                                                                        }) Pageable pageable,
                                                                        @RequestParam(required = false) BaseStatus status) {
-        return new SuccessResponse<>(200, "success", "Thành công", productService.getProductPricesHistory(code, status, pageable));
+        return new SuccessResponse<>(200, "success", "Thành công", productService.getProductPricesHistory(code, status, startDate, endDate, pageable));
     }
 
     @PostMapping("/{code}/prices")

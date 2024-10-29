@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import vn.edu.iuh.models.enums.ProductStatus;
-import vn.edu.iuh.models.enums.OrderDetailType;
 
 import java.util.List;
 
