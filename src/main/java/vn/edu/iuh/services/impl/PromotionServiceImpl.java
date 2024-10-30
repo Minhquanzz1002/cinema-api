@@ -130,9 +130,9 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public PromotionLine createPromotionLine(int promotionId, CreatePromotionLineRequestDTO createPromotionLineRequestDTO) {
         Promotion promotion = getPromotionById(promotionId);
-        if (promotion.getStatus() == BaseStatus.ACTIVE) {
-            throw new BadRequestException("Chiến dịch đang hoạt động không thể thêm chương trình");
-        }
+//        if (promotion.getStatus() == BaseStatus.ACTIVE) {
+//            throw new BadRequestException("Chiến dịch đang hoạt động không thể thêm chương trình");
+//        }
 
         PromotionLineType type = createPromotionLineRequestDTO.getType();
 
@@ -153,6 +153,7 @@ public class PromotionServiceImpl implements PromotionService {
                         .discountValue(detail.getDiscountValue())
                         .minOrderValue(detail.getMinOrderValue())
                         .usageLimit(detail.getUsageLimit())
+                        .status(detail.getStatus())
                         .build();
                 promotionLine.addPromotionDetail(promotionDetail);
             });
@@ -162,6 +163,7 @@ public class PromotionServiceImpl implements PromotionService {
                         .minOrderValue(detail.getMinOrderValue())
                         .maxDiscountValue(detail.getMaxDiscountValue())
                         .usageLimit(detail.getUsageLimit())
+                        .status(detail.getStatus())
                         .build();
                 promotionLine.addPromotionDetail(promotionDetail);
             });
@@ -174,6 +176,18 @@ public class PromotionServiceImpl implements PromotionService {
                         .giftQuantity(detail.getGiftQuantity())
                         .giftProduct(product)
                         .usageLimit(detail.getUsageLimit())
+                        .status(detail.getStatus())
+                        .build();
+                promotionLine.addPromotionDetail(promotionDetail);
+            });
+            case BUY_TICKETS_GET_TICKETS -> createPromotionLineRequestDTO.getPromotionDetails().forEach(detail -> {
+                PromotionDetail promotionDetail = PromotionDetail.builder()
+                        .requiredSeatType(detail.getRequiredSeatType())
+                        .requiredSeatQuantity(detail.getRequiredSeatQuantity())
+                        .giftSeatType(detail.getGiftSeatType())
+                        .giftSeatQuantity(detail.getGiftSeatQuantity())
+                        .usageLimit(detail.getUsageLimit())
+                        .status(detail.getStatus())
                         .build();
                 promotionLine.addPromotionDetail(promotionDetail);
             });

@@ -129,6 +129,8 @@ public class OrderServiceImpl implements OrderService {
         order.setFinalAmount(totalPrice);
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
+
+        applyPromotion(order);
         OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         saveOrderToRedis(order.getId());
         return new SuccessResponse<>(201, "success", "Tạo đơn hàng thành công", orderProjection);
@@ -137,6 +139,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public SuccessResponse<?> cancelOrder(UserPrincipal userPrincipal, UUID orderId) {
+        Order order = findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new BadRequestException("Không thể hủy đơn hàng đã hoàn thành");
+        }
+
+        // Update promotion usage count
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+
         orderRepository.deleteByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
         return new SuccessResponse<>(200, "success", "Xóa đơn hàng thành công", null);
     }
@@ -154,6 +168,17 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public SuccessResponse<OrderProjection> updateProductsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO) {
         Order order = orderRepository.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build()).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+
+        // Clear promotion
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+        order.setPromotionDetail(null);
+        order.setTotalDiscount(0);
+        order.setFinalAmount(order.getTotalPrice());
+        order.setPromotionLine(null);
 
         Map<Integer, OrderDetail> existingOrderDetails = order.getOrderDetails().stream()
                 .filter(od -> od.getType() == OrderDetailType.PRODUCT)
@@ -195,6 +220,8 @@ public class OrderServiceImpl implements OrderService {
         order.setFinalAmount(totalPrice);
         order = orderRepository.save(order);
 
+        applyPromotion(order);
+
         OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         return new SuccessResponse<>(201, "success", "Cập nhật sản phẩm thành công", orderProjection);
     }
@@ -203,6 +230,17 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public SuccessResponse<OrderProjection> updateSeatsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO) {
         Order order = this.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
+
+        // Clear promotion
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+        order.setPromotionDetail(null);
+        order.setTotalDiscount(0);
+        order.setFinalAmount(order.getTotalPrice());
+        order.setPromotionLine(null);
 
         ShowTime showTime = order.getShowTime();
         DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
@@ -241,6 +279,8 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(totalPrice);
         order.setFinalAmount(totalPrice);
         order = orderRepository.save(order);
+
+        applyPromotion(order);
 
         OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         return new SuccessResponse<>(201, "success", "Cập nhật ghế thành công", orderProjection);
@@ -456,6 +496,14 @@ public class OrderServiceImpl implements OrderService {
         order.setCancelReason(cancelOrderBeforeShowTimeRequestDTO.getReason());
         order.setRefundAmount(order.getFinalAmount());
         order.setRefundStatus(RefundStatus.PENDING);
+
+        // Update promotion usage count
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+
         orderRepository.save(order);
     }
 
@@ -506,5 +554,58 @@ public class OrderServiceImpl implements OrderService {
                         Collectors.summingInt(od -> 1)
                 ));
 
+    }
+
+
+
+    /**
+     * Apply promotion for order
+     */
+    private void applyPromotion(Order order) {
+        List<PromotionLine> promotionLines = promotionLineRepository.findActivePromotionLine(LocalDate.now());
+
+        if (promotionLines.isEmpty()) {
+            return;
+        }
+
+        PromotionDetail bestPromotion = null;
+        float highestDiscountValue = 0;
+        PromotionLine selectedPromotionLine = null;
+
+        for (PromotionLine promotionLine : promotionLines) {
+            switch (promotionLine.getType()) {
+                case CASH_REBATE -> {
+                    PromotionDetail promotionDetail = findBestApplicablePromotionForPromotionCashRebate(promotionLine.getPromotionDetails(), order);
+                    if (promotionDetail != null && promotionDetail.getDiscountValue() > highestDiscountValue) {
+                        bestPromotion = promotionDetail;
+                        highestDiscountValue = promotionDetail.getDiscountValue();
+                        selectedPromotionLine = promotionLine;
+                    }
+                }
+                case PRICE_DISCOUNT -> {
+                    PromotionDetail promotionDetail = findBestApplicablePromotionForPromotionPriceDiscount(promotionLine.getPromotionDetails(), order);
+
+                    if (promotionDetail != null) {
+                        float discountValue = calculatorDiscount(order.getTotalPrice(), promotionDetail);
+                        if (discountValue > highestDiscountValue) {
+                            bestPromotion = promotionDetail;
+                            highestDiscountValue = discountValue;
+                            selectedPromotionLine = promotionLine;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (bestPromotion != null) {
+            order.setTotalDiscount(highestDiscountValue);
+            order.setFinalAmount(order.getTotalPrice() - highestDiscountValue);
+            order.setPromotionDetail(bestPromotion);
+            order.setPromotionLine(selectedPromotionLine);
+            orderRepository.save(order);
+
+            bestPromotion.setCurrentUsageCount(bestPromotion.getCurrentUsageCount() + 1);
+            promotionDetailRepository.save(bestPromotion);
+        }
     }
 }

@@ -21,11 +21,15 @@ public interface PromotionRepository extends JpaRepository<Promotion, Integer>, 
     <T> Page<T> findAllByStatusAndDeletedAndCodeContainingIgnoreCaseAndNameContainingIgnoreCase(BaseStatus status, boolean deleted, String code, String name, Pageable pageable, Class<T> classType);
     <T> Page<T> findAllByDeletedAndCodeContainingIgnoreCaseAndNameContainingIgnoreCase(boolean deleted, String code, String name, Pageable pageable, Class<T> classType);
 
-    @Query("SELECT CASE WHEN COUNT(tp) > 0 THEN true ELSE false END FROM Promotion tp WHERE " +
-           "(:startDate BETWEEN tp.startDate AND tp.endDate) OR " +
-           "(:endDate BETWEEN tp.startDate AND tp.endDate) OR " +
-           "(tp.startDate BETWEEN :startDate AND :endDate)" +
-           "AND tp.deleted = false")
+    @Query("""
+        SELECT CASE WHEN COUNT(tp) > 0 THEN true ELSE false END 
+        FROM Promotion tp 
+        WHERE tp.deleted = false
+        AND NOT (
+            tp.endDate < :startDate OR 
+            tp.startDate > :endDate
+        )
+    """)
     boolean existsOverlapping(LocalDate startDate, LocalDate endDate);
 
     <T> Optional<T> findByCodeAndDeleted(String code, boolean deleted, Class<T> classType);
@@ -35,8 +39,7 @@ public interface PromotionRepository extends JpaRepository<Promotion, Integer>, 
     @Query("""
             SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END
             FROM Promotion p
-            WHERE p.id != :promotionId
-            AND p.status = 'ACTIVE'
+            WHERE p.id != :promotionId AND p.deleted = false
             AND ((p.startDate BETWEEN :startDate AND :endDate)
             OR (p.endDate BETWEEN :startDate AND :endDate)
             OR (:startDate BETWEEN p.startDate AND p.endDate)

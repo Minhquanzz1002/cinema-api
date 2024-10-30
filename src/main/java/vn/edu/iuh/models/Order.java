@@ -44,6 +44,8 @@ public class Order extends BaseEntity {
     private User user;
     @ManyToOne
     private PromotionLine promotionLine;
+    @ManyToOne
+    private PromotionDetail promotionDetail;
     @Column(length = 500)
     private String cancelReason;
     private Float refundAmount;

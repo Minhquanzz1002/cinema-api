@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "promotion_lines")
@@ -43,9 +44,11 @@ public class PromotionLine extends BaseEntity {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
+    @ToString.Exclude
     private Promotion promotion;
     @OneToMany(mappedBy = "promotionLine", orphanRemoval = true, cascade = CascadeType.ALL)
     @SQLRestriction("deleted = false")
+    @ToString.Exclude
     private List<PromotionDetail> promotionDetails;
 
     public void addPromotionDetail(PromotionDetail detail) {
