@@ -34,8 +34,11 @@ public interface TicketPriceLineRepository extends JpaRepository<TicketPriceLine
                  WHERE (:date BETWEEN tp.start_date AND tp.end_date)
              	    AND (:time BETWEEN tpl.start_time AND tpl.end_time)
              	    AND :type = ANY(tpl.apply_for_days)
+             	    AND tpl.deleted = :deleted
+             	    AND tpl.status = 'ACTIVE'
+             	    AND tp.status = 'ACTIVE'
             """, nativeQuery = true)
-    List<TicketPriceLineProjection> findByDayTypeAndDateAndTime(@Param("type") String dayType, @Param("date") LocalDate date, @Param("time") LocalTime time);
+    List<TicketPriceLineProjection> findByDayTypeAndDateAndTimeAndDeleted(@Param("type") String dayType, @Param("date") LocalDate date, @Param("time") LocalTime time, @Param("deleted") boolean deleted);
 
     Optional<TicketPriceLine> findByIdAndDeleted(int id, boolean deleted);
 

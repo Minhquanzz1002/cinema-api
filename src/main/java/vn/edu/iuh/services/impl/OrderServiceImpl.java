@@ -91,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
-        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTime(dayType.name(), showTime.getStartDate(), showTime.getStartTime());
+        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(dayType.name(), showTime.getStartDate(), showTime.getStartTime(), false);
 
         if (prices.isEmpty()) {
             throw new DataNotFoundException("Không tìm thấy giá vé cho lịch chiếu này");
@@ -206,7 +206,7 @@ public class OrderServiceImpl implements OrderService {
 
         ShowTime showTime = order.getShowTime();
         DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
-        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTime(dayType.name(), showTime.getStartDate(), showTime.getStartTime());
+        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(dayType.name(), showTime.getStartDate(), showTime.getStartTime(), false);
 
         if (prices.isEmpty()) {
             throw new DataNotFoundException("Không tìm thấy giá vé cho lịch chiếu này");
