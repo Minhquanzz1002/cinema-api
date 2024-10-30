@@ -47,4 +47,9 @@ public class PromotionLine extends BaseEntity {
     @OneToMany(mappedBy = "promotionLine", orphanRemoval = true, cascade = CascadeType.ALL)
     @SQLRestriction("deleted = false")
     private List<PromotionDetail> promotionDetails;
+
+    public void addPromotionDetail(PromotionDetail detail) {
+        promotionDetails.add(detail);
+        detail.setPromotionLine(this);
+    }
 }

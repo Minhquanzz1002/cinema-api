@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ProductService {
+    List<ProductProjection> getAllActiveProducts();
     List<ProductProjection> getProducts();
 
     Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String search, ProductStatus status);

@@ -106,4 +106,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findTopByOrderByCodeDesc();
     Optional<Product> findByCodeAndDeleted(String code, boolean deleted);
     boolean existsByCode(String code);
+
+    Optional<Product> findByIdAndDeletedAndStatus(int id, boolean deleted, ProductStatus status);
 }

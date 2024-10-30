@@ -5,8 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.models.Promotion;
+import vn.edu.iuh.models.TicketPrice;
 import vn.edu.iuh.models.enums.BaseStatus;
 
 import java.time.LocalDate;
@@ -29,4 +31,20 @@ public interface PromotionRepository extends JpaRepository<Promotion, Integer>, 
     <T> Optional<T> findByCodeAndDeleted(String code, boolean deleted, Class<T> classType);
 
     Optional<Promotion> findByIdAndDeleted(int id, boolean deleted);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END
+            FROM Promotion p
+            WHERE p.id != :promotionId
+            AND p.status = 'ACTIVE'
+            AND ((p.startDate BETWEEN :startDate AND :endDate)
+            OR (p.endDate BETWEEN :startDate AND :endDate)
+            OR (:startDate BETWEEN p.startDate AND p.endDate)
+            OR (:endDate BETWEEN p.startDate AND p.endDate))
+            """)
+    boolean existsOverlappingPromotion(
+            @Param("promotionId") int promotionId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 }

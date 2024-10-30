@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.PromotionLineType;
+import vn.edu.iuh.models.enums.SeatType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,12 @@ public class CreatePromotionLineRequestDTO {
         private Float discountValue;
         private Float maxDiscountValue;
         private Float minOrderValue;
+        private SeatType requiredSeatType;
+        private int requiredSeatQuantity;
+        private SeatType giftSeatType;
+        private int giftSeatQuantity;
+        private int giftQuantity;
+        private int giftProduct;
         private int usageLimit;
     }
 }

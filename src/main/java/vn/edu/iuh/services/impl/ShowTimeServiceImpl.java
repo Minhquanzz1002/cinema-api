@@ -28,8 +28,10 @@ import vn.edu.iuh.specifications.GenericSpecifications;
 import vn.edu.iuh.specifications.ShowTimeSpecification;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,11 +50,26 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     @Override
     public SuccessResponse<List<ShowTimeProjection>> getShowTimes(int movieId, LocalDate date, Integer cinemaId) {
         List<ShowTimeProjection> showTimes;
+
+        LocalTime currentTime;
+        if (date.isEqual(LocalDate.now())) {
+            currentTime = LocalTime.now();
+        } else {
+            currentTime = null;
+        }
+
         if (cinemaId == null) {
             showTimes = showTimeRepository.findAllByMovieAndStartDate(Movie.builder().id(movieId).build(), date, ShowTimeProjection.class);
         } else {
             showTimes = showTimeRepository.findAllByMovieAndStartDateAndCinema(Movie.builder().id(movieId).build(), date, Cinema.builder().id(cinemaId).build(), ShowTimeProjection.class);
         }
+
+        if (currentTime != null) {
+            showTimes = showTimes.stream()
+                    .filter(showTime -> showTime.getStartTime().isAfter(currentTime))
+                    .collect(Collectors.toList());
+        }
+
         return new SuccessResponse<>(200, "success", "Thành công", showTimes);
     }
 
