@@ -38,6 +38,11 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
 
     @Override
+    public List<ProductProjection> getAllActiveProducts() {
+        return productRepository.findAllWithPrice(ProductStatus.ACTIVE, false);
+    }
+
+    @Override
     public List<ProductProjection> getProducts() {
         return productRepository.findAllWithPrice(ProductStatus.ACTIVE, false);
     }

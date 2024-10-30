@@ -18,7 +18,7 @@ public class PromotionDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private float discountValue;
-    private float maxDiscountValue;
+    private Float maxDiscountValue;
     @Builder.Default
     @Column(nullable = false)
     private float minOrderValue = 0;

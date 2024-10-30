@@ -16,5 +16,6 @@ public interface PromotionLineRepository extends JpaRepository<PromotionLine, In
     <T> Page<T> findAllByPromotion_IdAndDeleted(int promotionId, boolean deleted, Pageable pageable, Class<T> classType);
 
     Optional<PromotionLine> findByCodeAndDeleted(String code, boolean deleted);
+    Optional<PromotionLine> findByIdAndDeleted(int id, boolean deleted);
 
 }
