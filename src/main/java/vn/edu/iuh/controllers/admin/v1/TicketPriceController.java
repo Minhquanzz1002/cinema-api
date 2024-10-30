@@ -41,7 +41,7 @@ public class TicketPriceController {
         if (createTicketPriceRequestDTO.getStartDate().isAfter(createTicketPriceRequestDTO.getEndDate())) {
             throw new ValidationException("Ngày bắt đầu phải trước ngày kết thúc");
         }
-        return new SuccessResponse<>(200, "success", "Thành công", ticketPriceService.createTicketPrice(createTicketPriceRequestDTO));
+        return new SuccessResponse<>(200, "success", "Thêm bảng giá vé thành công", ticketPriceService.createTicketPrice(createTicketPriceRequestDTO));
     }
 
     @PutMapping("/{id}")
@@ -49,7 +49,7 @@ public class TicketPriceController {
         if (updateTicketPriceRequestDTO.getStartDate().isAfter(updateTicketPriceRequestDTO.getEndDate())) {
             throw new ValidationException("Ngày bắt đầu phải trước ngày kết thúc");
         }
-        return new SuccessResponse<>(200, "success", "Thành công", ticketPriceService.updateTicketPrice(id, updateTicketPriceRequestDTO));
+        return new SuccessResponse<>(200, "success", "Cập nhật bảng giá thành công", ticketPriceService.updateTicketPrice(id, updateTicketPriceRequestDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -60,11 +60,11 @@ public class TicketPriceController {
 
     @PostMapping("/{id}/lines")
     public SuccessResponse<?> createTicketPriceLine(@PathVariable int id, @RequestBody @Valid CreateTicketPriceLineRequestDTO createTicketPriceLineRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", ticketPriceService.createTicketPriceLine(id, createTicketPriceLineRequestDTO));
+        return new SuccessResponse<>(200, "success", "Thêm giá vé thành công", ticketPriceService.createTicketPriceLine(id, createTicketPriceLineRequestDTO));
     }
 
     @PutMapping("/{id}/lines/{lineId}")
     public SuccessResponse<?> updateTicketPriceLine(@PathVariable int id, @PathVariable int lineId, @RequestBody @Valid UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", ticketPriceService.updateTicketPriceLine(id, lineId, updateTicketPriceLineRequestDTO));
+        return new SuccessResponse<>(200, "success", "Cập nhật giá vé thành công", ticketPriceService.updateTicketPriceLine(id, lineId, updateTicketPriceLineRequestDTO));
     }
 }

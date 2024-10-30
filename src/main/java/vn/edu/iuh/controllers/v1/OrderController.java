@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.req.OrderCreateRequestDTO;
-import vn.edu.iuh.dto.req.OrderUpdateDiscountDTO;
-import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
-import vn.edu.iuh.dto.req.OrderUpdateSeatRequestDTO;
+import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.projections.v1.OrderProjection;
 import vn.edu.iuh.security.UserPrincipal;
@@ -69,6 +66,14 @@ public class OrderController {
     @DeleteMapping("/{orderId}")
     public SuccessResponse<?> cancelOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderId) {
         return orderService.cancelOrder(userPrincipal, orderId);
+    }
+
+    @PutMapping("/{orderId}/cancel-before-showtime")
+    public SuccessResponse<?> cancelOrderBeforeShowtime(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                        @RequestBody @Valid CancelOrderBeforeShowTimeRequestDTO cancelOrderBeforeShowTimeRequestDTO,
+                                                        @PathVariable UUID orderId) {
+        orderService.cancelOrderBeforeShowtime(userPrincipal, orderId, cancelOrderBeforeShowTimeRequestDTO);
+        return new SuccessResponse<>(200, "success", "Hủy đơn hàng thành công", null);
     }
 
     @Operation(

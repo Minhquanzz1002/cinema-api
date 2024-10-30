@@ -2,6 +2,7 @@ package vn.edu.iuh.projections.admin.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
+import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.OrderDetailType;
 import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.v1.ProductInOrderProjection;
@@ -51,7 +52,7 @@ public interface AdminOrderOverviewProjection {
             String getTitle();
             String getImagePortrait();
             String getSlug();
-            Integer getAge();
+            AgeRating getAgeRating();
             Integer getDuration();
         }
     }

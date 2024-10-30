@@ -1,5 +1,6 @@
 package vn.edu.iuh.services;
 
+import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -16,5 +17,8 @@ public interface ShowTimeService {
     SuccessResponse<List<ShowTimeProjection>> getShowTimes(int movieId, LocalDate date, Integer cinemaId);
     AdminShowTimeResponseDTO getAllShowTimes(int cinemaId, LocalDate startDate, Integer movieId, BaseStatus status);
     ShowTimeFiltersResponseDTO getShowTimeFilters();
+    void createShowTime(CreateShowTimeRequestDTO createShowTimeRequestDTO);
+
+    void deleteShowTime(UUID id);
 
 }

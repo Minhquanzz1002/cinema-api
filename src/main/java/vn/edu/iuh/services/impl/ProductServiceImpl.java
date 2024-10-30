@@ -78,6 +78,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BaseProductProjection updateProduct(String code, UpdateProductRequestDTO updateProductRequestDTO) {
         Product existingProduct = getProductByCode(code);
+        if (existingProduct.getStatus() == ProductStatus.INACTIVE && updateProductRequestDTO.getStatus() == ProductStatus.ACTIVE) {
+            boolean hasActivePrice = productPriceRepository
+                    .findFirstByProduct_CodeAndDeletedAndStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByStartDateDesc(
+                            code,
+                            false,
+                            BaseStatus.ACTIVE,
+                            LocalDate.now(),
+                            LocalDate.now()
+                    )
+                    .isEmpty();
+
+            if (hasActivePrice) {
+                throw new BadRequestException("Không thể kích hoạt sản phẩm khi chưa có giá áp dụng cho ngày hiện tại");
+            }
+        }
         if (existingProduct.getStatus() != ProductStatus.ACTIVE) {
             if (updateProductRequestDTO.getName() != null) {
                 existingProduct.setName(updateProductRequestDTO.getName());

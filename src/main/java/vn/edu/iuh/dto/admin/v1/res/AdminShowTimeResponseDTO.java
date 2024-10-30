@@ -25,12 +25,37 @@ public class AdminShowTimeResponseDTO {
     @NoArgsConstructor
     public static class ShowTimeDTO {
         private UUID id;
-        private String movieTitle;
-        private String roomName;
-        private String cinemaName;
+        private MovieDTO movie;
+        private RoomDTO room;
+        private CinemaDTO cinema;
         private LocalDate startDate;
         private LocalTime startTime;
         private LocalTime endTime;
         private BaseStatus status;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MovieDTO {
+        private int id;
+        private String title;
+        private int duration;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CinemaDTO {
+        private int id;
+        private String name;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RoomDTO {
+        private int id;
+        private String name;
     }
 }
