@@ -1503,8 +1503,9 @@ public class DataInitializer implements CommandLineRunner {
         TicketPrice month9_TicketPrice = ticketPriceRepository.save(
                 TicketPrice.builder()
                         .startDate(currentDate)
-                        .endDate(LocalDate.of(2024, 12, 31))
+                        .endDate(currentDate)
                         .name("Giá vé 2024")
+                        .status(BaseStatus.ACTIVE)
                         .build()
         );
 
@@ -1717,10 +1718,10 @@ public class DataInitializer implements CommandLineRunner {
         Product combo1 = productRepository.save(
                 Product.builder()
                         .code("CB000001")
-                        .name("iCombo 1 Big Extra STD")
+                        .name("iCombo 1 Big Extra STD (new)")
                         .description("1 Ly nước ngọt size L + 01 Hộp bắp + 1 Snack")
                         .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo1-min_1711699834430.jpg?alt=media")
-                        .status(ProductStatus.ACTIVE)
+                        .status(ProductStatus.INACTIVE)
                         .build()
         );
 

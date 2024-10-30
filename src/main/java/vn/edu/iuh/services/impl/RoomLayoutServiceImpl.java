@@ -14,10 +14,12 @@ import vn.edu.iuh.projections.v1.*;
 import vn.edu.iuh.repositories.RoomLayoutRepository;
 import vn.edu.iuh.repositories.SeatRepository;
 import vn.edu.iuh.repositories.TicketPriceLineRepository;
+import vn.edu.iuh.repositories.TicketPriceRepository;
 import vn.edu.iuh.services.RoomLayoutService;
 import vn.edu.iuh.services.ShowTimeService;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class RoomLayoutServiceImpl implements RoomLayoutService {
     private final RoomLayoutRepository roomLayoutRepository;
     private final TicketPriceLineRepository ticketPriceLineRepository;
+    private final TicketPriceRepository ticketPriceRepository;
     private final ShowTimeService showTimeService;
     private final SeatRepository seatRepository;
 
@@ -42,9 +45,11 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
     }
 
     private RoomLayoutResponseDTO mapToResponseDTO(RoomLayoutProjection layout, ShowTime showTime, List<Seat> bookedSeats) {
-        DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
-        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTime(dayType.name(), showTime.getStartDate(), showTime.getStartTime());
+        LocalDate startDateShowTime = showTime.getStartDate();
+        DayType dayType = convertToDayType(startDateShowTime.getDayOfWeek());
 
+        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(dayType.name(), showTime.getStartDate(), showTime.getStartTime(), false);
+        log.info("prices: {}", prices);
         Map<SeatType, Float> priceMap = prices.stream().collect(Collectors.toMap(
                 TicketPriceLineProjection::getSeatType,
                 TicketPriceLineProjection::getPrice
@@ -86,7 +91,7 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
                 .rowIndex(seat.getRowIndex())
                 .type(seat.getType())
                 .booked(isBooked)
-                .price(priceMap.getOrDefault(seat.getType(), (float) 0))
+                .price(priceMap.getOrDefault(seat.getType(), null))
                 .groupSeats(mapGroupSeats(seat.getGroupSeats()))
                 .build();
     }

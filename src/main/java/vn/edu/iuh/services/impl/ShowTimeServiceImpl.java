@@ -59,9 +59,9 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
 
         if (cinemaId == null) {
-            showTimes = showTimeRepository.findAllByMovieAndStartDate(Movie.builder().id(movieId).build(), date, ShowTimeProjection.class);
+            showTimes = showTimeRepository.findAllByMovieAndStartDateAndDeletedAndStatus(Movie.builder().id(movieId).build(), date, false, BaseStatus.ACTIVE, ShowTimeProjection.class);
         } else {
-            showTimes = showTimeRepository.findAllByMovieAndStartDateAndCinema(Movie.builder().id(movieId).build(), date, Cinema.builder().id(cinemaId).build(), ShowTimeProjection.class);
+            showTimes = showTimeRepository.findAllByMovieAndStartDateAndCinemaAndDeletedAndStatus(Movie.builder().id(movieId).build(), date, Cinema.builder().id(cinemaId).build(), false, BaseStatus.ACTIVE, ShowTimeProjection.class);
         }
 
         if (currentTime != null) {

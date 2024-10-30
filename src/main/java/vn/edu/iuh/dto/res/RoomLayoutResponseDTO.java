@@ -39,7 +39,7 @@ public class RoomLayoutResponseDTO {
         private SeatStatus status;
         private String name;
         private boolean booked;
-        private float price;
+        private Float price;
         private List<GroupSeatDTO> groupSeats;
     }
 

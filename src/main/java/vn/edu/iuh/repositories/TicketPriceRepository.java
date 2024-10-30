@@ -28,4 +28,10 @@ public interface TicketPriceRepository extends JpaRepository<TicketPrice, Intege
     List<TicketPrice> findOverlappingTicketPrices(LocalDate startDate, LocalDate endDate);
 
     Optional<TicketPrice> findByIdAndDeleted(int id, boolean deleted);
+
+    Optional<TicketPrice> findByStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+            BaseStatus status,
+            LocalDate date,
+            LocalDate sameDate
+    );
 }
