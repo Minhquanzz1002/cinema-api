@@ -11,6 +11,7 @@ import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.Room;
 import vn.edu.iuh.models.ShowTime;
 import vn.edu.iuh.models.enums.BaseStatus;
+import vn.edu.iuh.models.enums.MovieStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,9 +23,9 @@ import java.util.UUID;
 public interface ShowTimeRepository extends JpaRepository<ShowTime, UUID>, JpaSpecificationExecutor<ShowTime> {
     <T> List<T> findAllProjectionBy(Class<T> classType);
 
-    <T> List<T> findAllByMovieAndStartDate(Movie movie, LocalDate startDate, Class<T> classType);
+    <T> List<T> findAllByMovieAndStartDateAndDeletedAndStatus(Movie movie, LocalDate startDate, boolean deleted, BaseStatus status, Class<T> classType);
 
-    <T> List<T> findAllByMovieAndStartDateAndCinema(Movie movie, LocalDate startDate, Cinema cinema, Class<T> classType);
+    <T> List<T> findAllByMovieAndStartDateAndCinemaAndDeletedAndStatus(Movie movie, LocalDate startDate, Cinema cinema, boolean deleted, BaseStatus status, Class<T> classType);
 
     <T> Page<T> findAllByStatusAndDeleted(BaseStatus status, boolean deleted, Pageable pageable, Class<T> classType);
 
