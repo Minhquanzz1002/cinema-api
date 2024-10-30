@@ -16,16 +16,4 @@ public class UpdatePromotionLineRequestDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private BaseStatus status;
-    private List<PromotionDetailDTO> promotionDetails;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class PromotionDetailDTO {
-        private Float discountValue;
-        private Float maxDiscountValue;
-        private Float minOrderValue;
-        private int usageLimit;
-
-    }
 }

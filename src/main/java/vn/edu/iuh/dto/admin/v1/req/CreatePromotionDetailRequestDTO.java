@@ -3,6 +3,7 @@ package vn.edu.iuh.dto.admin.v1.req;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.SeatType;
 
 @Data
@@ -19,4 +20,5 @@ public class CreatePromotionDetailRequestDTO {
     private int giftQuantity;
     private int giftProduct;
     private int usageLimit;
+    private BaseStatus status;
 }

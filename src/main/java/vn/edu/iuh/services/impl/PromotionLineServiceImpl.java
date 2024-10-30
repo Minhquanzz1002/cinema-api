@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.admin.v1.req.CreatePromotionDetailRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionLineRequestDTO;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.PromotionDetail;
@@ -13,12 +14,15 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.repositories.PromotionLineRepository;
 import vn.edu.iuh.services.PromotionLineService;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class PromotionLineServiceImpl implements PromotionLineService {
     private final PromotionLineRepository promotionLineRepository;
     private final ModelMapper modelMapper;
+
     @Override
     public PromotionLine getPromotionLineByCode(String code) {
         return promotionLineRepository.findByCodeAndDeleted(code, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy mã khuyến mãi"));
@@ -43,5 +47,35 @@ public class PromotionLineServiceImpl implements PromotionLineService {
 
         promotionLine.addPromotionDetail(promotionDetail);
         promotionLineRepository.save(promotionLine);
+    }
+
+    @Override
+    public PromotionLine updatePromotionLine(int id, UpdatePromotionLineRequestDTO updatePromotionLineRequestDTO) {
+        PromotionLine promotionLine = promotionLineRepository.findByIdAndDeleted(id, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy mã khuyến mãi"));
+
+        LocalDate newStartDate = updatePromotionLineRequestDTO.getStartDate();
+        LocalDate newEndDate = updatePromotionLineRequestDTO.getEndDate();
+
+        // Check if start date is after end date
+        if (newStartDate != null && newStartDate.isAfter(newEndDate)) {
+            throw new BadRequestException("Ngày bắt đầu không thể sau ngày kết thúc");
+        }
+
+        // Check for overlapping promotions with same type
+        if (promotionLineRepository.existsOverlappingPromotionLine(
+                id,
+                promotionLine.getType(),
+                newStartDate != null ? newStartDate : promotionLine.getStartDate(),
+                newEndDate
+        )) {
+            throw new BadRequestException("Đã tồn tại chương trình khuyến mãi cùng loại trong khoảng thời gian này");
+        }
+
+        if (promotionLine.getStatus() == BaseStatus.ACTIVE) {
+            promotionLine.setEndDate(updatePromotionLineRequestDTO.getEndDate());
+        } else {
+            modelMapper.map(updatePromotionLineRequestDTO, promotionLine);
+        }
+        return promotionLineRepository.save(promotionLine);
     }
 }

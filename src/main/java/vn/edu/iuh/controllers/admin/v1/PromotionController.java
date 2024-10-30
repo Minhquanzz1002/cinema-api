@@ -46,7 +46,7 @@ public class PromotionController {
 
     @PostMapping
     public SuccessResponse<Promotion> createPromotion(@RequestBody @Valid CreatePromotionRequestDTO createPromotionRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thêm khuyến mãi thành công", promotionService.createPromotion(createPromotionRequestDTO));
+        return new SuccessResponse<>(200, "success", "Thêm chiến dịch khuyến mãi thành công", promotionService.createPromotion(createPromotionRequestDTO));
     }
 
     @DeleteMapping("/{id}")

@@ -1309,6 +1309,11 @@ public class DataInitializer implements CommandLineRunner {
         }
         insertTicketPrices();
         insertPromotion();
+
+
+        promotionLineRepository.findActivePromotionLine(LocalDate.now()).forEach(promotionLine -> {
+            log.info("Promotion line: {}", promotionLine);
+        });
     }
 
     private void insertPromotion() {
@@ -1319,7 +1324,7 @@ public class DataInitializer implements CommandLineRunner {
                         .endDate(YearMonth.now().atEndOfMonth())
                         .imagePortrait("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/promotions%2Fshopee-pay-3_1725853141172.jpg?alt=media")
                         .code("KM" + currentDate.getMonthValue() + currentDate.getYear())
-                        .status(BaseStatus.ACTIVE)
+                        .status(BaseStatus.INACTIVE)
                         .build()
         );
 
