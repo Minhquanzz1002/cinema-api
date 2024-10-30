@@ -35,5 +35,6 @@ public class CreatePromotionLineRequestDTO {
         private int giftQuantity;
         private int giftProduct;
         private int usageLimit;
+        private BaseStatus status;
     }
 }
