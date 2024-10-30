@@ -15,13 +15,17 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecificationExecutor<Order> {
-    <T> List<T> findAllByUserAndStatus(User user, OrderStatus status, Class<T> classType);
+    <T> List<T> findAllByUserAndStatusIn(User user, List<OrderStatus> statuses, Class<T> classType);
 
     <T> Optional<T> findById(UUID id, Class<T> classType);
+
+    Optional<Order> findByIdAndDeleted(UUID id, boolean deleted);
 
     <T> Optional<T> findByCode(String code, Class<T> classType);
 
     Optional<Order> findByIdAndUser(UUID id, User user);
+
+    Optional<Order> findByIdAndUserAndDeletedAndStatus(UUID id, User user, boolean deleted, OrderStatus status);
 
     void deleteByIdAndUser(UUID uuid, User user);
 

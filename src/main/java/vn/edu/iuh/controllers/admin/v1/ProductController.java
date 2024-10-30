@@ -53,7 +53,7 @@ public class ProductController {
 
     @PutMapping("/{code}")
     public SuccessResponse<BaseProductProjection> updateProduct(@PathVariable String code, @RequestBody @Valid UpdateProductRequestDTO updateProductRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", productService.updateProduct(code, updateProductRequestDTO));
+        return new SuccessResponse<>(200, "success", "Cập nhật sản phẩm thành công", productService.updateProduct(code, updateProductRequestDTO));
     }
 
     @GetMapping("/{code}/price-histories")

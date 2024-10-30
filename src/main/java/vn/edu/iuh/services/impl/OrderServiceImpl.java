@@ -27,7 +27,9 @@ import vn.edu.iuh.services.ProductService;
 import vn.edu.iuh.specifications.GenericSpecifications;
 import vn.edu.iuh.specifications.OrderSpecifications;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -68,7 +70,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public SuccessResponse<List<OrderProjection>> getOrderHistory(UserPrincipal userPrincipal) {
-        List<OrderProjection> orders = orderRepository.findAllByUserAndStatus(User.builder().id(userPrincipal.getId()).build(), OrderStatus.COMPLETED, OrderProjection.class);
+        List<OrderStatus> statuses = List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED);
+        List<OrderProjection> orders = orderRepository.findAllByUserAndStatusIn(User.builder().id(userPrincipal.getId()).build(), statuses, OrderProjection.class);
         return new SuccessResponse<>(200, "success", "Thành công", orders);
     }
 
@@ -433,6 +436,27 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public AdminOrderOverviewProjection getOrderByCode(String code) {
         return orderRepository.findByCode(code, AdminOrderOverviewProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+    }
+
+    @Override
+    public void cancelOrderBeforeShowtime(UserPrincipal userPrincipal, UUID orderId, CancelOrderBeforeShowTimeRequestDTO cancelOrderBeforeShowTimeRequestDTO) {
+        Order order = orderRepository.findByIdAndUserAndDeletedAndStatus(orderId, User.builder().id(userPrincipal.getId()).build(), false, OrderStatus.COMPLETED)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+
+        ShowTime showTime = order.getShowTime();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime showDateTime = LocalDateTime.of(showTime.getStartDate(), showTime.getStartTime());
+        Duration timeUntilShow = Duration.between(now, showDateTime);
+
+        if (timeUntilShow.toHours() < 8) {
+            throw new BadRequestException("Không thể hủy vé trong vòng 8 giờ trước suất chiếu");
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        order.setCancelReason(cancelOrderBeforeShowTimeRequestDTO.getReason());
+        order.setRefundAmount(order.getFinalAmount());
+        order.setRefundStatus(RefundStatus.PENDING);
+        orderRepository.save(order);
     }
 
     private String generateOrderCode() {

@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
 import vn.edu.iuh.models.Movie;
+import vn.edu.iuh.models.Room;
 import vn.edu.iuh.models.ShowTime;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.projections.admin.v1.AdminCinemaFilterProjection;
@@ -78,5 +81,42 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                 .cinemas(cinemas)
                 .movies(movies)
                 .build();
+    }
+
+    @Override
+    public void createShowTime(CreateShowTimeRequestDTO createShowTimeRequestDTO) {
+        Movie movie = movieRepository.findByIdAndDeleted(createShowTimeRequestDTO.getMovieId(), false)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy phim"));
+        Cinema cinema = cinemaRepository.findByIdAndDeleted(createShowTimeRequestDTO.getCinemaId(), false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp"));
+        Room room = roomRepository.findByIdAndDeleted(createShowTimeRequestDTO.getRoomId(), false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy phòng chiếu"));
+
+        boolean hasConflict = showTimeRepository.existsByRoomAndStartDateAndStartTimeBetweenOrEndTimeBetween(
+                room,
+                createShowTimeRequestDTO.getStartDate(),
+                createShowTimeRequestDTO.getStartTime(),
+                createShowTimeRequestDTO.getEndTime()
+        );
+
+        if (hasConflict) {
+            throw new BadRequestException("Đã có phim chiếu trong khung giờ này");
+        }
+
+        ShowTime showTime = ShowTime.builder()
+                .movie(movie)
+                .cinema(cinema)
+                .room(room)
+                .startDate(createShowTimeRequestDTO.getStartDate())
+                .startTime(createShowTimeRequestDTO.getStartTime())
+                .endTime(createShowTimeRequestDTO.getEndTime())
+                .status(createShowTimeRequestDTO.getStatus())
+                .build();
+        showTimeRepository.save(showTime);
+    }
+
+    @Override
+    public void deleteShowTime(UUID id) {
+        ShowTime showTime = showTimeRepository.findByIdAndDeleted(id, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy lịch chiếu"));
+        showTime.setDeleted(true);
+        showTimeRepository.save(showTime);
     }
 }
