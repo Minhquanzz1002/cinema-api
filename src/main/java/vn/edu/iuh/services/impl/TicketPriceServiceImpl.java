@@ -137,6 +137,23 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
             throw new BadRequestException("Không thể thêm vào giá vé đang hoạt động");
         }
+
+        String[] applyForDays = createTicketPriceLineRequestDTO.getApplyForDays()
+                .stream()
+                .map(Enum::name)
+                .toArray(String[]::new);
+
+        boolean hasOverlap = ticketPriceLineRepository.hasOverlappingTicketPriceLine(
+                ticketPrice.getId(),
+                applyForDays,
+                createTicketPriceLineRequestDTO.getStartTime(),
+                createTicketPriceLineRequestDTO.getEndTime()
+        );
+
+        if (hasOverlap) {
+            throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
+        }
+
         TicketPriceLine ticketPriceLine = modelMapper.map(createTicketPriceLineRequestDTO, TicketPriceLine.class);
         ticketPriceLine.setTicketPrice(ticketPrice);
 
@@ -172,6 +189,22 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         TicketPrice ticketPrice = getTicketPriceById(ticketPriceId);
         if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
             throw new BadRequestException("Không thể sửa giá vé đang hoạt động");
+        }
+
+        // Check if there is an overlapping ticket price line
+        String[] applyForDays = updateTicketPriceLineRequestDTO.getApplyForDays()
+                .stream()
+                .map(Enum::name)
+                .toArray(String[]::new);
+        boolean hasOverlap = ticketPriceLineRepository.hasOverlappingTicketPriceLine(
+                ticketPrice.getId(),
+                applyForDays,
+                updateTicketPriceLineRequestDTO.getStartTime(),
+                updateTicketPriceLineRequestDTO.getEndTime(),
+                lineId
+        );
+        if (hasOverlap) {
+            throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
         }
 
         TicketPriceLine ticketPriceLine = ticketPriceLineRepository.findByIdAndDeleted(lineId, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy dòng giá vé"));

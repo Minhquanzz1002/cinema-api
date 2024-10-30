@@ -1,6 +1,7 @@
 package vn.edu.iuh.projections.v1;
 
 import vn.edu.iuh.models.enums.OrderStatus;
+import vn.edu.iuh.models.enums.RefundStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +15,9 @@ public interface OrderProjection {
     float getTotalPrice();
     float getFinalAmount();
     float getTotalDiscount();
+    Float getRefundAmount();
+    LocalDateTime getRefundDate();
+    RefundStatus getRefundStatus();
 
     LocalDateTime getOrderDate();
 

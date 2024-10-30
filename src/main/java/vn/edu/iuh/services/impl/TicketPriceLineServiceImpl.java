@@ -46,6 +46,7 @@ public class TicketPriceLineServiceImpl implements TicketPriceLineService {
         }
 
         ticketPriceLine.setDeleted(true);
+        ticketPriceLine.setStatus(BaseStatus.INACTIVE);
         ticketPriceLine.getTicketPriceDetails().forEach(detail -> detail.setDeleted(true));
         ticketPriceLineRepository.save(ticketPriceLine);
     }

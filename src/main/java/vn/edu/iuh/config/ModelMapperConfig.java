@@ -27,13 +27,6 @@ public class ModelMapperConfig {
             mapper.map(src -> src.getRole().getName(), UserResponseDTO::setRole);
         });
 
-        modelMapper.typeMap(ShowTime.class, AdminShowTimeResponseDTO.ShowTimeDTO.class)
-                .addMappings(mapper -> {
-                    mapper.map(src -> src.getMovie().getTitle(), AdminShowTimeResponseDTO.ShowTimeDTO::setMovieTitle);
-                    mapper.map(src -> src.getRoom().getName(), AdminShowTimeResponseDTO.ShowTimeDTO::setRoomName);
-                    mapper.map(src -> src.getCinema().getName(), AdminShowTimeResponseDTO.ShowTimeDTO::setCinemaName);
-                });
-
         return modelMapper;
     }
 }

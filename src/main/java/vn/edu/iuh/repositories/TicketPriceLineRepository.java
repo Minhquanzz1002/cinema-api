@@ -4,17 +4,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import vn.edu.iuh.models.TicketPrice;
 import vn.edu.iuh.models.TicketPriceLine;
+import vn.edu.iuh.models.enums.DayType;
 import vn.edu.iuh.projections.v1.TicketPriceLineProjection;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TicketPriceLineRepository extends JpaRepository<TicketPriceLine, Integer> {
-//    @Query(value = """
+    //    @Query(value = """
 //        SELECT tpd.price AS price, tpd.seatType as seatType
 //        FROM TicketPriceLine AS tpl
 //        JOIN TicketPriceDetail AS tpd ON tpd.ticketPriceLine.id = tpl.id
@@ -35,4 +38,44 @@ public interface TicketPriceLineRepository extends JpaRepository<TicketPriceLine
     List<TicketPriceLineProjection> findByDayTypeAndDateAndTime(@Param("type") String dayType, @Param("date") LocalDate date, @Param("time") LocalTime time);
 
     Optional<TicketPriceLine> findByIdAndDeleted(int id, boolean deleted);
+
+    @Query(
+            value = """
+                    SELECT EXISTS (
+                                    SELECT 1 FROM ticket_price_lines tpl\s
+                                    WHERE tpl.ticket_price_id = :ticketPriceId\s
+                                    AND tpl.start_time <= :endTime\s
+                                    AND tpl.end_time >= :startTime
+                                    AND tpl.apply_for_days && CAST(:applyForDays AS text[])
+                                    AND tpl.deleted = false
+                                )
+                    """, nativeQuery = true
+    )
+    boolean hasOverlappingTicketPriceLine(
+            @Param("ticketPriceId") Integer ticketPriceId,
+            @Param("applyForDays") String[] applyForDays,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime
+    );
+
+    @Query(
+            value = """
+                    SELECT EXISTS (
+                                    SELECT 1 FROM ticket_price_lines tpl\s
+                                    WHERE tpl.ticket_price_id = :ticketPriceId\s
+                                    AND tpl.start_time <= :endTime\s
+                                    AND tpl.end_time >= :startTime
+                                    AND tpl.apply_for_days && CAST(:applyForDays AS text[])
+                                    AND tpl.deleted = false
+                                    AND (:excludeId IS NULL OR tpl.id != :excludeId)
+                                )
+                    """, nativeQuery = true
+    )
+    boolean hasOverlappingTicketPriceLine(
+            @Param("ticketPriceId") Integer ticketPriceId,
+            @Param("applyForDays") String[] applyForDays,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime,
+            @Param("excludeId") Integer excludeId
+    );
 }

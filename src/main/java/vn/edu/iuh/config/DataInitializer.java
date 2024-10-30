@@ -1059,6 +1059,7 @@ public class DataInitializer implements CommandLineRunner {
                                             .startDate(currentDate)
                                             .startTime(LocalTime.of(18, 0))
                                             .endTime(LocalTime.of(20, 0))
+                                            .status(BaseStatus.INACTIVE)
                                             .build()
                             );
 
@@ -1443,7 +1444,7 @@ public class DataInitializer implements CommandLineRunner {
     private void insertOrders(User user, String orderCode, int seatId1, Integer seatId2, float totalPrice) {
         Order order = orderRepository.save(
                 Order.builder()
-                        .orderDate(LocalDateTime.now())
+                        .orderDate(LocalDateTime.now().minusDays(1))
                         .code(orderCode)
                         .totalPrice(100000)
                         .finalAmount(100000)
@@ -1502,6 +1503,15 @@ public class DataInitializer implements CommandLineRunner {
                         .startDate(currentDate)
                         .endDate(LocalDate.of(2024, 12, 31))
                         .name("Giá vé 2024")
+                        .build()
+        );
+
+        ticketPriceRepository.save(
+                TicketPrice.builder()
+                        .startDate(LocalDate.of(2025, 1, 1))
+                        .endDate(LocalDate.of(2025, 12, 31))
+                        .name("Giá vé 2025")
+                        .status(BaseStatus.INACTIVE)
                         .build()
         );
 
