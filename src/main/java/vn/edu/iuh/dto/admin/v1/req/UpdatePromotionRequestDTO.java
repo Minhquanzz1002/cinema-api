@@ -19,8 +19,6 @@ public class UpdatePromotionRequestDTO {
     private String name;
     @URL(message = "Link ảnh không hợp lệ")
     private String imagePortrait;
-    @NotNull(message = "Ngày bắt đầu là bắt buộc")
-    @FutureOrPresent(message = "Ngày bắt đầu phải ở hiện tại hoặc tương lai")
     private LocalDate startDate;
     @NotNull(message = "Ngày kết thúc là bắt buộc")
     @FutureOrPresent(message = "Ngày kết thúc phải ở hiện tại hoặc tương lai")

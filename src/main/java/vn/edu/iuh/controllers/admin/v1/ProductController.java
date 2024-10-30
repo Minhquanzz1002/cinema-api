@@ -21,9 +21,11 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.ProductStatus;
 import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
 import vn.edu.iuh.projections.admin.v1.BaseProductWithPriceProjection;
+import vn.edu.iuh.projections.v1.ProductProjection;
 import vn.edu.iuh.services.ProductService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,6 +34,11 @@ import java.time.LocalDate;
 @Tag(name = "Product Controller Admin V1", description = "Quản lý sản phẩm")
 public class ProductController {
     private final ProductService productService;
+
+    @GetMapping("/all-active")
+    public SuccessResponse<List<ProductProjection>> getAllActiveProducts() {
+        return new SuccessResponse<>(200, "success", "Thành công", productService.getAllActiveProducts());
+    }
 
     @GetMapping
     public SuccessResponse<Page<BaseProductWithPriceProjection>> getAllProducts(@PageableDefault Pageable pageable,

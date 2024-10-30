@@ -1384,7 +1384,7 @@ public class DataInitializer implements CommandLineRunner {
                 PromotionDetail.builder()
                         .promotionLine(promotionLine1)
                         .discountValue(10)
-                        .maxDiscountValue(50000)
+                        .maxDiscountValue(50000F)
                         .minOrderValue(100000)
                         .usageLimit(50)
                         .currentUsageCount(0)
@@ -1407,10 +1407,12 @@ public class DataInitializer implements CommandLineRunner {
         promotionDetailRepository.save(
                 PromotionDetail.builder()
                         .promotionLine(promotionLine2)
-                        .discountValue(10)
                         .usageLimit(50)
                         .currentUsageCount(0)
-                        .giftQuantity(1)
+                        .requiredSeatType(SeatType.NORMAL)
+                        .requiredSeatQuantity(1)
+                        .giftSeatType(SeatType.NORMAL)
+                        .giftSeatQuantity(1)
                         .status(BaseStatus.ACTIVE)
                         .build()
         );
