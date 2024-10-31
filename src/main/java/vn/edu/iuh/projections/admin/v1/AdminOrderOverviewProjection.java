@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.OrderDetailType;
 import vn.edu.iuh.models.enums.OrderStatus;
+import vn.edu.iuh.models.enums.RefundStatus;
 import vn.edu.iuh.projections.v1.ProductInOrderProjection;
 import vn.edu.iuh.projections.v1.SeatInOrderProjection;
 
@@ -25,6 +26,10 @@ public interface AdminOrderOverviewProjection {
     ShowTime getShowTime();
 
     List<OrderDetail> getOrderDetails();
+    Float getRefundAmount();
+    LocalDateTime getRefundDate();
+    String getCancelReason();
+    RefundStatus getRefundStatus();
 
     User getUser();
 
