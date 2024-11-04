@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
+import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -13,6 +14,7 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.ShowTimeService;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -22,6 +24,13 @@ import java.util.UUID;
 @Tag(name = "Show Time Controller Admin V1", description = "Quản lý đặt hàng")
 public class ShowTimeController {
     private final ShowTimeService showTimeService;
+
+    @GetMapping("/sales")
+    public SuccessResponse<List<AdminShowTimeForSaleResponseDTO>> getShowTimesForSales(@RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate startDate,
+                                                                                       @RequestParam Integer movieId,
+                                                                                       @RequestParam(required = false) Integer cinemaId) {
+        return new SuccessResponse<>(200, "success", "Thành công", showTimeService.getShowTimesForSales(cinemaId, movieId, startDate));
+    }
 
     @GetMapping
     public SuccessResponse<AdminShowTimeResponseDTO> getAllShowTimes(@RequestParam int cinemaId,

@@ -6,8 +6,13 @@ import vn.edu.iuh.models.ShowTime;
 import java.time.LocalDate;
 
 public class ShowTimeSpecification {
-    public static Specification<ShowTime> withCinema(int cinemaId) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("cinema").get("id"), cinemaId);
+    public static Specification<ShowTime> withCinema(Integer cinemaId) {
+        return (root, query, criteriaBuilder) -> {
+            if (cinemaId == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("cinema").get("id"), cinemaId);
+        };
     }
 
     public static Specification<ShowTime> withMovie(Integer movieId) {

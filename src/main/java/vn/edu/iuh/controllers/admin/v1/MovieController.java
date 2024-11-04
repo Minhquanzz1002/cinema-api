@@ -19,6 +19,8 @@ import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.MovieStatus;
 import vn.edu.iuh.services.MovieService;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/admin/v1/movies")
@@ -26,6 +28,12 @@ import vn.edu.iuh.services.MovieService;
 @Tag(name = "Movie Controller Admin V1", description = "Quản lý phim")
 public class MovieController {
     private final MovieService movieService;
+
+    @GetMapping("/sales")
+    public SuccessResponse<List<AdminMovieResponseDTO>> getMoviesForSales() {
+        List<AdminMovieResponseDTO> movies = movieService.getMoviesForSales();
+        return new SuccessResponse<>(200, "success", "Thành công", movies);
+    }
 
     @GetMapping
     public SuccessResponse<Page<AdminMovieResponseDTO>> getMovies(@PageableDefault(sort = "title") Pageable pageable,

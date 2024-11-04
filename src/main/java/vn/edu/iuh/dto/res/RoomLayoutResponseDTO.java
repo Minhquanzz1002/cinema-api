@@ -38,6 +38,7 @@ public class RoomLayoutResponseDTO {
         private SeatType type;
         private SeatStatus status;
         private String name;
+        private String fullName;
         private boolean booked;
         private Float price;
         private List<GroupSeatDTO> groupSeats;
