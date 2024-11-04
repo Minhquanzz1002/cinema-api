@@ -195,6 +195,9 @@ public class OrderServiceImpl implements OrderService {
         order.setFinalAmount(totalPrice);
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
+
+        applyPromotion(order);
+
         AdminOrderProjection orderProjection = orderRepository.findById(order.getId(), AdminOrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         saveOrderToRedis(order.getId());
         return orderProjection;
@@ -288,6 +291,66 @@ public class OrderServiceImpl implements OrderService {
 
         OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         return new SuccessResponse<>(201, "success", "Cập nhật sản phẩm thành công", orderProjection);
+    }
+
+    @Override
+    public AdminOrderProjection updateProductsInOrderByEmployee(UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+
+        // Clear promotion
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+        order.setPromotionDetail(null);
+        order.setTotalDiscount(0);
+        order.setFinalAmount(order.getTotalPrice());
+        order.setPromotionLine(null);
+
+        Map<Integer, OrderDetail> existingOrderDetails = order.getOrderDetails().stream()
+                .filter(od -> od.getType() == OrderDetailType.PRODUCT)
+                .collect(Collectors.toMap(od -> od.getProduct().getId(), Function.identity()));
+
+        List<OrderDetail> updatedOrderDetails = new ArrayList<>(order.getOrderDetails());
+        updatedOrderDetails.removeIf(od -> od.getType() == OrderDetailType.PRODUCT);
+
+        float totalPrice = calculateTotalPriceByType(order, OrderDetailType.TICKET);
+
+        for (OrderProductRequestDTO product : orderUpdateProductRequestDTO.getProducts()) {
+            ProductProjection productProjection = productRepository.findWithPriceById(ProductStatus.ACTIVE, false, product.getId());
+
+            OrderDetail orderDetail = existingOrderDetails.get(product.getId());
+
+            if (orderDetail == null) {
+                orderDetail = OrderDetail.builder()
+                        .price(productProjection.getPrice())
+                        .product(Product.builder().id(productProjection.getId()).build())
+                        .quantity(product.getQuantity())
+                        .type(OrderDetailType.PRODUCT)
+                        .order(order)
+                        .build();
+            } else {
+                orderDetail.setQuantity(product.getQuantity());
+                existingOrderDetails.remove(product.getId());
+            }
+
+            orderDetail.setOrder(order);
+            updatedOrderDetails.add(orderDetail);
+
+            float productTotalPrice = productProjection.getPrice() * product.getQuantity();
+            totalPrice += productTotalPrice;
+
+        }
+        order.getOrderDetails().clear();
+        order.getOrderDetails().addAll(updatedOrderDetails);
+        order.setTotalPrice(totalPrice);
+        order.setFinalAmount(totalPrice);
+        order = orderRepository.save(order);
+
+        applyPromotion(order);
+
+        return orderRepository.findById(order.getId(), AdminOrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
     }
 
     @Override
@@ -619,7 +682,6 @@ public class OrderServiceImpl implements OrderService {
                 ));
 
     }
-
 
 
     /**

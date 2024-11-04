@@ -33,6 +33,8 @@ public interface OrderService {
 
     SuccessResponse<OrderProjection> updateProductsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO);
 
+    AdminOrderProjection updateProductsInOrderByEmployee(UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO);
+
     SuccessResponse<OrderProjection> updateSeatsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO);
 
     SuccessResponse<OrderProjection> updateDiscountInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateDiscountDTO orderUpdateDiscountDTO);
