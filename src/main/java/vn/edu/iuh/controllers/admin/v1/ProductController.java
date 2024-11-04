@@ -12,7 +12,6 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreateProductRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateProductRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Product;
@@ -78,17 +77,6 @@ public class ProductController {
     @PostMapping("/{code}/prices")
     public SuccessResponse<ProductPrice> createProductPrice(@PathVariable String code, @RequestBody @Valid CreateProductPriceRequestDTO createProductPriceRequestDTO) {
         return new SuccessResponse<>(200, "success", "Thành công", productService.createProductPrice(code, createProductPriceRequestDTO));
-    }
-
-    @DeleteMapping("/{code}/prices/{id}")
-    public SuccessResponse<?> deleteProductPrice(@PathVariable String code, @PathVariable int id) {
-        productService.deleteProductPrice(code, id);
-        return new SuccessResponse<>(200, "success", "Thành công", null);
-    }
-
-    @PutMapping("/{code}/prices/{id}")
-    public SuccessResponse<ProductPrice> updateProductPrice(@PathVariable String code, @PathVariable int id, @RequestBody @Valid UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", productService.updateProductPrice(code, id, updateProductPriceRequestDTO));
     }
 
     @PostMapping

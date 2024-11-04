@@ -63,14 +63,14 @@ public class TicketPriceServiceImpl implements TicketPriceService {
 
     @Override
     public TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO) {
-        List<TicketPrice> overlappingTicketPrices = ticketPriceRepository.findOverlappingTicketPrices(
-                createTicketPriceRequestDTO.getStartDate(),
-                createTicketPriceRequestDTO.getEndDate()
-        );
-
-        if (!overlappingTicketPrices.isEmpty()) {
-            throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
-        }
+//        List<TicketPrice> overlappingTicketPrices = ticketPriceRepository.findOverlappingTicketPrices(
+//                createTicketPriceRequestDTO.getStartDate(), // kiem tra
+//                createTicketPriceRequestDTO.getEndDate()
+//        );
+//
+//        if (!overlappingTicketPrices.isEmpty()) {
+//            throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
+//        }
 
         TicketPrice ticketPrice = modelMapper.map(createTicketPriceRequestDTO, TicketPrice.class);
         return ticketPriceRepository.save(ticketPrice);
@@ -80,6 +80,15 @@ public class TicketPriceServiceImpl implements TicketPriceService {
     public TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequestDTO updateTicketPriceRequestDTO) {
         TicketPrice ticketPrice = ticketPriceRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá vé"));
         LocalDate currentDate = LocalDate.now();
+
+        // Kiểm tra nếu đang từ INACTIVE chuyển sang ACTIVE
+        if (ticketPrice.getStatus() == BaseStatus.INACTIVE && updateTicketPriceRequestDTO.getStatus() == BaseStatus.ACTIVE) {
+            // Kiểm tra xem có dữ liệu (price) không
+            if (ticketPrice.getTicketPriceLines() == null || ticketPrice.getTicketPriceLines().isEmpty()) {
+                throw new BadRequestException("Không thể kích hoạt giá vé khi chưa có dữ liệu giá");
+            }
+        }
+
         if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
             if (updateTicketPriceRequestDTO.getEndDate().isBefore(currentDate)) {
                 throw new BadRequestException("Chỉ được phép sửa ngày kết thúc thành ngày hiện tại cho giá vé đang hoạt động");
@@ -98,20 +107,31 @@ public class TicketPriceServiceImpl implements TicketPriceService {
 
             ticketPrice.setEndDate(updateTicketPriceRequestDTO.getEndDate());
         } else {
-            List<TicketPrice> overlappingTicketPrices = ticketPriceRepository.findOverlappingTicketPrices(
-                    updateTicketPriceRequestDTO.getStartDate(),
-                    updateTicketPriceRequestDTO.getEndDate()
-            );
+            if (updateTicketPriceRequestDTO.getStatus() == BaseStatus.INACTIVE) {
+                modelMapper.map(updateTicketPriceRequestDTO, ticketPrice);
+            } else {
+                List<TicketPrice> overlappingTicketPrices = ticketPriceRepository.findOverlappingTicketPrices(
+                        updateTicketPriceRequestDTO.getStartDate(),
+                        updateTicketPriceRequestDTO.getEndDate()
+                );
 
-            overlappingTicketPrices = overlappingTicketPrices.stream()
-                    .filter(tp -> tp.getId() != id)
-                    .toList();
+                overlappingTicketPrices = overlappingTicketPrices.stream()
+                        .filter(tp -> tp.getId() != id)
+                        .toList();
 
-            if (!overlappingTicketPrices.isEmpty()) {
-                throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
+                if (!overlappingTicketPrices.isEmpty()) {
+                    throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
+                }
+                // Prevent activation if the ticket's date includes the current date
+                if (!updateTicketPriceRequestDTO.getStartDate().isAfter(currentDate) &&
+                        !updateTicketPriceRequestDTO.getEndDate().isBefore(currentDate)) {
+                    throw new BadRequestException("Giá vé không thể hoạt động khi nằm trong ngày đang mở vé");
+                }
+
+
+                modelMapper.map(updateTicketPriceRequestDTO, ticketPrice);
             }
 
-            modelMapper.map(updateTicketPriceRequestDTO, ticketPrice);
         }
         return ticketPriceRepository.save(ticketPrice);
     }
@@ -172,12 +192,6 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
                 .price(createTicketPriceLineRequestDTO.getCouplePrice())
                 .seatType(SeatType.COUPLE)
-                .status(BaseStatus.ACTIVE)
-                .build());
-
-        ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
-                .price(createTicketPriceLineRequestDTO.getTriplePrice())
-                .seatType(SeatType.TRIPLE)
                 .status(BaseStatus.ACTIVE)
                 .build());
 
