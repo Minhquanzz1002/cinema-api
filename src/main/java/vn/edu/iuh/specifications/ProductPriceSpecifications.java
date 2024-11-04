@@ -1,5 +1,6 @@
 package vn.edu.iuh.specifications;
 
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import vn.edu.iuh.models.ProductPrice;
@@ -20,6 +21,23 @@ public class ProductPriceSpecifications {
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public static Specification<ProductPrice> withProductCodeOrName(String searchTerm) {
+        return (root, query, criteriaBuilder) -> {
+            if (searchTerm == null || searchTerm.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+
+            var product = root.join("product", JoinType.INNER);
+
+            String likePattern = "%" + searchTerm.toLowerCase() + "%";
+
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(product.get("code")), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(product.get("name")), likePattern)
+            );
         };
     }
 }

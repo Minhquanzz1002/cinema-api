@@ -85,6 +85,7 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
         return RoomLayoutResponseDTO.SeatDTO.builder()
                 .id(seat.getId())
                 .name(seat.getName())
+                .fullName(seat.getFullName())
                 .area(seat.getArea())
                 .status(seat.getStatus())
                 .columnIndex(seat.getColumnIndex())

@@ -40,7 +40,7 @@ public class Order extends BaseEntity {
     @JoinColumn(nullable = false)
     private ShowTime showTime;
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     private User user;
     @ManyToOne
     private PromotionLine promotionLine;

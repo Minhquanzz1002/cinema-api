@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -17,6 +18,7 @@ import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.*;
 import vn.edu.iuh.models.enums.*;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
+import vn.edu.iuh.projections.admin.v1.AdminOrderProjection;
 import vn.edu.iuh.projections.v1.OrderProjection;
 import vn.edu.iuh.projections.v1.ProductProjection;
 import vn.edu.iuh.projections.v1.TicketPriceLineProjection;
@@ -132,6 +134,68 @@ public class OrderServiceImpl implements OrderService {
         OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         saveOrderToRedis(order.getId());
         return new SuccessResponse<>(201, "success", "Tạo đơn hàng thành công", orderProjection);
+    }
+
+    @Override
+    public AdminOrderProjection createOrderByEmployee(UserPrincipal userPrincipal, CreateOrderRequestDTO createOrderRequestDTO) {
+        UUID showTimeId = createOrderRequestDTO.getShowTimeId();
+        ShowTime showTime = showTimeRepository.findById(showTimeId).orElseThrow(() -> new DataNotFoundException("Không tìm thấy lịch chiếu có ID là " + showTimeId));
+        // TODO: Check seat
+        List<Seat> seats = seatRepository.findAllByIdInAndStatus(createOrderRequestDTO.getSeatIds(), SeatStatus.ACTIVE);
+
+        if (seats.isEmpty()) {
+            throw new DataNotFoundException("Ghế không tồn tại");
+        }
+
+        if (seats.size() != createOrderRequestDTO.getSeatIds().size()) {
+            throw new DataNotFoundException("Ghế không tồn tại");
+        }
+
+        DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
+        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(dayType.name(), showTime.getStartDate(), showTime.getStartTime(), false);
+
+        if (prices.isEmpty()) {
+            throw new DataNotFoundException("Không tìm thấy giá vé cho lịch chiếu này");
+        }
+
+        Map<SeatType, Float> priceMap = prices.stream().collect(Collectors.toMap(
+                TicketPriceLineProjection::getSeatType,
+                TicketPriceLineProjection::getPrice
+        ));
+
+        Order order = Order.builder()
+                .code(generateOrderCode())
+                .status(OrderStatus.PENDING)
+                .showTime(showTime)
+                .build();
+
+        if (createOrderRequestDTO.getCustomerId() != null) {
+            order.setUser(User.builder().id(createOrderRequestDTO.getCustomerId()).build());
+        }
+
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        float totalPrice = 0;
+
+        for (Seat seat : seats) {
+            float price = priceMap.get(seat.getType());
+            totalPrice += price;
+            OrderDetail orderDetail = OrderDetail.builder()
+                    .price(price)
+                    .type(OrderDetailType.TICKET)
+                    .seat(seat)
+                    .order(order)
+                    .build();
+
+            orderDetails.add(orderDetail);
+        }
+
+        order.setTotalPrice(totalPrice);
+        order.setFinalAmount(totalPrice);
+        order.setOrderDetails(orderDetails);
+        order = orderRepository.save(order);
+        AdminOrderProjection orderProjection = orderRepository.findById(order.getId(), AdminOrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        saveOrderToRedis(order.getId());
+        return orderProjection;
     }
 
     @Override

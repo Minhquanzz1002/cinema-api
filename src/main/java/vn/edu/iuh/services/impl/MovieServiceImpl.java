@@ -171,6 +171,15 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository.save(movie);
     }
 
+    @Override
+    public List<AdminMovieResponseDTO> getMoviesForSales() {
+        Specification<Movie> spec = Specification.where(null);
+        spec = spec.and(MovieSpecification.withStatus(MovieStatus.ACTIVE))
+                .and(MovieSpecification.withDeleted(false));
+        List<Movie> movies = movieRepository.findAll(spec);
+        return movies.stream().map(movie -> modelMapper.map(movie, AdminMovieResponseDTO.class)).toList();
+    }
+
     private String generateNextActorCode() {
         Optional<Movie> lastActor = movieRepository.findTopByOrderByCodeDesc();
         int nextNumber = 1;
