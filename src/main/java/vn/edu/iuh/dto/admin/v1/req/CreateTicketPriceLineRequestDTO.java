@@ -20,5 +20,4 @@ public class CreateTicketPriceLineRequestDTO {
     private float normalPrice;
     private float vipPrice;
     private float couplePrice;
-    private float triplePrice;
 }

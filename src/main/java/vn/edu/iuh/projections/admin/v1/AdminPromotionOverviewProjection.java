@@ -8,9 +8,7 @@ public interface AdminPromotionOverviewProjection {
     int getId();
     String getCode();
     String getName();
-    String getImagePortrait();
     LocalDate getStartDate();
     LocalDate getEndDate();
-    String getDescription();
     BaseStatus getStatus();
 }

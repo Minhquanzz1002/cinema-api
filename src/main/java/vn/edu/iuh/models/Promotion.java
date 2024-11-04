@@ -20,12 +20,8 @@ public class Promotion extends BaseEntity {
     private int id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String imagePortrait;
     @Column(unique = true, updatable = false)
     private String code;
-    @Column(columnDefinition = "TEXT")
-    private String description;
     @Column(nullable = false)
     private LocalDate startDate;
     @Column(nullable = false)
