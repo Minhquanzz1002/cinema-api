@@ -13,5 +13,6 @@ public interface SeatProjection {
     SeatType getType();
     SeatStatus getStatus();
     String getName();
+    String getFullName();
     List<GroupSeatProjection> getGroupSeats();
 }

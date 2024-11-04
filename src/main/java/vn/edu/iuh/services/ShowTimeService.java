@@ -1,6 +1,7 @@
 package vn.edu.iuh.services;
 
 import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
+import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -21,4 +22,6 @@ public interface ShowTimeService {
 
     void deleteShowTime(UUID id);
 
+
+    List<AdminShowTimeForSaleResponseDTO> getShowTimesForSales(Integer cinemaId, Integer movieId,LocalDate date);
 }

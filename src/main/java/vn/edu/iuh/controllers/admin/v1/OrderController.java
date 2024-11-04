@@ -7,11 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
+import vn.edu.iuh.projections.admin.v1.AdminOrderProjection;
+import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.OrderService;
 
 import java.time.LocalDate;
@@ -26,8 +30,8 @@ public class OrderController {
 
     @GetMapping
     public SuccessResponse<Page<AdminOrderResponseDTO>> getOrders(@PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable,
-                                                                @RequestParam(required = false) LocalDate fromDate, @RequestParam(required = false) LocalDate toDate,
-                                                                @RequestParam(required = false) String code, @RequestParam(required = false) OrderStatus status) {
+                                                                  @RequestParam(required = false) LocalDate fromDate, @RequestParam(required = false) LocalDate toDate,
+                                                                  @RequestParam(required = false) String code, @RequestParam(required = false) OrderStatus status) {
         Page<AdminOrderResponseDTO> orderPage = orderService.getAllOrders(code, status, fromDate, toDate, pageable);
         return new SuccessResponse<>(200, "success", "Thành công", orderPage);
     }
@@ -36,5 +40,11 @@ public class OrderController {
     public SuccessResponse<AdminOrderOverviewProjection> getOrderByCode(@PathVariable String code) {
         AdminOrderOverviewProjection order = orderService.getOrderByCode(code);
         return new SuccessResponse<>(200, "success", "Thành công", order);
+    }
+
+    @PostMapping
+    public SuccessResponse<AdminOrderProjection> createOrderByEmployee(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                                       @RequestBody CreateOrderRequestDTO createOrderRequestDTO) {
+        return new SuccessResponse<>(200, "success", "Thành công", orderService.createOrderByEmployee(userPrincipal, createOrderRequestDTO));
     }
 }

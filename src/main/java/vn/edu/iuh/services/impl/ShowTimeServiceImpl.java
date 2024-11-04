@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
+import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -135,5 +136,26 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         ShowTime showTime = showTimeRepository.findByIdAndDeleted(id, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy lịch chiếu"));
         showTime.setDeleted(true);
         showTimeRepository.save(showTime);
+    }
+
+    @Override
+    public List<AdminShowTimeForSaleResponseDTO> getShowTimesForSales(Integer cinemaId, Integer movieId, LocalDate date) {
+        Specification<ShowTime> spec = Specification.where(ShowTimeSpecification.withCinema(cinemaId))
+                .and(ShowTimeSpecification.onDate(date))
+                .and(ShowTimeSpecification.withMovie(movieId))
+                .and(GenericSpecifications.withDeleted(false));
+        List<ShowTime> showTimes = showTimeRepository.findAll(spec);
+
+        // If requested date is today, filter out show times that have already started
+        LocalTime currentTime =  LocalTime.now();
+        if (date.isEqual(LocalDate.now())) {
+            showTimes = showTimes.stream()
+                    .filter(showTime -> showTime.getStartTime().isAfter(currentTime))
+                    .toList();
+        }
+
+        return showTimes.stream()
+                .map(showTime -> modelMapper.map(showTime, AdminShowTimeForSaleResponseDTO.class))
+                .toList();
     }
 }

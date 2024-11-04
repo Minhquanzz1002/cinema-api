@@ -12,6 +12,8 @@ import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.MovieStatus;
 import vn.edu.iuh.projections.v1.MovieProjection;
 
+import java.util.List;
+
 public interface MovieService {
     SuccessResponse<Page<MovieProjection>> getMovies(Pageable pageable, String title, MovieStatus status);
     SuccessResponse<Movie> getMovie(String slug);
@@ -22,4 +24,5 @@ public interface MovieService {
     void deleteMovie(int id);
     Movie createMovie(CreateMovieRequestDTO createMovieRequestDTO);
     Movie updateMovie(int id, UpdateMovieRequestDTO updateMovieRequestDTO);
+    List<AdminMovieResponseDTO> getMoviesForSales();
 }
