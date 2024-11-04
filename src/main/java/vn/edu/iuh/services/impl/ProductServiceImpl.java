@@ -134,17 +134,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProductPrice(String code, int id) {
-        ProductPrice productPrice = productPriceRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá sản phẩm"));
-        if (productPrice.getStatus() != BaseStatus.ACTIVE) {
-            productPrice.setDeleted(true);
-            productPriceRepository.save(productPrice);
-        } else {
-            throw new BadRequestException("Không thể xóa giá sản phẩm đang hoạt động");
-        }
-    }
-
-    @Override
     public ProductPrice updateProductPrice(String code, int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
         ProductPrice productPrice = productPriceRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá sản phẩm"));
         if (productPrice.getStatus() != BaseStatus.ACTIVE) {
