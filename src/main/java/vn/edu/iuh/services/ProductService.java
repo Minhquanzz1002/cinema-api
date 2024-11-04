@@ -37,7 +37,5 @@ public interface ProductService {
 
     ProductPrice createProductPrice(String code, CreateProductPriceRequestDTO createProductPriceRequestDTO);
 
-    void deleteProductPrice(String code, int id);
-
     ProductPrice updateProductPrice(String code, int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO);
 }

@@ -2,17 +2,15 @@ package vn.edu.iuh.controllers.admin.v1;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminProductPriceOverviewResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -46,5 +44,26 @@ public class ProductPriceController {
                                                                                         @RequestParam(required = false) String search,
                                                                                         @PageableDefault(sort = "startDate") Pageable pageable) {
         return new SuccessResponse<>(200, "success", "Thành công", productPriceService.getAllProductPrices(startDate, endDate, status, search, pageable));
+    }
+
+    @Operation(
+            summary = "Xóa bảng giá",
+            description = """
+                    Xóa bảng giá sản phẩm theo id
+                    
+                    Không thể xóa bảng giá đang hoạt động
+                    """
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public SuccessResponse<?> deleteProductPrice(@PathVariable int id) {
+        productPriceService.deleteProductPrice(id);
+        return new SuccessResponse<>(200, "success", "Xóa giá bảng giá thành công", null);
+    }
+
+    @PutMapping("/{id}")
+    public SuccessResponse<?> updateProductPrice(@PathVariable int id,
+                                                 @RequestBody @Valid UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
+        return new SuccessResponse<>(200, "success", "Cập nhật giá bảng giá thành công", productPriceService.updateProductPrice(id, updateProductPriceRequestDTO));
     }
 }

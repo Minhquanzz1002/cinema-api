@@ -7,7 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminProductPriceOverviewResponseDTO;
+import vn.edu.iuh.exceptions.BadRequestException;
+import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.ProductPrice;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.repositories.ProductPriceRepository;
@@ -34,5 +37,37 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 
         Page<ProductPrice> productPrices = productPriceRepository.findAll(spec, pageable);
         return productPrices.map(productPrice -> modelMapper.map(productPrice, AdminProductPriceOverviewResponseDTO.class));
+    }
+
+    @Override
+    public void deleteProductPrice(int id) {
+        ProductPrice productPrice = productPriceRepository.findByIdAndDeleted(id, false)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá sản phẩm"));
+        if (productPrice.getStatus() == BaseStatus.ACTIVE) {
+            throw new RuntimeException("Không thể xóa bảng giá đang hoạt động");
+        }
+        productPrice.setDeleted(true);
+        productPriceRepository.save(productPrice);
+    }
+
+    @Override
+    public ProductPrice updateProductPrice(int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
+        ProductPrice productPrice = productPriceRepository.findByIdAndDeleted(id, false)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá sản phẩm"));
+        if (productPrice.getStatus() == BaseStatus.ACTIVE) {
+            LocalDate newEndDate = updateProductPriceRequestDTO.getEndDate();
+            if (newEndDate.isBefore(productPrice.getStartDate())) {
+                throw new BadRequestException("Ngày kết thúc phải sau ngày bắt đầu");
+            }
+            productPrice.setEndDate(newEndDate);
+        } else {
+            BaseStatus newStatus = updateProductPriceRequestDTO.getStatus();
+            if (newStatus == BaseStatus.ACTIVE) {
+                // TODO: Check if there is any active product price
+
+            }
+            modelMapper.map(updateProductPriceRequestDTO, productPrice);
+        }
+        return productPriceRepository.save(productPrice);
     }
 }

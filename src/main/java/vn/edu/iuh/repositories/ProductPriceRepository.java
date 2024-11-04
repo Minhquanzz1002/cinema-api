@@ -24,4 +24,6 @@ public interface ProductPriceRepository extends JpaRepository<ProductPrice, Inte
             LocalDate currentDate,
             LocalDate currentDateForEnd
     );
+
+    Optional<ProductPrice> findByIdAndDeleted(int id, boolean deleted);
 }
