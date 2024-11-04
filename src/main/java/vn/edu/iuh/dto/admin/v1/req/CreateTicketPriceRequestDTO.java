@@ -21,8 +21,9 @@ public class CreateTicketPriceRequestDTO {
     @FutureOrPresent(message = "Ngày bắt đầu phải là một ngày trong tương lai hoặc hiện tại")
     private LocalDate startDate;
     @NotNull(message = "Ngày kết thúc không được để trống")
-    @Future(message = "Ngày kết thú phải là một ngày trong tương lai")
+    @FutureOrPresent(message = "Ngày kết thú phải là một ngày trong tương lai")
     private LocalDate endDate;
     @NotNull(message = "Trạng thái không được để trống")
     private BaseStatus status;
+
 }
