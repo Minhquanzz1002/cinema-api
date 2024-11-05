@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import vn.edu.iuh.models.enums.BaseStatus;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +14,14 @@ import java.time.LocalDate;
 public class CreateProductPriceRequestDTO {
     private LocalDate startDate;
     private LocalDate endDate;
-    private float price;
     private BaseStatus status;
+    private List<ProductDTO> products;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProductDTO {
+        private int id;
+        private float price;
+    }
 }

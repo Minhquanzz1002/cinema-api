@@ -19,6 +19,7 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductProjection> getAllActiveProducts();
+
     List<ProductProjection> getProducts();
 
     Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String search, ProductStatus status);
@@ -38,4 +39,6 @@ public interface ProductService {
     ProductPrice createProductPrice(String code, CreateProductPriceRequestDTO createProductPriceRequestDTO);
 
     ProductPrice updateProductPrice(String code, int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO);
+
+    List<BaseProductProjection> getListProducts(String search);
 }
