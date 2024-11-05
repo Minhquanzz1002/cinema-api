@@ -1,5 +1,6 @@
 package vn.edu.iuh.controllers.admin.v1;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreateProductRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateProductRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -39,6 +39,13 @@ public class ProductController {
         return new SuccessResponse<>(200, "success", "Thành công", productService.getAllActiveProducts());
     }
 
+    @Operation(summary = "Danh sách 10 sản phẩm theo mã hoặc tên")
+    @GetMapping("/list")
+    public SuccessResponse<?> getListProducts(@RequestParam(required = false, defaultValue = "") String search) {
+        return new SuccessResponse<>(200, "success", "Thành công", productService.getListProducts(search));
+    }
+
+    @Operation(summary = "Danh sách sản phẩm (có giá & phân trang)")
     @GetMapping
     public SuccessResponse<Page<BaseProductWithPriceProjection>> getAllProducts(@PageableDefault Pageable pageable,
                                                                                 @RequestParam(defaultValue = "", required = false) String search,
@@ -72,11 +79,6 @@ public class ProductController {
                                                                        }) Pageable pageable,
                                                                        @RequestParam(required = false) BaseStatus status) {
         return new SuccessResponse<>(200, "success", "Thành công", productService.getProductPricesHistory(code, status, startDate, endDate, pageable));
-    }
-
-    @PostMapping("/{code}/prices")
-    public SuccessResponse<ProductPrice> createProductPrice(@PathVariable String code, @RequestBody @Valid CreateProductPriceRequestDTO createProductPriceRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", productService.createProductPrice(code, createProductPriceRequestDTO));
     }
 
     @PostMapping

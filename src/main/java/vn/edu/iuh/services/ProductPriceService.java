@@ -2,6 +2,7 @@ package vn.edu.iuh.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminProductPriceOverviewResponseDTO;
 import vn.edu.iuh.models.ProductPrice;
@@ -15,4 +16,6 @@ public interface ProductPriceService {
     void deleteProductPrice(int id);
 
     ProductPrice updateProductPrice(int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO);
+
+    void createProductPrice(CreateProductPriceRequestDTO createProductPriceRequestDTO);
 }
