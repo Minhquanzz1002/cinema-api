@@ -10,9 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminProductPriceOverviewResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.models.ProductPrice;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.ProductPriceService;
 
@@ -56,14 +58,29 @@ public class ProductPriceController {
     )
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public SuccessResponse<?> deleteProductPrice(@PathVariable int id) {
+    public SuccessResponse<Void> deleteProductPrice(@PathVariable int id) {
         productPriceService.deleteProductPrice(id);
         return new SuccessResponse<>(200, "success", "Xóa giá bảng giá thành công", null);
     }
 
+    @Operation(
+            summary = "Cập nhật bảng giá",
+            description = """
+                    Check trùng ngày khi trạng thái mới là `ACTIVE`
+                    """
+    )
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public SuccessResponse<?> updateProductPrice(@PathVariable int id,
-                                                 @RequestBody @Valid UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
+    public SuccessResponse<ProductPrice> updateProductPrice(@PathVariable int id,
+                                                            @RequestBody @Valid UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
         return new SuccessResponse<>(200, "success", "Cập nhật giá bảng giá thành công", productPriceService.updateProductPrice(id, updateProductPriceRequestDTO));
+    }
+
+    @Operation(summary = "Thêm bảng giá")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
+    public SuccessResponse<Void> createProductPrice(@RequestBody @Valid CreateProductPriceRequestDTO createProductPriceRequestDTO) {
+        productPriceService.createProductPrice(createProductPriceRequestDTO);
+        return new SuccessResponse<>(200, "success", "Thêm bảng giá thành công", null);
     }
 }

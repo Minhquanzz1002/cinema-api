@@ -159,6 +159,15 @@ public class ProductServiceImpl implements ProductService {
         return productPriceRepository.save(productPrice);
     }
 
+    @Override
+    public List<BaseProductProjection> getListProducts(String search) {
+        return productRepository.findTop10ByDeletedAndCodeContainingIgnoreCaseOrNameContainingIgnoreCase(false, search, search, BaseProductProjection.class);
+    }
+
+    /**
+     * Generate next product code
+     * @return next product code: CBxxxxxx
+     */
     private String generateNextProductCode() {
         Optional<Product> lastProduct = productRepository.findTopByOrderByCodeDesc();
         int nextNumber = 1;

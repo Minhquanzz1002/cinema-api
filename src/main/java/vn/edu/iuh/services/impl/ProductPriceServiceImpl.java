@@ -1,5 +1,6 @@
 package vn.edu.iuh.services.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -7,13 +8,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminProductPriceOverviewResponseDTO;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
+import vn.edu.iuh.models.Product;
 import vn.edu.iuh.models.ProductPrice;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.repositories.ProductPriceRepository;
+import vn.edu.iuh.repositories.ProductRepository;
 import vn.edu.iuh.services.ProductPriceService;
 import vn.edu.iuh.specifications.GenericSpecifications;
 import vn.edu.iuh.specifications.ProductPriceSpecifications;
@@ -25,6 +29,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ProductPriceServiceImpl implements ProductPriceService {
     private final ProductPriceRepository productPriceRepository;
+    private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -63,11 +68,41 @@ public class ProductPriceServiceImpl implements ProductPriceService {
         } else {
             BaseStatus newStatus = updateProductPriceRequestDTO.getStatus();
             if (newStatus == BaseStatus.ACTIVE) {
-                // TODO: Check if there is any active product price
+                boolean hasOverlap = productPriceRepository.existsByProductAndDeletedAndStatusAndIdNotAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                        productPrice.getProduct(),
+                        false,
+                        BaseStatus.ACTIVE,
+                        id,
+                        updateProductPriceRequestDTO.getEndDate(),
+                        updateProductPriceRequestDTO.getStartDate()
+                );
+
+                if (hasOverlap) {
+                    throw new BadRequestException("Đã tồn tại bảng giá trong khoảng thời gian này");
+                }
 
             }
             modelMapper.map(updateProductPriceRequestDTO, productPrice);
         }
         return productPriceRepository.save(productPrice);
+    }
+
+    @Transactional
+    @Override
+    public void createProductPrice(CreateProductPriceRequestDTO createProductPriceRequestDTO) {
+        LocalDate startDate = createProductPriceRequestDTO.getStartDate();
+        LocalDate endDate = createProductPriceRequestDTO.getEndDate();
+
+        createProductPriceRequestDTO.getProducts().stream().map(p -> {
+            Product product = productRepository.findByIdAndDeleted(p.getId(), false)
+                    .orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
+            return ProductPrice.builder()
+                    .product(product)
+                    .price(p.getPrice())
+                    .startDate(startDate)
+                    .endDate(endDate)
+                    .status(BaseStatus.INACTIVE)
+                    .build();
+        }).forEach(productPriceRepository::save);
     }
 }
