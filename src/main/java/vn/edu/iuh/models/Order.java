@@ -3,7 +3,6 @@ package vn.edu.iuh.models;
 import jakarta.persistence.*;
 import lombok.*;
 import vn.edu.iuh.models.enums.OrderStatus;
-import vn.edu.iuh.models.enums.RefundStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,10 +45,6 @@ public class Order extends BaseEntity {
     private PromotionLine promotionLine;
     @ManyToOne
     private PromotionDetail promotionDetail;
-    @Column(length = 500)
-    private String cancelReason;
-    private Float refundAmount;
-    private LocalDateTime refundDate;
-    @Enumerated(EnumType.STRING)
-    private RefundStatus refundStatus;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Refund refund;
 }

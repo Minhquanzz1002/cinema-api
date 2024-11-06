@@ -1,14 +1,13 @@
 package vn.edu.iuh.dto.admin.v1.res;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import vn.edu.iuh.models.enums.OrderStatus;
-import vn.edu.iuh.models.enums.RefundStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
@@ -23,10 +22,7 @@ public class AdminOrderResponseDTO {
     private LocalDateTime orderDate;
     private OrderStatus status;
     private UserDTO user;
-    private String cancelReason;
-    private Float refundAmount;
-    private LocalDateTime refundDate;
-    private RefundStatus refundStatus;
+    private ShowTimeDTO showTime;
 
     @Data
     @NoArgsConstructor
@@ -36,5 +32,21 @@ public class AdminOrderResponseDTO {
         private String name;
         private String email;
         private String phone;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ShowTimeDTO {
+        private LocalDate startDate;
+        private LocalTime startTime;
+        private MovieDTO movie;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MovieDTO {
+        private String title;
     }
 }

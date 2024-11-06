@@ -3,6 +3,7 @@ package vn.edu.iuh.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -45,5 +46,5 @@ public interface OrderService {
 
     AdminOrderOverviewProjection getOrderByCode(String code);
 
-    void cancelOrderBeforeShowtime(UserPrincipal userPrincipal, UUID orderId, CancelOrderBeforeShowTimeRequestDTO cancelOrderBeforeShowTimeRequestDTO);
+    void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO);
 }

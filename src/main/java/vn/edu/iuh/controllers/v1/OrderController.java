@@ -68,14 +68,6 @@ public class OrderController {
         return orderService.cancelOrder(userPrincipal, orderId);
     }
 
-    @PutMapping("/{orderId}/cancel-before-showtime")
-    public SuccessResponse<?> cancelOrderBeforeShowtime(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                        @RequestBody @Valid CancelOrderBeforeShowTimeRequestDTO cancelOrderBeforeShowTimeRequestDTO,
-                                                        @PathVariable UUID orderId) {
-        orderService.cancelOrderBeforeShowtime(userPrincipal, orderId, cancelOrderBeforeShowTimeRequestDTO);
-        return new SuccessResponse<>(200, "success", "Hủy đơn hàng thành công", null);
-    }
-
     @Operation(
             summary = "Áp mã khuyến mãi",
             description = """

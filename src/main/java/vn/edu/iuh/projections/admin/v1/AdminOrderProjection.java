@@ -18,10 +18,6 @@ public interface AdminOrderProjection {
     float getTotalPrice();
     float getFinalAmount();
     float getTotalDiscount();
-    Float getRefundAmount();
-    LocalDateTime getRefundDate();
-    RefundStatus getRefundStatus();
-
     LocalDateTime getOrderDate();
 
     OrderStatus getStatus();

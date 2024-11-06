@@ -26,11 +26,6 @@ public interface AdminOrderOverviewProjection {
     ShowTime getShowTime();
 
     List<OrderDetail> getOrderDetails();
-    Float getRefundAmount();
-    LocalDateTime getRefundDate();
-    String getCancelReason();
-    RefundStatus getRefundStatus();
-
     User getUser();
 
     interface User {

@@ -1,5 +1,6 @@
 package vn.edu.iuh.controllers.admin.v1;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -54,5 +56,12 @@ public class OrderController {
     public SuccessResponse<AdminOrderProjection> updateProductsInOrderByEmployee(@PathVariable UUID orderId,
                                                                                  @RequestBody OrderUpdateProductRequestDTO orderUpdateProductRequestDTO) {
         return new SuccessResponse<>(200, "success", "Thành công", orderService.updateProductsInOrderByEmployee(orderId, orderUpdateProductRequestDTO));
+    }
+
+    @Operation(summary = "Hoàn đơn")
+    @PutMapping("/{orderId}/refund")
+    public SuccessResponse<Void> refundOrder(@PathVariable UUID orderId, @RequestBody RefundOrderRequestDTO refundOrderRequestDTO) {
+        orderService.refundOrder(orderId, refundOrderRequestDTO);
+        return new SuccessResponse<>(200, "success", "Hoàn đơn thành công", null);
     }
 }

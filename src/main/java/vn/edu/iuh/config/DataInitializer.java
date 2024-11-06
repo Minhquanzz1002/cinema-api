@@ -45,6 +45,7 @@ public class DataInitializer implements CommandLineRunner {
     private final PromotionRepository promotionRepository;
     private final PromotionLineRepository promotionLineRepository;
     private final PromotionDetailRepository promotionDetailRepository;
+    private final RefundRepository refundRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final LocalDate currentDate = LocalDate.now();
@@ -1303,8 +1304,20 @@ public class DataInitializer implements CommandLineRunner {
                         .status(UserStatus.ACTIVE)
                         .build());
 
-                insertOrders(user1, "HD00000001", 404, 405, 309000);
-                insertOrders(user2, "HD00000002", 406, null, 290000);
+                insertOrders(user1, "HD00000001", 404, 405, 309000, OrderStatus.COMPLETED);
+                insertOrders(user2, "HD00000002", 406, null, 209000, OrderStatus.COMPLETED);
+                Order order = insertOrders(user2, "HD00000003", 408, null, 209000, OrderStatus.CANCELLED);
+
+                Refund refund = Refund.builder()
+                        .order(order)
+                        .code("HDHT00000001")
+                        .amount(order.getFinalAmount())
+                        .refundMethod(RefundMethod.CASH)
+                        .reason("Không thể đến xem phim")
+                        .refundDate(LocalDateTime.now())
+                        .status(RefundStatus.COMPLETED)
+                        .build();
+                refundRepository.save(refund);
             }
         }
         insertTicketPrices();
@@ -1446,7 +1459,7 @@ public class DataInitializer implements CommandLineRunner {
         );
     }
 
-    private void insertOrders(User user, String orderCode, int seatId1, Integer seatId2, float totalPrice) {
+    private Order insertOrders(User user, String orderCode, int seatId1, Integer seatId2, float totalPrice, OrderStatus status) {
         Order order = orderRepository.save(
                 Order.builder()
                         .orderDate(LocalDateTime.now().minusDays(1))
@@ -1457,7 +1470,7 @@ public class DataInitializer implements CommandLineRunner {
                         .totalPrice(totalPrice)
                         .finalAmount(totalPrice)
                         .user(user)
-                        .status(OrderStatus.COMPLETED)
+                        .status(status)
                         .build()
         );
 
@@ -1499,7 +1512,7 @@ public class DataInitializer implements CommandLineRunner {
             showTime.setBookedSeat(showTime.getBookedSeat() + 1);
             showTimeRepository.save(showTime);
         }
-
+        return order;
     }
 
     private void insertTicketPrices() {
