@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -44,6 +45,7 @@ import static vn.edu.iuh.services.impl.RoomLayoutServiceImpl.convertToDayType;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final RefundRepository refundRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
     private final ProductService productService;
@@ -605,9 +607,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByCode(code, AdminOrderOverviewProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
     }
 
+    @Transactional
     @Override
-    public void cancelOrderBeforeShowtime(UserPrincipal userPrincipal, UUID orderId, CancelOrderBeforeShowTimeRequestDTO cancelOrderBeforeShowTimeRequestDTO) {
-        Order order = orderRepository.findByIdAndUserAndDeletedAndStatus(orderId, User.builder().id(userPrincipal.getId()).build(), false, OrderStatus.COMPLETED)
+    public void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO) {
+        Order order = orderRepository.findByIdAndDeletedAndStatus(orderId, false, OrderStatus.COMPLETED)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
 
         ShowTime showTime = order.getShowTime();
@@ -615,28 +618,39 @@ public class OrderServiceImpl implements OrderService {
         LocalDateTime showDateTime = LocalDateTime.of(showTime.getStartDate(), showTime.getStartTime());
         Duration timeUntilShow = Duration.between(now, showDateTime);
 
-        if (timeUntilShow.toHours() < 8) {
-            throw new BadRequestException("Không thể hủy vé trong vòng 8 giờ trước suất chiếu");
+        if (timeUntilShow.toMillis() < 0) {
+            throw new BadRequestException("Không thể hoàn tiền cho đơn hàng đã qua suất chiếu");
         }
 
         order.setStatus(OrderStatus.CANCELLED);
-        order.setCancelReason(cancelOrderBeforeShowTimeRequestDTO.getReason());
-        order.setRefundAmount(order.getFinalAmount());
-        order.setRefundStatus(RefundStatus.PENDING);
 
-        // Update promotion usage count
         PromotionDetail promotionDetail = order.getPromotionDetail();
         if (promotionDetail != null) {
             promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
             promotionDetailRepository.save(promotionDetail);
         }
 
+        Refund refund = Refund.builder()
+                .order(order)
+                .code(generateRefundCode())
+                .amount(order.getFinalAmount())
+                .refundMethod(RefundMethod.CASH)
+                .reason(refundOrderRequestDTO.getReason())
+                .refundDate(LocalDateTime.now())
+                .status(RefundStatus.PENDING)
+                .build();
+        refundRepository.save(refund);
         orderRepository.save(order);
     }
 
     private String generateOrderCode() {
         long orderCount = orderRepository.count();
         return String.format("HD%08d", (orderCount % 100000000) + 1);
+    }
+
+    private String generateRefundCode() {
+        long refundCount = refundRepository.count();
+        return String.format("HDHT%08d", (refundCount % 100000000) + 1);
     }
 
     private float calculateTotalPriceByType(Order order, OrderDetailType type) {

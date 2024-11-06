@@ -20,6 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
     <T> Optional<T> findById(UUID id, Class<T> classType);
 
     Optional<Order> findByIdAndDeleted(UUID id, boolean deleted);
+    Optional<Order> findByIdAndDeletedAndStatus(UUID id, boolean deleted, OrderStatus status);
 
     <T> Optional<T> findByCode(String code, Class<T> classType);
 
