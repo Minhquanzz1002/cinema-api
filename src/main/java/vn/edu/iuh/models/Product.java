@@ -25,7 +25,7 @@ public class Product extends BaseEntity {
     private String name;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String image;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -81,8 +81,9 @@ public class ProductController {
         return new SuccessResponse<>(200, "success", "Thành công", productService.getProductPricesHistory(code, status, startDate, endDate, pageable));
     }
 
+    @Operation(summary = "Thêm sản phẩm")
     @PostMapping
     public SuccessResponse<Product> createProduct(@RequestBody @Valid CreateProductRequestDTO createProductRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", productService.createProduct(createProductRequestDTO));
+        return new SuccessResponse<>(200, "success", "Thêm sản phẩm thành công", productService.createProduct(createProductRequestDTO));
     }
 }
