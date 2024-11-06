@@ -3,6 +3,9 @@ server:
     context-path: /api
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   mail:
     host: smtp.gmail.com
     port: 587
