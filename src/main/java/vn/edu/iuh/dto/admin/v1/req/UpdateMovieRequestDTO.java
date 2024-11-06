@@ -17,11 +17,10 @@ import java.util.List;
 public class UpdateMovieRequestDTO {
     @NotBlank(message = "Tên phim không được để trống")
     private String title;
+    @URL(message = "Ảnh không đúng định dạng URL")
     private String imageLandscape;
-    @NotBlank(message = "Ảnh chính không được để trống")
     @URL(message = "Ảnh chính không đúng định dạng URL")
     private String imagePortrait;
-    @NotBlank(message = "Trailer không được để trống")
     @URL(message = "Trailer không đúng định dạng URL")
     private String trailer;
     @Min(value = 1, message = "Thời lượng phim phải lớn hơn 0")
@@ -32,16 +31,10 @@ public class UpdateMovieRequestDTO {
     private AgeRating ageRating;
     private LocalDate releaseDate;
     private MovieStatus status;
-    @NotEmpty(message = "Danh sách nhà sản xuất không được để trống")
-    @Size(min = 1, message = "Phải có ít nhất 1 nhà sản xuất")
     private List<Integer> producers;
     @NotEmpty(message = "Danh sách thể loại không được để trống")
     @Size(min = 1, message = "Phải có ít nhất 1 thể loại")
     private List<Integer> genres;
-    @NotEmpty(message = "Danh sách đạo diễn không được để trống")
-    @Size(min = 1, message = "Phải có ít nhất 1 đạo diễn")
     private List<Integer> directors;
-    @NotEmpty(message = "Danh sách diễn viên không được để trống")
-    @Size(min = 1, message = "Phải có ít nhất 1 diễn viên")
     private List<Integer> actors;
 }

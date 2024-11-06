@@ -1,5 +1,6 @@
 package vn.edu.iuh.controllers.admin.v1;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -63,11 +64,13 @@ public class MovieController {
         return new SuccessResponse<>(200, "success", "Xóa phim thành công", null);
     }
 
+    @Operation(summary = "Cập nhật phim")
     @PutMapping("/{id}")
     public SuccessResponse<Movie> updateMovie(@PathVariable int id, @RequestBody @Valid UpdateMovieRequestDTO updateMovieRequestDTO) {
         return new SuccessResponse<>(200, "success", "Cập nhật phim thành công", movieService.updateMovie(id, updateMovieRequestDTO));
     }
 
+    @Operation(summary = "Thêm phim")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<Movie> createMovie(@RequestBody @Valid CreateMovieRequestDTO createMovieRequestDTO) {
