@@ -24,11 +24,10 @@ public class Movie extends BaseEntity {
     private String code;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String imageLandscape;
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String imagePortrait;
-    @Column(nullable = false)
     private String trailer;
     @Column(nullable = false, unique = true)
     private String slug;

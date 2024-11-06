@@ -14,6 +14,7 @@ public class CreateProductRequestDTO {
     private String code;
     @NotBlank(message = "Tên sản phẩm không được để trống")
     private String name;
+    @NotBlank(message = "Mô tả sản phẩm không được để trống")
     private String description;
     private String image;
     @NotNull(message = "Trạng thái sản phẩm không được để trống")
