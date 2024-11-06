@@ -643,6 +643,11 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
+    @Override
+    public void completeOrder(UUID orderId) {
+
+    }
+
     private String generateOrderCode() {
         long orderCount = orderRepository.count();
         return String.format("HD%08d", (orderCount % 100000000) + 1);

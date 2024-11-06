@@ -47,4 +47,6 @@ public interface OrderService {
     AdminOrderOverviewProjection getOrderByCode(String code);
 
     void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO);
+
+    void completeOrder(UUID orderId);
 }
