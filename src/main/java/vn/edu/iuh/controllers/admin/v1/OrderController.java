@@ -58,6 +58,11 @@ public class OrderController {
         return new SuccessResponse<>(200, "success", "Thành công", orderService.updateProductsInOrderByEmployee(orderId, orderUpdateProductRequestDTO));
     }
 
+    @PutMapping("/{orderId}/complete")
+    public SuccessResponse<AdminOrderProjection> completeOrder(@PathVariable UUID orderId) {
+        return new SuccessResponse<>(200, "success", "Thành công", orderService.completeOrder(orderId));
+    }
+
     @Operation(summary = "Hoàn đơn")
     @PutMapping("/{orderId}/refund")
     public SuccessResponse<Void> refundOrder(@PathVariable UUID orderId, @RequestBody RefundOrderRequestDTO refundOrderRequestDTO) {

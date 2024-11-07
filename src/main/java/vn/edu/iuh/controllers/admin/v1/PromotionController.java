@@ -1,5 +1,6 @@
 package vn.edu.iuh.controllers.admin.v1;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreatePromotionLineRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreatePromotionRequestDTO;
@@ -44,9 +46,11 @@ public class PromotionController {
         return new SuccessResponse<>(200, "success", "Thành công", promotionService.getPromotionByCode(code));
     }
 
+    @Operation(summary = "Tạo chiến dịch khuyến mãi")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<Promotion> createPromotion(@RequestBody @Valid CreatePromotionRequestDTO createPromotionRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thêm chiến dịch khuyến mãi thành công", promotionService.createPromotion(createPromotionRequestDTO));
+        return new SuccessResponse<>(201, "success", "Thêm chiến dịch khuyến mãi thành công", promotionService.createPromotion(createPromotionRequestDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -55,6 +59,7 @@ public class PromotionController {
         return new SuccessResponse<>(200, "success", "Xóa khuyến mãi thành công", null);
     }
 
+    @Operation(summary = "Cập nhật chiến dịch khuyến mãi")
     @PutMapping("/{id}")
     public SuccessResponse<Promotion> updatePromotion(@PathVariable int id, @RequestBody @Valid UpdatePromotionRequestDTO updatePromotionRequestDTO) {
         return new SuccessResponse<>(200, "success", "Cập nhật khuyến mãi thành công", promotionService.updatePromotion(id, updatePromotionRequestDTO));
