@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -1283,6 +1284,7 @@ public class DataInitializer implements CommandLineRunner {
 
             if (userRepository.count() == 0) {
                 User user1 = userRepository.save(User.builder()
+                        .code("USER00000001")
                         .name("Lê Hữu Bằng")
                         .phone("0837699806")
                         .birthday(LocalDate.of(2002, 10, 10))
@@ -1294,6 +1296,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build());
 
                 User user2 = userRepository.save(User.builder()
+                        .code("NV00000001")
                         .name("Nguyễn Minh Quân")
                         .phone("0354927402")
                         .birthday(LocalDate.of(2002, 10, 10))
@@ -1471,6 +1474,7 @@ public class DataInitializer implements CommandLineRunner {
                         .finalAmount(totalPrice)
                         .user(user)
                         .status(status)
+                        .createdBy(user.getId())
                         .build()
         );
 

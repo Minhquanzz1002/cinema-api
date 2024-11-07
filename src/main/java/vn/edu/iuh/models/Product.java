@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +29,7 @@ public class Product extends BaseEntity {
     private String image;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private ProductStatus status = ProductStatus.INACTIVE;
     @OneToMany(mappedBy = "product")
     private List<ProductPrice> productPrices;
