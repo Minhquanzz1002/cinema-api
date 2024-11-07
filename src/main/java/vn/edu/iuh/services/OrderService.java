@@ -48,5 +48,5 @@ public interface OrderService {
 
     void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO);
 
-    void completeOrder(UUID orderId);
+    AdminOrderProjection completeOrder(UUID orderId);
 }

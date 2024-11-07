@@ -59,9 +59,8 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}/complete")
-    public SuccessResponse<Void> completeOrder(@PathVariable UUID orderId) {
-        orderService.completeOrder(orderId);
-        return new SuccessResponse<>(200, "success", "Thành công", null);
+    public SuccessResponse<AdminOrderProjection> completeOrder(@PathVariable UUID orderId) {
+        return new SuccessResponse<>(200, "success", "Thành công", orderService.completeOrder(orderId));
     }
 
     @Operation(summary = "Hoàn đơn")
