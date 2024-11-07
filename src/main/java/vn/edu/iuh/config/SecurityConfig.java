@@ -53,11 +53,6 @@ public class SecurityConfig {
             "/v1/promotions",
             "/v1/payment/**",
             "/admin/v1/auth/login",
-            "/admin/v1/actors/**",
-            "/admin/v1/directors/**",
-            "/admin/v1/show-times/**",
-            "/admin/v1/products/**",
-            "/admin/v1/orders/**",
     };
 
     @Bean

@@ -20,7 +20,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class BaseEntity {

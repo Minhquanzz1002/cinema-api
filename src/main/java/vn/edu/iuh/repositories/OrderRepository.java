@@ -4,11 +4,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import vn.edu.iuh.dto.admin.v1.res.AdminDailyReportResponseDTO;
 import vn.edu.iuh.models.Order;
 import vn.edu.iuh.models.User;
 import vn.edu.iuh.models.enums.OrderStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,4 +35,20 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
 
     <T> Page<T> findAllByCodeContainingAndStatusAndDeleted(String code, OrderStatus status, boolean deleted, Pageable pageable, Class<T> classType);
     <T> Page<T> findAllByCodeContainingAndDeleted(String code, boolean deleted, Pageable pageable, Class<T> classType);
+
+    @Query("""
+        SELECT new vn.edu.iuh.dto.admin.v1.res.AdminDailyReportResponseDTO(
+            u.code,
+            u.name,
+            CAST(DATE(o.orderDate) AS localdate) ,
+            CAST(COALESCE(SUM(o.totalPrice), 0) AS float),
+            CAST(COALESCE(SUM(o.totalDiscount), 0) AS float),
+            CAST(COALESCE(SUM(o.finalAmount), 0) AS float)
+        ) FROM User u
+        INNER JOIN Order o ON u.id = o.createdBy AND DATE(o.orderDate) BETWEEN :fromDate AND :toDate
+        WHERE u.role.name = 'ROLE_ADMIN'
+        GROUP BY u.name, u.code, DATE(o.orderDate)
+        ORDER BY DATE(o.orderDate) ASC
+    """)
+    List<AdminDailyReportResponseDTO> getDailyReport(LocalDate fromDate, LocalDate toDate);
 }
