@@ -18,36 +18,16 @@ import java.util.Optional;
 @Repository
 public interface PromotionRepository extends JpaRepository<Promotion, Integer>, JpaSpecificationExecutor<Promotion> {
     <T> List<T> findAllByStatusAndDeleted(BaseStatus status, boolean deleted, Class<T> classType);
-    <T> Page<T> findAllByStatusAndDeletedAndCodeContainingIgnoreCaseAndNameContainingIgnoreCase(BaseStatus status, boolean deleted, String code, String name, Pageable pageable, Class<T> classType);
-    <T> Page<T> findAllByDeletedAndCodeContainingIgnoreCaseAndNameContainingIgnoreCase(boolean deleted, String code, String name, Pageable pageable, Class<T> classType);
 
-    @Query("""
-        SELECT CASE WHEN COUNT(tp) > 0 THEN true ELSE false END 
-        FROM Promotion tp 
-        WHERE tp.deleted = false
-        AND NOT (
-            tp.endDate < :startDate OR 
-            tp.startDate > :endDate
-        )
-    """)
-    boolean existsOverlapping(LocalDate startDate, LocalDate endDate);
+    <T> Page<T> findAllByStatusAndDeletedAndCodeContainingIgnoreCaseAndNameContainingIgnoreCase(BaseStatus status, boolean deleted, String code, String name, Pageable pageable, Class<T> classType);
+
+    <T> Page<T> findAllByDeletedAndCodeContainingIgnoreCaseAndNameContainingIgnoreCase(boolean deleted, String code, String name, Pageable pageable, Class<T> classType);
 
     <T> Optional<T> findByCodeAndDeleted(String code, boolean deleted, Class<T> classType);
 
     Optional<Promotion> findByIdAndDeleted(int id, boolean deleted);
 
-    @Query("""
-            SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END
-            FROM Promotion p
-            WHERE p.id != :promotionId AND p.deleted = false
-            AND ((p.startDate BETWEEN :startDate AND :endDate)
-            OR (p.endDate BETWEEN :startDate AND :endDate)
-            OR (:startDate BETWEEN p.startDate AND p.endDate)
-            OR (:endDate BETWEEN p.startDate AND p.endDate))
-            """)
-    boolean existsOverlappingPromotion(
-            @Param("promotionId") int promotionId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate
+    boolean existsByDeletedAndStatusAndIdNotAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+            boolean deleted, BaseStatus status, int id, LocalDate startDate, LocalDate endDate
     );
 }

@@ -643,6 +643,15 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
+    @Override
+    public AdminOrderProjection completeOrder(UUID orderId) {
+        Order order = orderRepository.findByIdAndDeleted(orderId, false)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        order.setStatus(OrderStatus.COMPLETED);
+        orderRepository.save(order);
+        return orderRepository.findById(order.getId(), AdminOrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+    }
+
     private String generateOrderCode() {
         long orderCount = orderRepository.count();
         return String.format("HD%08d", (orderCount % 100000000) + 1);

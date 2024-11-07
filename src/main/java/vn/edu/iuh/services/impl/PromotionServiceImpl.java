@@ -72,9 +72,6 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public Promotion createPromotion(CreatePromotionRequestDTO createPromotionRequestDTO) {
-        if (promotionRepository.existsOverlapping(createPromotionRequestDTO.getStartDate(), createPromotionRequestDTO.getEndDate())) {
-            throw new BadRequestException("Đã tồn tại khuyến mãi trong khoảng thời gian này");
-        }
         Promotion promotion = modelMapper.map(createPromotionRequestDTO, Promotion.class);
         return promotionRepository.save(promotion);
     }
@@ -93,31 +90,30 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public Promotion updatePromotion(int id, UpdatePromotionRequestDTO updatePromotionRequestDTO) {
         Promotion promotion = getPromotionById(id);
-
         LocalDate newStartDate = updatePromotionRequestDTO.getStartDate();
         LocalDate newEndDate = updatePromotionRequestDTO.getEndDate();
 
-        // Check for overlapping promotions in the same time period
-        if (promotionRepository.existsOverlappingPromotion(id, newStartDate, newEndDate)) {
-            throw new BadRequestException("Đã có chương trình khuyến mãi khác trong khoảng thời gian này");
-        }
-
-        // Ensure start date is before end date
-        if (newStartDate.isAfter(newEndDate)) {
-            throw new BadRequestException("Ngày bắt đầu không thể sau ngày kết thúc");
-        }
-
-        // Validate promotion lines time periods
-        if (!promotion.getPromotionLines().isEmpty() && (newStartDate.isAfter(promotion.getStartDate()) || newEndDate.isBefore(promotion.getEndDate()))) {
-            boolean hasInvalidLines = promotion.getPromotionLines().stream().
-                    anyMatch(line -> line.getStartDate().isBefore(newStartDate) || line.getEndDate().isAfter(newEndDate));
-
-            if (hasInvalidLines) {
-                throw new BadRequestException("Không thể cập nhật thời gian khuyến mãi vì có chương trình con không nằm trong khoảng thời gian mới");
+        if (promotion.getStatus() == BaseStatus.ACTIVE) {
+            if (newEndDate.isBefore(promotion.getStartDate())) {
+                throw new BadRequestException("Ngày kết thúc phải sau ngày bắt đầu");
             }
+            promotion.setEndDate(newEndDate);
+        } else {
+            BaseStatus newStatus = updatePromotionRequestDTO.getStatus();
+            if (newStatus == BaseStatus.ACTIVE) {
+                boolean hasOverlap = promotionRepository.existsByDeletedAndStatusAndIdNotAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                        false,
+                        BaseStatus.ACTIVE,
+                        id,
+                        newEndDate,
+                        newStartDate
+                );
+                if (hasOverlap) {
+                    throw new BadRequestException("Đã tồn tại chiến dịch trong khoảng thời gian này");
+                }
+            }
+            modelMapper.map(updatePromotionRequestDTO, promotion);
         }
-
-        modelMapper.map(updatePromotionRequestDTO, promotion);
         return promotionRepository.save(promotion);
     }
 

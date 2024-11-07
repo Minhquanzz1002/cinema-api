@@ -19,6 +19,7 @@ import java.util.List;
 
 public interface PromotionService {
     SuccessResponse<List<PromotionProjection>> getPromotions();
+
     AdminPromotionOverviewProjection getPromotionByCode(String code);
 
     Page<AdminPromotionLineOverviewProjection> getPromotionLines(int id, Pageable pageable);
@@ -28,7 +29,10 @@ public interface PromotionService {
     Promotion createPromotion(CreatePromotionRequestDTO createPromotionRequestDTO);
 
     void deletePromotionById(int id);
+
     Promotion updatePromotion(int id, UpdatePromotionRequestDTO updatePromotionRequestDTO);
+
     Promotion getPromotionById(int id);
+
     PromotionLine createPromotionLine(int promotionId, CreatePromotionLineRequestDTO createPromotionLineRequestDTO);
 }
