@@ -2,6 +2,7 @@ package vn.edu.iuh.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import vn.edu.iuh.models.enums.OrderStatus;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Builder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")

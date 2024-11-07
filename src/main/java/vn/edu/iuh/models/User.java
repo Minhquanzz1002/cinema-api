@@ -21,6 +21,8 @@ public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(nullable = false, unique = true, updatable = false)
+    private String code;
     @Column(nullable = false)
     private String name;
     private boolean gender;
