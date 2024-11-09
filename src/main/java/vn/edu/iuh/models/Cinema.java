@@ -19,6 +19,8 @@ public class Cinema extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false, unique = true, updatable = false)
+    private String code;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)

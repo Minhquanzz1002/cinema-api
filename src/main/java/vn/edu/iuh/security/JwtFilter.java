@@ -35,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         log.info(request.getRequestURI());
-        log.info("Handling incoming request: {}, {}", request.getRequestURI(), request.getMethod());
+        log.info("PRIVATE: {}, {}", request.getRequestURI(), request.getMethod());
         final String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -59,6 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         log.info("Omitting request from filtering");
+        log.info("PUBLIC: {}, {}", request.getRequestURI(), request.getMethod());
         return Arrays.stream(SecurityConfig.AUTH_WHITELIST).anyMatch(e -> new AntPathMatcher().match(e, request.getServletPath()));
     }
 }
