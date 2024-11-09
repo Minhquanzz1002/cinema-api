@@ -13,4 +13,5 @@ public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
     <T> List<T> findAllProjectionByDeleted(boolean deleted, Class<T> classType);
 
     Optional<Cinema> findByIdAndDeleted(int id, boolean deleted);
+    Optional<Cinema> findTopByOrderByCodeDesc();
 }

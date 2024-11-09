@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import vn.edu.iuh.models.*;
 import vn.edu.iuh.models.enums.*;
 import vn.edu.iuh.repositories.*;
+import vn.edu.iuh.services.CinemaService;
+import vn.edu.iuh.services.impl.CinemaServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +50,7 @@ public class DataInitializer implements CommandLineRunner {
     private final PromotionDetailRepository promotionDetailRepository;
     private final RefundRepository refundRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CinemaServiceImpl cinemaService;
 
     private final LocalDate currentDate = LocalDate.now();
     private final LocalDate tomorrowDate = LocalDate.now().plusDays(1);
@@ -160,6 +163,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 Cinema nguyenDuCinema = cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Nguyễn Du")
                                 .address("116 Nguyễn Du")
                                 .ward("Bến Thành")
@@ -209,6 +213,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Sala")
                                 .address("Tầng 3, Thiso Mall Sala")
                                 .ward("10 Mai Chí Thọ")
@@ -222,6 +227,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Tân Bình")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -235,6 +241,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Kinh Dương Vương")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -248,6 +255,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 Cinema quangTrungCinema = cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Quang Trung")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -297,6 +305,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Trung Chánh")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -310,6 +319,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Huỳnh Tấn Phát")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -323,6 +333,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Nguyễn Văn Quá")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -335,6 +346,7 @@ public class DataInitializer implements CommandLineRunner {
                 );
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Co.opXtra Linh Trung")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -347,6 +359,7 @@ public class DataInitializer implements CommandLineRunner {
                 );
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Trường Chinh")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -359,6 +372,7 @@ public class DataInitializer implements CommandLineRunner {
                 );
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Parc Mall Q8")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -372,6 +386,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy MIPEC Long Biên")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -385,6 +400,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Tràng Thi")
                                 .address("Nguyễn Kim Tràng Thi, 10B Tràng Thi")
                                 .ward("Hàng Trống")
@@ -398,6 +414,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Bến Tre")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -412,6 +429,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Đà Nẵng")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -425,6 +443,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Cà Mau")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -438,6 +457,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Vinh")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -450,6 +470,7 @@ public class DataInitializer implements CommandLineRunner {
                 );
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Hải Phòng")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -463,6 +484,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Buôn Ma Thuột")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -476,6 +498,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 cinemaRepository.save(
                         Cinema.builder()
+                                .code(cinemaService.generateCinemaCode())
                                 .name("Galaxy Long Xuyên")
                                 .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
                                 .ward("Tây Thạnh")
@@ -1281,6 +1304,7 @@ public class DataInitializer implements CommandLineRunner {
         if (roleRepository.count() == 0) {
             Role roleAdmin = roleRepository.save(new Role("ROLE_ADMIN"));
             Role roleClient = roleRepository.save(new Role("ROLE_CLIENT"));
+            Role roleEmployeeSale = roleRepository.save(new Role("ROLE_EMPLOYEE_SALE"));
 
             if (userRepository.count() == 0) {
                 User user1 = userRepository.save(User.builder()
