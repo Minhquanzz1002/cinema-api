@@ -51,4 +51,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
         ORDER BY DATE(o.orderDate) ASC
     """)
     List<AdminDailyReportResponseDTO> getDailyReport(LocalDate fromDate, LocalDate toDate);
+
+    Order findTopByOrderByIdDesc();
 }

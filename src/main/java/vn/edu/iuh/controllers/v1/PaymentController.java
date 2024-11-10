@@ -3,6 +3,7 @@ package vn.edu.iuh.controllers.v1;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,9 @@ import vn.edu.iuh.config.VnPayConfig;
 import vn.edu.iuh.dto.res.PaymentResDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.dto.res.TransactionStatusDTO;
+import vn.edu.iuh.models.Order;
+import vn.edu.iuh.repositories.OrderRepository;
+
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -25,6 +29,9 @@ import static vn.edu.iuh.constant.RouterConstant.PAYMENT_BASE_PATH;
 @RequestMapping(PAYMENT_BASE_PATH)
 @Tag(name = "Payment Controller V1", description = "Quản lý thanh toán")
 public class PaymentController {
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     // Pattern to validate input parameters - chỉ chấp nhận chữ, số và một số ký tự đặc biệt an toàn
     private static final Pattern SAFE_PATTERN = Pattern.compile("^[a-zA-Z0-9\\s_\\-\\.]+$");
@@ -81,7 +88,10 @@ public class PaymentController {
             String vnp_Command = "pay";
             String vnp_OrderInfo = sanitizeRequestPath("Thanh toan don hang");
             String orderType = sanitizeRequestPath("other");
-            long amount = 1000000 * 100;
+
+            // Retrieve the latest order and get the final_amount
+            Order latestOrder = orderRepository.findTopByOrderByIdDesc();
+            long amount = (long) (latestOrder.getFinalAmount() * 100); // Convert to VND cents
 
             // Validate amount
             validateAmount(amount);
@@ -92,11 +102,6 @@ public class PaymentController {
                 throw new IllegalArgumentException("Invalid transaction reference");
             }
 
-            // Validate IP address
-//            String vnp_IpAddr = sanitizeRequestPath(VnPayConfig.getIpAddress(req));
-//            if (!vnp_IpAddr.matches("^[0-9\\.\\:]+$")) {
-//                throw new IllegalArgumentException("Invalid IP address");
-//            }
             String vnp_IpAddr = "127.0.0.1";
 
             Map<String, String> vnp_Params = new HashMap<>();
@@ -114,8 +119,6 @@ public class PaymentController {
             vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
             vnp_Params.put("vnp_Locale", "vn");
 
-//            String returnUrl = URLEncoder.encode(VnPayConfig.vnp_ReturnUrl, StandardCharsets.UTF_8);
-            log.info("Base URL: {}", baseUrl);
             String returnUrl = baseUrl + VnPayConfig.vnp_ReturnUrl;
             vnp_Params.put("vnp_ReturnUrl", returnUrl);
 
@@ -230,10 +233,5 @@ public class PaymentController {
             errorResponse.setData("");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
-    }
-
-    @PostMapping("")
-    public SuccessResponse<?> createOrderZaloPay() {
-        return new SuccessResponse<>(200, "success", "Thành công", null);
     }
 }

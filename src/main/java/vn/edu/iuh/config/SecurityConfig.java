@@ -54,6 +54,11 @@ public class SecurityConfig {
             "/v1/payment/**",
             "/admin/v1/auth/login",
             "/admin/v1/callback/**",
+            "/admin/v1/employees",
+            "/admin/v1/employees/**",
+            "/admin/v1/cinemas",
+            "/admin/v1/cinemas/**"
+
     };
 
     @Bean
