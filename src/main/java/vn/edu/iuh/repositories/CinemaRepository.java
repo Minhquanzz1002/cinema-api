@@ -1,5 +1,8 @@
 package vn.edu.iuh.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.models.Cinema;
@@ -14,4 +17,6 @@ public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
 
     Optional<Cinema> findByIdAndDeleted(int id, boolean deleted);
     Optional<Cinema> findTopByOrderByCodeDesc();
+
+    Page<Cinema> findAll(Specification<Cinema> spec, Pageable pageable);
 }

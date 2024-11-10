@@ -7,6 +7,9 @@ public class RouterConstant {
     public static final String ADMIN_CALLBACK_BASE_PATH = "/admin/v1/callback";
     public static final String ADMIN_EMPLOYEE_BASE_PATH = "/admin/v1/employees";
     public static final String ADMIN_CINEMA_BASE_PATH = "/admin/v1/cinemas";
+    public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
+
+
 
     // BASE API PATH ==========================================
     public static final String PAYMENT_BASE_PATH = "/v1/payments";
