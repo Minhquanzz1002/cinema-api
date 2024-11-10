@@ -139,7 +139,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     private String generateEmployeeCode() {
         // Implement employee code generation logic
         // For example: EMP-[random UUID first 8 chars]
-        return "EMP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+//        return "EMP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        Optional<User> lastEmployee = userRepository.findTopByOrderByCodeDesc();
+
+        int nextNumber = 1;
+
+        if (lastEmployee.isPresent()) {
+            String lastCode = lastEmployee.get().getCode();
+            try {
+                String numericPart = lastCode.substring(4);
+                nextNumber = Integer.parseInt(numericPart) + 1;
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                nextNumber = 1;
+            }
+        }
+
+        return String.format("NVBH%08d", nextNumber);
 
     }
 }

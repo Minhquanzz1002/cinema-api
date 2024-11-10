@@ -30,5 +30,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByCode(String code);
 
 
-
+    Optional<User> findTopByOrderByCodeDesc();
 }
