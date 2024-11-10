@@ -11,12 +11,15 @@ public class RouterConstant {
 
 
 
+    // BASE API PATH ==========================================
+    public static final String PAYMENT_BASE_PATH = "/v1/payments";
 
     // ENDPOINT URL ADMIN REPORT ===============================
     public static final String GET_ADMIN_REPORT_DAILY_SUB_PATH = "/daily";
 
     // ENDPOINT URL ADMIN ZALOPAY PAYMENT ======================
     public static final String POST_ADMIN_ZALOPAY_SUB_PATH = "/zalo-pay";
+    public static final String GET_ADMIN_ZALOPAY_SUB_PATH = "/zalo-pay";
 
     // ENDPOINT URL ADMIN CALLBACK =============================
     public static final String POST_ADMIN_CALLBACK_ZALOPAY_SUB_PATH = "/zalo-pay";

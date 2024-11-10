@@ -9,4 +9,5 @@ public class SwaggerConstant {
 
     // FOR ADMIN PAYMENT
     public static final String POST_ADMIN_PAYMENT_ZALOPAY_SUM = "Tạo đơn hàng ZaloPay";
+    public static final String GET_ADMIN_PAYMENT_ZALOPAY_SUM = "Lấy thông tin đơn hàng ZaloPay";
 }

@@ -1,5 +1,6 @@
 package vn.edu.iuh.controllers.v1;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.config.VnPayConfig;
 import vn.edu.iuh.dto.res.PaymentResDTO;
+import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.dto.res.TransactionStatusDTO;
 import vn.edu.iuh.models.Order;
 import vn.edu.iuh.repositories.OrderRepository;
@@ -20,9 +22,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static vn.edu.iuh.constant.RouterConstant.PAYMENT_BASE_PATH;
+
 @Slf4j
 @RestController
-@RequestMapping("/v1/payment")
+@RequestMapping(PAYMENT_BASE_PATH)
+@Tag(name = "Payment Controller V1", description = "Quản lý thanh toán")
 public class PaymentController {
 
     @Autowired
