@@ -3,7 +3,9 @@ package vn.edu.iuh.models;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import vn.edu.iuh.models.enums.PaymentStatus;
 import vn.edu.iuh.models.enums.OrderStatus;
+import vn.edu.iuh.models.enums.PaymentMethod;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,13 +36,18 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
     @ManyToOne
     @JoinColumn(nullable = false)
     private ShowTime showTime;
     @ManyToOne
-    @JoinColumn(nullable = true)
     private User user;
     @ManyToOne
     private PromotionLine promotionLine;
@@ -48,4 +55,6 @@ public class Order extends BaseEntity {
     private PromotionDetail promotionDetail;
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Refund refund;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments;
 }

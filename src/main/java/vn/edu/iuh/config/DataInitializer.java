@@ -1491,6 +1491,8 @@ public class DataInitializer implements CommandLineRunner {
                 Order.builder()
                         .orderDate(LocalDateTime.now().minusDays(1))
                         .code(orderCode)
+                        .paymentMethod(PaymentMethod.CASH)
+                        .paymentStatus(PaymentStatus.PAID)
                         .totalPrice(100000)
                         .finalAmount(100000)
                         .showTime(showTime)
