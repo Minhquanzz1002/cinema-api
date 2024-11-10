@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.common.zalopay.CallBackRequestDTO;
 import vn.edu.iuh.dto.common.zalopay.ZaloPayCallBackResponseDTO;
 import vn.edu.iuh.services.ZaloPayService;
@@ -19,6 +16,7 @@ import static vn.edu.iuh.constant.SwaggerConstant.*;
 @RequiredArgsConstructor
 @RequestMapping(ADMIN_CALLBACK_BASE_PATH)
 @RestController
+@CrossOrigin("*")
 @Tag(name = "Callback Controller Admin V1", description = "Quản lý callback")
 public class CallbackController {
     private final ZaloPayService zaloPayService;
