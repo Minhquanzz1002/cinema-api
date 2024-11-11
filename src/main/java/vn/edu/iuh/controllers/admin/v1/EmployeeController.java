@@ -18,20 +18,15 @@ import vn.edu.iuh.dto.admin.v1.req.CreateEmployeeDTO;
 import vn.edu.iuh.dto.admin.v1.req.EmployeeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateEmployeeDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.models.enums.BaseStatus;
+import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.services.EmployeeService;
+import vn.edu.iuh.specifications.UserSpecification;
 
 import java.util.UUID;
 
 import static vn.edu.iuh.constant.RouterConstant.ADMIN_EMPLOYEE_BASE_PATH;
-
-/**
- * TODO: ROLE_EMPLOYEE_SALE, code: NVBH + 8 số
- * API lấy danh sách nhân viên có phân trang và lọc theo ID và name (dùng chung ?search)
- * API lấy thông tin chi tiết nhân viên theo ID
- * API thêm mới nhân viên
- * API cập nhật thông tin nhân viên
- * API xóa nhân viên
- */
+import static vn.edu.iuh.constant.SwaggerConstant.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,14 +36,15 @@ import static vn.edu.iuh.constant.RouterConstant.ADMIN_EMPLOYEE_BASE_PATH;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    @Operation(summary = "Lấy danh sách nhân viên có phân trang")
+    @Operation(summary = GET_ALL_ADMIN_EMPLOYEE_SUM)
     @GetMapping
     @ApiResponse(responseCode = "200", description = "Success")
     public SuccessResponse<Page<EmployeeResponseDTO>> getEmployees(
+            @RequestParam(required = false) UserStatus status,
             @Parameter(description = "Tìm kiếm theo ID hoặc tên")
             @RequestParam(required = false) String search,
             @PageableDefault Pageable pageable) {
-        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(search, pageable);
+        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(search, status, pageable);
         return new SuccessResponse<>(
                 HttpStatus.OK.value(),
                 "success",
@@ -57,7 +53,7 @@ public class EmployeeController {
         );
     }
 
-    @Operation(summary = "Lấy thông tin chi tiết nhân viên theo mã nhân viên")
+    @Operation(summary = GET_ADMIN_EMPLOYEE_SUM)
     @GetMapping("/{code}")
     @ApiResponse(responseCode = "200", description = "Success")
     public SuccessResponse<EmployeeResponseDTO> getEmployee(
@@ -71,7 +67,7 @@ public class EmployeeController {
         );
     }
 
-    @Operation(summary = "Thêm mới nhân viên")
+    @Operation(summary = POST_ADMIN_EMPLOYEE_SUM)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "Created successfully")
@@ -86,7 +82,7 @@ public class EmployeeController {
         );
     }
 
-    @Operation(summary = "Cập nhật thông tin nhân viên")
+    @Operation(summary = PUT_ADMIN_EMPLOYEE_SUM)
     @PutMapping("/{id}")
     @ApiResponse(responseCode = "200", description = "Updated successfully")
     public SuccessResponse<EmployeeResponseDTO> updateEmployee(
@@ -101,7 +97,7 @@ public class EmployeeController {
         );
     }
 
-    @Operation(summary = "Xóa nhân viên")
+    @Operation(summary = DELETE_ADMIN_EMPLOYEE_SUM)
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "200", description = "Deleted successfully")
     public SuccessResponse<Void> deleteEmployee(
