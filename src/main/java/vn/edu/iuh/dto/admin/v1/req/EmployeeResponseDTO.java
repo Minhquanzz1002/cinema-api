@@ -21,7 +21,6 @@ public class EmployeeResponseDTO {
     private String phone;
     private LocalDate birthday;
     private UserStatus status;
-    private boolean deleted;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 }

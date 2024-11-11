@@ -2,8 +2,10 @@ package vn.edu.iuh.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,12 @@ import vn.edu.iuh.dto.admin.v1.req.EmployeeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateEmployeeDTO;
 import vn.edu.iuh.models.Role;
 import vn.edu.iuh.models.User;
+import vn.edu.iuh.models.enums.BaseStatus;
+import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.repositories.RoleRepository;
 import vn.edu.iuh.repositories.UserRepository;
 import vn.edu.iuh.services.EmployeeService;
+import vn.edu.iuh.specifications.UserSpecification;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -30,19 +35,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Override
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> getEmployees(String search, Pageable pageable) {
-        Page<User> employees;
-        if (search != null && !search.trim().isEmpty()) {
-            employees = userRepository.findByPhoneContainingOrNameContainingAndDeletedFalseAndRole_Name(
-                    search, search, ROLE_EMPLOYEE_SALE, pageable);
-        } else {
-            employees = userRepository.findByDeletedFalseAndRole_Name(ROLE_EMPLOYEE_SALE, pageable);
-        }
-
-        return employees.map(this::mapToEmployeeResponse);
+    public Page<EmployeeResponseDTO> getEmployees(String search, UserStatus status, Pageable pageable) {
+        Specification<User> specification = Specification.where(UserSpecification.hasRole(ROLE_EMPLOYEE_SALE))
+                .and(UserSpecification.hasStatus(status))
+                .and(UserSpecification.hasSearchKey(search));
+        Page<User> employees = userRepository.findAll(specification, pageable);
+        return employees.map(emp -> modelMapper.map(emp, EmployeeResponseDTO.class));
     }
 
     @Override
@@ -130,7 +132,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .phone(user.getPhone())
                 .birthday(user.getBirthday())
                 .status(user.getStatus())
-                .deleted(user.isDeleted())
                 .createdAt(user.getCreatedAt().toLocalDate())
                 .updatedAt(user.getUpdatedAt().toLocalDate())
                 .build();

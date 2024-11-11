@@ -1331,6 +1331,18 @@ public class DataInitializer implements CommandLineRunner {
                         .status(UserStatus.ACTIVE)
                         .build());
 
+                userRepository.save(User.builder()
+                        .code("NVBH00000001")
+                        .name("Nguyễn Văn A")
+                        .phone("0354927403")
+                        .birthday(LocalDate.of(2002, 10, 10))
+                        .email("quannguyenminh1002@gmail.com")
+                        .password(passwordEncoder.encode("Cinema123123@"))
+                        .gender(true)
+                        .role(roleEmployeeSale)
+                        .status(UserStatus.ACTIVE)
+                        .build());
+
                 insertOrders(user1, "HD00000001", 404, 405, 309000, OrderStatus.COMPLETED);
                 insertOrders(user2, "HD00000002", 406, null, 209000, OrderStatus.COMPLETED);
                 Order order = insertOrders(user2, "HD00000003", 408, null, 209000, OrderStatus.CANCELLED);
