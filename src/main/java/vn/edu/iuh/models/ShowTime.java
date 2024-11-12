@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "showTimes")
@@ -45,6 +46,7 @@ public class ShowTime extends BaseEntity {
     @Builder.Default
     @Column(nullable = false)
     private int bookedSeat = 0;
+    @ToString.Exclude
     @OneToMany(mappedBy = "showTime", fetch = FetchType.LAZY)
     private List<Order> orders;
 }

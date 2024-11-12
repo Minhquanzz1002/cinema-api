@@ -30,4 +30,6 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>, JpaSpeci
     boolean existsBySlug(String slug);
 
     Optional<Movie> findTopByOrderByCodeDesc();
+
+    List<Movie> findAllByIdInAndDeleted(List<Integer> ids, boolean deleted);
 }

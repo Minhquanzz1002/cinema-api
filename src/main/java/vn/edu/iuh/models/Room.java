@@ -10,9 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "rooms")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Room extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private int id;
     @Column(nullable = false)
     private String name;
