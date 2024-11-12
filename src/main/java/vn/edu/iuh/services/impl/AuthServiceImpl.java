@@ -29,6 +29,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+import static vn.edu.iuh.constant.SecurityConstant.ROLE_ADMIN;
+import static vn.edu.iuh.constant.SecurityConstant.ROLE_EMPLOYEE_SALE;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -88,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException("Tài khoản hoặc mật khẩu không đúng. Hãy nhập lại");
         }
 
-        boolean isAdminUser = user.getRole().getName().equals("ROLE_ADMIN");
+        boolean isAdminUser = List.of(ROLE_ADMIN, ROLE_EMPLOYEE_SALE).contains(user.getRole().getName());
         if (isAdminLogin) {
             if (!isAdminUser) {
                 throw new UnauthorizedException("Tài khoản không có quyền truy cập");
