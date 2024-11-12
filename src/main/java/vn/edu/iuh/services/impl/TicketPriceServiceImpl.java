@@ -237,9 +237,6 @@ public class TicketPriceServiceImpl implements TicketPriceService {
                 case COUPLE:
                     ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getCouplePrice());
                     break;
-                case TRIPLE:
-                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getTriplePrice());
-                    break;
             }
         });
         return ticketPriceLineRepository.save(ticketPriceLine);
