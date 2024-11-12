@@ -14,22 +14,21 @@ import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
+import static vn.edu.iuh.constant.RouterConstant.ADMIN_AUTH_BASE_PATH;
+import static vn.edu.iuh.constant.RouterConstant.POST_ADMIN_LOGIN_SUB_PATH;
+import static vn.edu.iuh.constant.SwaggerConstant.POST_LOGIN_DESC;
+import static vn.edu.iuh.constant.SwaggerConstant.POST_LOGIN_SUM;
+
 @Slf4j
 @RestController("authControllerAdminV1")
 @RequiredArgsConstructor
-@RequestMapping("/admin/v1/auth")
-@Tag(name = "Authentication Admin V1", description = "Xác thực người dùng")
+@RequestMapping(ADMIN_AUTH_BASE_PATH)
+@Tag(name = "ADMIN V1: Authentication", description = "Xác thực người dùng")
 public class AuthController {
     private final AuthService authService;
 
-    @Operation(
-            summary = "Đăng nhập",
-            description = """
-                    Access token: 24 hours
-                    Refresh token: 14 days
-                    """
-    )
-    @PostMapping("/login")
+    @Operation(summary = POST_LOGIN_SUM, description = POST_LOGIN_DESC)
+    @PostMapping(POST_ADMIN_LOGIN_SUB_PATH)
     public SuccessResponse<UserAuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
         return new SuccessResponse<>(200, "success", "Thành công", authService.login(loginRequestDTO, true));
     }
