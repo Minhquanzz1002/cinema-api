@@ -46,7 +46,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
             CAST(COALESCE(SUM(o.finalAmount), 0) AS float)
         ) FROM User u
         INNER JOIN Order o ON u.id = o.createdBy AND DATE(o.orderDate) BETWEEN :fromDate AND :toDate
-        WHERE u.role.name = 'ROLE_ADMIN'
+        WHERE u.role.name = 'ROLE_ADMIN' OR u.role.name = 'ROLE_EMPLOYEE_SALE'
         GROUP BY u.name, u.code, DATE(o.orderDate)
         ORDER BY DATE(o.orderDate) ASC
     """)

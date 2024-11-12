@@ -33,6 +33,7 @@ import vn.edu.iuh.specifications.OrderSpecifications;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -654,7 +655,8 @@ public class OrderServiceImpl implements OrderService {
 
     private String generateOrderCode() {
         long orderCount = orderRepository.count();
-        return String.format("HD%08d", (orderCount % 100000000) + 1);
+        LocalDateTime now = LocalDateTime.now();
+        return String.format("HD%s%06d", now.format(DateTimeFormatter.ofPattern("yyMMdd")), (orderCount % 1000000) + 1);
     }
 
     private String generateRefundCode() {

@@ -22,58 +22,101 @@ import vn.edu.iuh.services.MovieService;
 
 import java.util.List;
 
+import static vn.edu.iuh.constant.RouterConstant.*;
+import static vn.edu.iuh.constant.SwaggerConstant.*;
+
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/admin/v1/movies")
+@RequestMapping(ADMIN_MOVIE_BASE_PATH)
 @RestController("movieControllerAdminV1")
-@Tag(name = "Movie Controller Admin V1", description = "Quản lý phim")
+@Tag(name = "ADMIN V1: Movie Controller", description = "Quản lý phim")
 public class MovieController {
     private final MovieService movieService;
 
-    @GetMapping("/sales")
+    @Operation(summary = GET_ADMIN_MOVIE_FOR_SALE_SUM)
+    @GetMapping(GET_ADMIN_MOVIE_FOR_SALE_SUB_PATH)
     public SuccessResponse<List<AdminMovieResponseDTO>> getMoviesForSales() {
-        List<AdminMovieResponseDTO> movies = movieService.getMoviesForSales();
-        return new SuccessResponse<>(200, "success", "Thành công", movies);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                movieService.getMoviesForSales()
+        );
     }
 
+    @Operation(summary = GET_ALL_ADMIN_MOVIE_SUM)
     @GetMapping
-    public SuccessResponse<Page<AdminMovieResponseDTO>> getMovies(@PageableDefault(sort = "title") Pageable pageable,
-                                                                  @RequestParam(required = false) String search,
-                                                                  @RequestParam(required = false) String country,
-                                                                  @RequestParam(required = false) AgeRating ageRating,
-                                                                  @RequestParam(required = false) MovieStatus status) {
-        Page<AdminMovieResponseDTO> moviePage = movieService.getAllMovies(search, country, ageRating, status, pageable);
-        return new SuccessResponse<>(200, "success", "Thành công", moviePage);
+    public SuccessResponse<Page<AdminMovieResponseDTO>> getMovies(
+            @PageableDefault(sort = "title") Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) AgeRating ageRating,
+            @RequestParam(required = false) MovieStatus status) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                movieService.getAllMovies(search, country, ageRating, status, pageable)
+        );
     }
 
-    @GetMapping("/filters")
+    @Operation(summary = GET_ADMIN_MOVIE_FOR_FILTER_SUM)
+    @GetMapping(GET_ADMIN_MOVIE_FOR_FILTER_SUB_PATH)
     public SuccessResponse<MovieFiltersResponseDTO> getMovieFilters() {
-        MovieFiltersResponseDTO response = movieService.getMovieFilters();
-        return new SuccessResponse<>(200, "success", "Thành công", response);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                movieService.getMovieFilters()
+        );
     }
 
-    @GetMapping("/{code}")
+    @Operation(summary = GET_ADMIN_MOVIE_SUM)
+    @GetMapping(GET_ADMIN_MOVIE_SUB_PATH)
     public SuccessResponse<?> getMovieByCode(@PathVariable String code) {
-        Movie movie = movieService.getMovieByCode(code);
-        return new SuccessResponse<>(200, "success", "Thành công", movie);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                movieService.getMovieByCode(code)
+        );
     }
 
-    @DeleteMapping("/{id}")
+    @Operation(summary = DELETE_ADMIN_MOVIE_SUM)
+    @DeleteMapping(DELETE_ADMIN_MOVIE_SUB_PATH)
     public SuccessResponse<?> deleteMovie(@PathVariable int id) {
         movieService.deleteMovie(id);
-        return new SuccessResponse<>(200, "success", "Xóa phim thành công", null);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Xóa phim thành công",
+                null
+        );
     }
 
-    @Operation(summary = "Cập nhật phim")
-    @PutMapping("/{id}")
-    public SuccessResponse<Movie> updateMovie(@PathVariable int id, @RequestBody @Valid UpdateMovieRequestDTO updateMovieRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Cập nhật phim thành công", movieService.updateMovie(id, updateMovieRequestDTO));
+    @Operation(summary = PUT_ADMIN_MOVIE_SUM)
+    @PutMapping(PUT_ADMIN_MOVIE_SUB_PATH)
+    public SuccessResponse<Movie> updateMovie(
+            @PathVariable int id,
+            @RequestBody @Valid UpdateMovieRequestDTO updateMovieRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Cập nhật phim thành công",
+                movieService.updateMovie(id, updateMovieRequestDTO)
+        );
     }
 
-    @Operation(summary = "Thêm phim")
+    @Operation(summary = POST_ADMIN_MOVIE_SUM)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<Movie> createMovie(@RequestBody @Valid CreateMovieRequestDTO createMovieRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thêm phim thành công", movieService.createMovie(createMovieRequestDTO));
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Thêm phim thành công",
+                movieService.createMovie(createMovieRequestDTO)
+        );
     }
 }

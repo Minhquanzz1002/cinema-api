@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -1502,7 +1503,7 @@ public class DataInitializer implements CommandLineRunner {
         Order order = orderRepository.save(
                 Order.builder()
                         .orderDate(LocalDateTime.now().minusDays(1))
-                        .code(orderCode)
+                        .code(generateOrderCode())
                         .paymentMethod(PaymentMethod.CASH)
                         .paymentStatus(PaymentStatus.PAID)
                         .totalPrice(100000)
@@ -1863,5 +1864,11 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
+    }
+
+    private String generateOrderCode() {
+        long orderCount = orderRepository.count();
+        LocalDateTime now = LocalDateTime.now();
+        return String.format("HD%s%06d", now.format(DateTimeFormatter.ofPattern("yyMMdd")), (orderCount % 1000000) + 1);
     }
 }

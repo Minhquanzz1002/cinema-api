@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.constant.SecurityConstant;
 import vn.edu.iuh.dto.admin.v1.res.AdminDailyReportResponseDTO;
+import vn.edu.iuh.dto.admin.v1.res.AdminPromotionSummaryResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.services.ReportService;
 
@@ -24,17 +25,39 @@ import static vn.edu.iuh.constant.SwaggerConstant.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(ADMIN_REPORT_BASE_PATH)
-@Tag(name = "Report Controller Admin V1", description = "Báo cáo")
+@Tag(name = "ADMIN V1: Report Controller", description = "Báo cáo")
 public class ReportController {
     private final ReportService reportService;
 
     @Operation(summary = GET_ADMIN_REPORT_DAILY_SUM)
-    @PreAuthorize(SecurityConstant.ROLE_SUPER_ADMIN)
+    @PreAuthorize(SecurityConstant.HAS_ROLE_SUPER_ADMIN)
     @GetMapping(GET_ADMIN_REPORT_DAILY_SUB_PATH)
     public SuccessResponse<List<AdminDailyReportResponseDTO>> getDailyReport(
             @RequestParam(required = false) LocalDate fromDate,
             @RequestParam(required = false) LocalDate toDate
     ) {
-        return new SuccessResponse<>(200, "success", "Thành công", reportService.getDailyReport(fromDate, toDate));
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                reportService.getDailyReport(fromDate, toDate)
+        );
     }
+
+    @Operation(summary = GET_ADMIN_REPORT_PROMOTION_SUM)
+    @PreAuthorize(SecurityConstant.HAS_ROLE_SUPER_ADMIN)
+    @GetMapping(GET_ADMIN_REPORT_PROMOTION_SUB_PATH)
+    public SuccessResponse<List<AdminPromotionSummaryResponseDTO>> getPromotionReport(
+            @RequestParam(required = false) LocalDate fromDate,
+            @RequestParam(required = false) LocalDate toDate,
+            @RequestParam(required = false) String code
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                reportService.getPromotionReport(fromDate, toDate, code)
+        );
+    }
+
 }

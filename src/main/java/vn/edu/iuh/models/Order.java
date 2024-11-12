@@ -22,7 +22,7 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(nullable = false, unique = true, updatable = false, columnDefinition = "CHAR(10)")
+    @Column(nullable = false, unique = true, updatable = false)
     private String code;
     @Column(nullable = false)
     private float totalPrice;
