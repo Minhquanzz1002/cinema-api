@@ -40,6 +40,20 @@ public class SwaggerConstant {
     public static final String POST_ADMIN_MOVIE_SUM = "Thêm phim";
     public static final String PUT_ADMIN_MOVIE_SUM = "Cập nhật phim";
 
+    public static class AdminSwagger {
+
+        public static class Promotion {
+            public static final String GET_ALL_SUM = "Lấy danh sách chiến dịch khuyến mãi";
+            public static final String GET_SUM = "Lấy thông tin chiến dịch khuyến mãi";
+            public static final String DELETE_SUM = "Xóa chiến dịch khuyến mãi";
+            public static final String CREATE_SUM = "Tạo chiến dịch khuyến mãi";
+            public static final String UPDATE_SUM = "Cập nhật chiến dịch khuyến mãi";
+            public static final String GET_ALL_LINES_SUM = "Lấy danh sách chương trình khuyến mãi";
+            public static final String CREATE_LINES_SUM = "Tạo chương trình khuyến mãi";
+
+        }
+    }
+
     // FOR ADMIN AUTH DESC
     public static final String POST_LOGIN_DESC = """
             Access token: 24 hours
