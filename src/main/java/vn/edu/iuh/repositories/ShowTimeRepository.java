@@ -44,4 +44,6 @@ public interface ShowTimeRepository extends JpaRepository<ShowTime, UUID>, JpaSp
     boolean existsByRoomAndStartDateAndStartTimeBetweenOrEndTimeBetween(Room room, LocalDate startDate, LocalTime startTime, LocalTime endTime);
 
     Optional<ShowTime> findByIdAndDeleted(UUID id, boolean deleted);
+
+    List<ShowTime> findByCinemaAndDeletedAndStartDateBetween(Cinema cinema, boolean deleted, LocalDate startDate, LocalDate endDate);
 }
