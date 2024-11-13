@@ -40,6 +40,39 @@ public class SwaggerConstant {
     public static final String POST_ADMIN_MOVIE_SUM = "Thêm phim";
     public static final String PUT_ADMIN_MOVIE_SUM = "Cập nhật phim";
 
+    public static class AdminSwagger {
+
+        public static class Promotion {
+            public static final String GET_ALL_SUM = "Lấy danh sách chiến dịch khuyến mãi";
+            public static final String GET_SUM = "Lấy thông tin chiến dịch khuyến mãi";
+            public static final String DELETE_SUM = "Xóa chiến dịch khuyến mãi";
+            public static final String CREATE_SUM = "Tạo chiến dịch khuyến mãi";
+            public static final String UPDATE_SUM = "Cập nhật chiến dịch khuyến mãi";
+            public static final String GET_ALL_LINES_SUM = "Lấy danh sách chương trình khuyến mãi";
+            public static final String CREATE_LINES_SUM = "Tạo chương trình khuyến mãi";
+
+        }
+
+        public static class TicketPrice {
+            public static final String GET_SUM = "Lấy thông tin bảng giá vé";
+            public static final String GET_ALL_SUM = "Lấy bảng giá vé";
+            public static final String DELETE_SUM = "Xóa bảng giá vé";
+            public static final String CREATE_SUM = "Tạo bảng giá vé";
+            public static final String UPDATE_SUM = "Cập nhật bảng giá vé";
+            public static final String CREATE_LINES_SUM = "Tạo giá vé";
+            public static final String UPDATE_LINES_SUM = "Cập nhật giá vé";
+        }
+
+        public static class Cinema {
+            public static final String GET_ALL_SUM = "Lấy danh sách rạp";
+            public static final String GET_SUM = "Lấy thông tin rạp";
+            public static final String DELETE_SUM = "Xóa rạp";
+            public static final String CREATE_SUM = "Tạo rạp";
+            public static final String UPDATE_SUM = "Cập nhật rạp";
+            public static final String GET_ROOMS_SUM = "Lấy danh sách phòng chiếu";
+        }
+    }
+
     // FOR ADMIN AUTH DESC
     public static final String POST_LOGIN_DESC = """
             Access token: 24 hours

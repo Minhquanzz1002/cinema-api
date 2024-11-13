@@ -13,30 +13,27 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.RoomDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Cinema;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.CinemaService;
+import vn.edu.iuh.services.RoomService;
 
-import static vn.edu.iuh.constant.RouterConstant.ADMIN_CINEMA_BASE_PATH;
+import java.util.List;
 
-/**
- * TODO
- * API lấy danh sách rạp có phân trang và lọc theo ID và name, trạng thái... (dùng chung ?search)
- * API lấy thông tin chi tiết rạp theo ID
- * API thêm mới rạp
- * API cập nhật thông tin rạp
- * API xóa rạp
- */
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
+import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(ADMIN_CINEMA_BASE_PATH)
+@RequestMapping(AdminPaths.Cinema.BASE)
 @RestController("cinemaControllerAdminV1")
-@Tag(name = "Cinema Controller Admin V1", description = "Quản lý rạp")
+@Tag(name = "ADMIN V1: Cinema Management", description = "Quản lý rạp")
 public class CinemaController {
     private final CinemaService cinemaService;
+    private final RoomService roomService;
 
     @GetMapping
     @Operation(summary = "Get all cinemas with pagination and filters")
@@ -114,6 +111,17 @@ public class CinemaController {
                 "success",
                 "Xóa rạp thành công",
                 null
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Cinema.GET_ROOMS_SUM)
+    @GetMapping(AdminPaths.Cinema.GET_ROOMS)
+    public SuccessResponse<List<RoomDTO>> getRoomsByCinemaId(@PathVariable Integer id) {
+        return new SuccessResponse<>(
+                HttpStatus.OK.value(),
+                "success",
+                "Lấy danh sách phòng chiếu thành công",
+                roomService.getRoomsByCinemaId(id)
         );
     }
 }

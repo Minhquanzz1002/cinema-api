@@ -1427,7 +1427,7 @@ public class DataInitializer implements CommandLineRunner {
         PromotionLine promotionLine1 = promotionLineRepository.save(
                 PromotionLine.builder()
                         .promotion(promotion)
-                        .name("Tri ân khách hàng")
+                        .name("Kỷ niệm 10 năm")
                         .code("SALE10")
                         .startDate(currentDate)
                         .endDate(YearMonth.now().atEndOfMonth())
@@ -1476,7 +1476,7 @@ public class DataInitializer implements CommandLineRunner {
         PromotionLine promotionLine3 = promotionLineRepository.save(
                 PromotionLine.builder()
                         .promotion(promotion)
-                        .name("Tri ân khách hàng")
+                        .name("Combo 1 vé xem phim + 1 sản phẩm")
                         .code("1VETANG1COMBO")
                         .startDate(currentDate)
                         .endDate(YearMonth.now().atEndOfMonth())
@@ -1587,7 +1587,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
-        insertTicketPriceDetails(ticketPriceLine1, new float[]{75000, 90000, 130000, 200000});
+        insertTicketPriceDetails(ticketPriceLine1, new float[]{75000, 90000, 130000});
 
         TicketPriceLine ticketPriceLine2 = ticketPriceLineRepository.save(
                 TicketPriceLine.builder()
@@ -1599,7 +1599,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
-        insertTicketPriceDetails(ticketPriceLine2, new float[]{80000, 100000, 150000, 220000});
+        insertTicketPriceDetails(ticketPriceLine2, new float[]{80000, 100000, 150000});
 
         TicketPriceLine ticketPriceLine3 = ticketPriceLineRepository.save(
                 TicketPriceLine.builder()
@@ -1611,7 +1611,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
-        insertTicketPriceDetails(ticketPriceLine3, new float[]{55000, 60000, 100000, 150000});
+        insertTicketPriceDetails(ticketPriceLine3, new float[]{55000, 60000, 100000});
 
         TicketPriceLine ticketPriceLine4 = ticketPriceLineRepository.save(
                 TicketPriceLine.builder()
@@ -1623,7 +1623,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
-        insertTicketPriceDetails(ticketPriceLine4, new float[]{85000, 95000, 160000, 240000});
+        insertTicketPriceDetails(ticketPriceLine4, new float[]{85000, 95000, 160000});
 
         TicketPriceLine ticketPriceLine5 = ticketPriceLineRepository.save(
                 TicketPriceLine.builder()
@@ -1635,7 +1635,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build()
         );
 
-        insertTicketPriceDetails(ticketPriceLine5, new float[]{95000, 105000, 180000, 270000});
+        insertTicketPriceDetails(ticketPriceLine5, new float[]{95000, 105000, 180000});
     }
 
     private void insertTicketPriceDetails(TicketPriceLine line, float[] prices) {
@@ -1660,14 +1660,6 @@ public class DataInitializer implements CommandLineRunner {
                         .seatType(SeatType.COUPLE)
                         .ticketPriceLine(line)
                         .price(prices[2])
-                        .build()
-        );
-
-        ticketPriceDetailRepository.save(
-                TicketPriceDetail.builder()
-                        .seatType(SeatType.TRIPLE)
-                        .ticketPriceLine(line)
-                        .price(prices[3])
                         .build()
         );
     }
