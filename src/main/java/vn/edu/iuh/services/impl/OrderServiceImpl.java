@@ -226,6 +226,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void cancelOrder(UUID orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new BadRequestException("Không thể hủy đơn hàng đã hoàn thành");
+        }
+
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+
+        orderRepository.deleteById(orderId);
+    }
+
+    @Override
     public SuccessResponse<OrderProjection> completeOrder(UserPrincipal userPrincipal, UUID orderId) {
         Order order = this.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
         order.setStatus(OrderStatus.COMPLETED);
@@ -303,7 +319,7 @@ public class OrderServiceImpl implements OrderService {
         // Clear promotion
         PromotionDetail promotionDetail = order.getPromotionDetail();
         if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
             promotionDetailRepository.save(promotionDetail);
         }
         order.setPromotionDetail(null);
@@ -414,6 +430,64 @@ public class OrderServiceImpl implements OrderService {
 
         OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
         return new SuccessResponse<>(201, "success", "Cập nhật ghế thành công", orderProjection);
+    }
+
+    @Override
+    public AdminOrderProjection updateSeatsInOrderByEmployee(UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+
+        // Clear promotion
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+        order.setPromotionDetail(null);
+        order.setTotalDiscount(0);
+        order.setFinalAmount(order.getTotalPrice());
+        order.setPromotionLine(null);
+
+        List<OrderDetail> updatedOrderDetails = new ArrayList<>(order.getOrderDetails());
+        updatedOrderDetails.removeIf(od -> od.getType() == OrderDetailType.TICKET);
+
+        float totalPrice = calculateTotalPriceByType(order, OrderDetailType.PRODUCT);
+
+        ShowTime showTime = order.getShowTime();
+        DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
+        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(dayType.name(), showTime.getStartDate(), showTime.getStartTime(), false);
+
+        if (prices.isEmpty()) {
+            throw new DataNotFoundException("Không tìm thấy giá vé cho lịch chiếu này");
+        }
+
+        Map<SeatType, Float> priceMap = prices.stream().collect(Collectors.toMap(
+                TicketPriceLineProjection::getSeatType,
+                TicketPriceLineProjection::getPrice
+        ));
+
+        List<Seat> seats = seatRepository.findAllById(orderUpdateSeatRequestDTO.getSeatIds());
+        for (Seat seat : seats) {
+            float price = priceMap.get(seat.getType());
+            totalPrice += price;
+            OrderDetail orderDetail = OrderDetail.builder()
+                    .price(price)
+                    .type(OrderDetailType.TICKET)
+                    .seat(seat)
+                    .order(order)
+                    .build();
+
+            updatedOrderDetails.add(orderDetail);
+        }
+
+        order.getOrderDetails().clear();
+        order.getOrderDetails().addAll(updatedOrderDetails);
+        order.setTotalPrice(totalPrice);
+        order.setFinalAmount(totalPrice);
+        order = orderRepository.save(order);
+
+        applyPromotion(order);
+
+        return orderRepository.findById(order.getId(), AdminOrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
     }
 
     @Override

@@ -1,13 +1,15 @@
 package vn.edu.iuh.constant;
 
 public class RouterConstant {
+    private static final String V1 = "/v1";
+    private static final String ADMIN = "/admin";
+
     // BASE ADMIN API PATH ====================================
     public static final String ADMIN_AUTH_BASE_PATH = "/admin/v1/auth";
     public static final String ADMIN_REPORT_BASE_PATH = "/admin/v1/reports";
     public static final String ADMIN_PAYMENT_BASE_PATH = "/admin/v1/payments";
     public static final String ADMIN_CALLBACK_BASE_PATH = "/admin/v1/callback";
     public static final String ADMIN_EMPLOYEE_BASE_PATH = "/admin/v1/employees";
-    public static final String ADMIN_CINEMA_BASE_PATH = "/admin/v1/cinemas";
     public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
     public static final String ADMIN_SHOWTIME_BASE_PATH = "/admin/v1/show-times";
     public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
@@ -45,4 +47,34 @@ public class RouterConstant {
     public static final String GET_ADMIN_MOVIE_SUB_PATH = "/{code}";
     public static final String DELETE_ADMIN_MOVIE_SUB_PATH = "/{id}";
     public static final String PUT_ADMIN_MOVIE_SUB_PATH = "/{id}";
+
+    public static class AdminPaths {
+        private static final String ADMIN_V1 = ADMIN + V1;
+
+        public static class Cinema {
+            public static final String BASE = ADMIN_V1 + "/cinemas";
+            public static final String DETAIL = "/{id}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+            public static final String GET_ROOMS = "/{id}/rooms";
+        }
+
+        public static class Promotion {
+            public static final String BASE = ADMIN_V1 + "/promotions";
+            public static final String DETAIL = "/{code}";
+            public static final String DELETE = "/{id}";
+            public static final String UPDATE = "/{id}";
+            public static final String GET_LINES = "/{id}/lines";
+            public static final String CREATE_LINES = "/{id}/lines";
+        }
+
+        public static class TicketPrice {
+            public static final String BASE = ADMIN_V1 + "/ticket-prices";
+            public static final String DETAIL = "/{id}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+            public static final String CREATE_LINES = "/{id}/lines";
+            public static final String LINE_DETAIL = "/{id}/lines/{lineId}";
+        }
+    }
 }

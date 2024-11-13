@@ -14,6 +14,7 @@ import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
+import vn.edu.iuh.dto.req.OrderUpdateSeatRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
@@ -56,6 +57,25 @@ public class OrderController {
     public SuccessResponse<AdminOrderProjection> updateProductsInOrderByEmployee(@PathVariable UUID orderId,
                                                                                  @RequestBody OrderUpdateProductRequestDTO orderUpdateProductRequestDTO) {
         return new SuccessResponse<>(200, "success", "Thành công", orderService.updateProductsInOrderByEmployee(orderId, orderUpdateProductRequestDTO));
+    }
+
+    @PutMapping("/{orderId}/seats")
+    public SuccessResponse<AdminOrderProjection> updateSeatsInOrderByEmployee(
+            @PathVariable UUID orderId,
+            @RequestBody OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                orderService.updateSeatsInOrderByEmployee(orderId, orderUpdateSeatRequestDTO)
+        );
+    }
+
+    @DeleteMapping("/{orderId}")
+    public SuccessResponse<Void> cancelOrder(@PathVariable UUID orderId) {
+        orderService.cancelOrder(orderId);
+        return new SuccessResponse<>(200, "success", "Hủy đơn hàng thành công", null);
     }
 
     @PutMapping("/{orderId}/complete")
