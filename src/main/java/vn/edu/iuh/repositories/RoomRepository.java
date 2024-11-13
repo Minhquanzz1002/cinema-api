@@ -20,4 +20,6 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     Page<Room> findAll(Specification<Room> spec, Pageable pageable);
 
     List<Room> findByCinemaAndDeleted(Cinema cinema, boolean deleted);
+
+    List<Room> findAllByDeletedAndCinema_Id(boolean deleted, int cinemaId);
 }

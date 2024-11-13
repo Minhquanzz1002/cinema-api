@@ -7,6 +7,8 @@ import vn.edu.iuh.dto.admin.v1.req.CreateRoomDTO;
 import vn.edu.iuh.dto.admin.v1.req.RoomDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateRoomDTO;
 
+import java.util.List;
+
 public interface RoomService {
 
     Page<RoomDTO> getRooms(String search, Pageable pageable);
@@ -22,4 +24,6 @@ public interface RoomService {
     RoomDTO updateRoom(int id, UpdateRoomDTO dto);
 
     void deleteRoom(int id);
+
+    List<RoomDTO> getRoomsByCinemaId(int cinemaId);
 }

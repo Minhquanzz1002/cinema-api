@@ -30,6 +30,8 @@ public interface OrderService {
 
     SuccessResponse<?> cancelOrder(UserPrincipal userPrincipal, UUID orderId);
 
+    void cancelOrder(UUID orderId);
+
     SuccessResponse<OrderProjection> completeOrder(UserPrincipal userPrincipal, UUID orderId);
 
     SuccessResponse<OrderProjection> updateProductsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO);
@@ -37,6 +39,8 @@ public interface OrderService {
     AdminOrderProjection updateProductsInOrderByEmployee(UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO);
 
     SuccessResponse<OrderProjection> updateSeatsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO);
+
+    AdminOrderProjection updateSeatsInOrderByEmployee(UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO);
 
     SuccessResponse<OrderProjection> updateDiscountInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateDiscountDTO orderUpdateDiscountDTO);
 

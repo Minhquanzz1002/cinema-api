@@ -10,11 +10,9 @@ public class RouterConstant {
     public static final String ADMIN_PAYMENT_BASE_PATH = "/admin/v1/payments";
     public static final String ADMIN_CALLBACK_BASE_PATH = "/admin/v1/callback";
     public static final String ADMIN_EMPLOYEE_BASE_PATH = "/admin/v1/employees";
-    public static final String ADMIN_CINEMA_BASE_PATH = "/admin/v1/cinemas";
     public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
     public static final String ADMIN_SHOWTIME_BASE_PATH = "/admin/v1/show-times";
     public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
-    public static final String ADMIN_PROMOTION_BASE_PATH = "/admin/v1/promotions";
 
     // BASE API PATH ==========================================
     public static final String PAYMENT_BASE_PATH = "/v1/payments";
@@ -53,6 +51,14 @@ public class RouterConstant {
     public static class AdminPaths {
         private static final String ADMIN_V1 = ADMIN + V1;
 
+        public static class Cinema {
+            public static final String BASE = ADMIN_V1 + "/cinemas";
+            public static final String DETAIL = "/{id}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+            public static final String GET_ROOMS = "/{id}/rooms";
+        }
+
         public static class Promotion {
             public static final String BASE = ADMIN_V1 + "/promotions";
             public static final String DETAIL = "/{code}";
@@ -60,6 +66,15 @@ public class RouterConstant {
             public static final String UPDATE = "/{id}";
             public static final String GET_LINES = "/{id}/lines";
             public static final String CREATE_LINES = "/{id}/lines";
+        }
+
+        public static class TicketPrice {
+            public static final String BASE = ADMIN_V1 + "/ticket-prices";
+            public static final String DETAIL = "/{id}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+            public static final String CREATE_LINES = "/{id}/lines";
+            public static final String LINE_DETAIL = "/{id}/lines/{lineId}";
         }
     }
 }

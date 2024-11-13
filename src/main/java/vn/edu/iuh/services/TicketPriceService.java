@@ -15,6 +15,7 @@ public interface TicketPriceService {
     Page<TicketPrice> getAllTicketPrices(String name, BaseStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO);
+
     TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequestDTO updateTicketPriceRequestDTO);
 
     void deleteTicketPrice(int id);

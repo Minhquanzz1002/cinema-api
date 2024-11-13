@@ -1,6 +1,7 @@
 package vn.edu.iuh.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final CinemaRepository cinemaRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Page<RoomDTO> getRooms(String search, Pageable pageable) {
@@ -109,6 +111,14 @@ public class RoomServiceImpl implements RoomService {
 
         room.setDeleted(true);
         roomRepository.save(room);
+    }
+
+    @Override
+    public List<RoomDTO> getRoomsByCinemaId(int cinemaId) {
+        List<Room> rooms = roomRepository.findAllByDeletedAndCinema_Id(false, cinemaId);
+        return rooms.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     private RoomDTO toDTO(Room room) {

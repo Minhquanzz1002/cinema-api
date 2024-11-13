@@ -63,15 +63,6 @@ public class TicketPriceServiceImpl implements TicketPriceService {
 
     @Override
     public TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO) {
-//        List<TicketPrice> overlappingTicketPrices = ticketPriceRepository.findOverlappingTicketPrices(
-//                createTicketPriceRequestDTO.getStartDate(), // kiem tra
-//                createTicketPriceRequestDTO.getEndDate()
-//        );
-//
-//        if (!overlappingTicketPrices.isEmpty()) {
-//            throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
-//        }
-
         TicketPrice ticketPrice = modelMapper.map(createTicketPriceRequestDTO, TicketPrice.class);
         return ticketPriceRepository.save(ticketPrice);
     }
@@ -81,12 +72,23 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         TicketPrice ticketPrice = ticketPriceRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá vé"));
         LocalDate currentDate = LocalDate.now();
 
-        // Kiểm tra nếu đang từ INACTIVE chuyển sang ACTIVE
         if (ticketPrice.getStatus() == BaseStatus.INACTIVE && updateTicketPriceRequestDTO.getStatus() == BaseStatus.ACTIVE) {
-            // Kiểm tra xem có dữ liệu (price) không
             if (ticketPrice.getTicketPriceLines() == null || ticketPrice.getTicketPriceLines().isEmpty()) {
                 throw new BadRequestException("Không thể kích hoạt giá vé khi chưa có dữ liệu giá");
             }
+
+            ticketPrice.getTicketPriceLines().forEach(line -> {
+                if (!line.isDeleted()) {
+                    line.setStatus(BaseStatus.ACTIVE);
+                    if (line.getTicketPriceDetails() != null) {
+                        line.getTicketPriceDetails().forEach(detail -> {
+                            if (!detail.isDeleted()) {
+                                detail.setStatus(BaseStatus.ACTIVE);
+                            }
+                        });
+                    }
+                }
+            });
         }
 
         if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
@@ -180,19 +182,19 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
                 .price(createTicketPriceLineRequestDTO.getNormalPrice())
                 .seatType(SeatType.NORMAL)
-                .status(BaseStatus.ACTIVE)
+                .status(BaseStatus.INACTIVE)
                 .build());
 
         ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
                 .price(createTicketPriceLineRequestDTO.getVipPrice())
                 .seatType(SeatType.VIP)
-                .status(BaseStatus.ACTIVE)
+                .status(BaseStatus.INACTIVE)
                 .build());
 
         ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
                 .price(createTicketPriceLineRequestDTO.getCouplePrice())
                 .seatType(SeatType.COUPLE)
-                .status(BaseStatus.ACTIVE)
+                .status(BaseStatus.INACTIVE)
                 .build());
 
         return ticketPriceLineRepository.save(ticketPriceLine);
