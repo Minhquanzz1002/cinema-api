@@ -76,6 +76,14 @@ public class SwaggerConstant {
             public static final String DELETE_SUM = "Xóa sản phẩm";
         }
 
+        public static class ProductPrice {
+            public static final String GET_ALL_SUM = "Lấy danh sách giá sản phẩm";
+            public static final String GET_SUM = "Lấy thông tin giá sản phẩm";
+            public static final String DELETE_SUM = "Xóa giá sản phẩm";
+            public static final String CREATE_SUM = "Tạo giá sản phẩm";
+            public static final String UPDATE_SUM = "Cập nhật giá sản phẩm";
+        }
+
         public static class TicketPrice {
             public static final String GET_SUM = "Lấy thông tin bảng giá vé";
             public static final String GET_ALL_SUM = "Lấy bảng giá vé";

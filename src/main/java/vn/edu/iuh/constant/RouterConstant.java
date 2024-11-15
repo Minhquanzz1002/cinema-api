@@ -86,6 +86,12 @@ public class RouterConstant {
             public static final String UPDATE = "/{code}";
         }
 
+        public static class ProductPrice {
+            public static final String BASE = ADMIN_V1 + "/product-prices";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+        }
+
         public static class TicketPrice {
             public static final String BASE = ADMIN_V1 + "/ticket-prices";
             public static final String DETAIL = "/{id}";
