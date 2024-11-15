@@ -8,19 +8,12 @@ public class SwaggerConstant {
     public static final String GET_ADMIN_REPORT_DAILY_SUM = "Lấy báo cáo doanh thu theo ngày";
     public static final String GET_ADMIN_REPORT_PROMOTION_SUM = "Lấy báo cáo khuyến mãi";
 
-    // FOR ADMIN CALLBACK
-    public static final String POST_ADMIN_CALLBACK_ZALOPAY_SUM = "Callback cho ZaloPay";
-
     // FOR ADMIN PAYMENT
     public static final String POST_ADMIN_PAYMENT_ZALOPAY_SUM = "Tạo đơn hàng ZaloPay";
     public static final String GET_ADMIN_PAYMENT_ZALOPAY_SUM = "Lấy thông tin đơn hàng ZaloPay";
 
     // FOR ADMIN EMPLOYEE
-    public static final String GET_ALL_ADMIN_EMPLOYEE_SUM = "Danh sách nhân viên";
-    public static final String GET_ADMIN_EMPLOYEE_SUM = "Lấy thông tin nhân viên";
     public static final String POST_ADMIN_EMPLOYEE_SUM = "Thêm mới nhân viên";
-    public static final String PUT_ADMIN_EMPLOYEE_SUM = "Cập nhật thông tin nhân viên";
-    public static final String DELETE_ADMIN_EMPLOYEE_SUM = "Xóa nhân viên";
 
     // FOR SHOW TIME
     public static final String GET_SHOW_TIME_FOR_SALE_SUB_PATH_SUM = "Lấy lịch chiếu cho bán vé tại quầy";
@@ -47,6 +40,10 @@ public class SwaggerConstant {
             public static final String GET_SUM = "Lấy thông tin diễn viên";
             public static final String UPDATE_SUM = "Cập nhật diễn viên";
             public static final String DELETE_SUM = "Xóa diễn viên";
+        }
+
+        public static class Callback {
+            public static final String ZALOPAY_SUM = "Callback cho ZaloPay";
         }
 
         public static class Director {
@@ -112,6 +109,13 @@ public class SwaggerConstant {
             public static final String CANCEL_SUM = "Hủy đơn hàng";
             public static final String COMPLETE_SUM = "Hoàn thành đơn hàng";
             public static final String REFUND_SUM = "Hoàn đơn";
+        }
+
+        public static class Employee {
+            public static final String GET_ALL_SUM = "Lấy danh sách nhân viên";
+            public static final String GET_SUM = "Lấy thông tin nhân viên";
+            public static final String DELETE_SUM = "Xóa nhân viên";
+            public static final String UPDATE_SUM = "Cập nhật nhân viên";
         }
     }
 

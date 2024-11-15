@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/v1/refunds")
-@Tag(name = "Refund Controller Admin V1", description = "Quản lý hoàn đơn")
+@Tag(name = "ADMIN V1: Refund Management", description = "Quản lý hoàn đơn")
 public class RefundController {
     private final RefundService refundService;
 

@@ -8,8 +8,6 @@ public class RouterConstant {
     public static final String ADMIN_AUTH_BASE_PATH = "/admin/v1/auth";
     public static final String ADMIN_REPORT_BASE_PATH = "/admin/v1/reports";
     public static final String ADMIN_PAYMENT_BASE_PATH = "/admin/v1/payments";
-    public static final String ADMIN_CALLBACK_BASE_PATH = "/admin/v1/callback";
-    public static final String ADMIN_EMPLOYEE_BASE_PATH = "/admin/v1/employees";
     public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
     public static final String ADMIN_SHOWTIME_BASE_PATH = "/admin/v1/show-times";
     public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
@@ -28,11 +26,6 @@ public class RouterConstant {
     public static final String POST_ADMIN_ZALOPAY_SUB_PATH = "/zalo-pay";
     public static final String GET_ADMIN_ZALOPAY_SUB_PATH = "/zalo-pay";
 
-    // ENDPOINT URL ADMIN CALLBACK =============================
-    public static final String POST_ADMIN_CALLBACK_ZALOPAY_SUB_PATH = "/zalo-pay";
-
-    // ENDPOINT URL ADMIN EMPLOYEE =============================
-    public static final String GET_ADMIN_EMPLOYEE_SUB_PATH = "/employees";
 
     // ENDPOINT URL SHOW TIME =============================
     public static final String GET_SHOW_TIME_FOR_FILTER_SUB_PATH = "/filters";
@@ -56,6 +49,11 @@ public class RouterConstant {
             public static final String DETAIL = "/{code}";
             public static final String UPDATE = "/{id}";
             public static final String DELETE = "/{id}";
+        }
+
+        public static class Callback {
+            public static final String BASE = ADMIN_V1 + "/callback";
+            public static final String ZALOPAY = "/zalo-pay";
         }
 
         public static class Cinema {
@@ -99,6 +97,13 @@ public class RouterConstant {
             public static final String DELETE = "/{id}";
             public static final String CREATE_LINES = "/{id}/lines";
             public static final String LINE_DETAIL = "/{id}/lines/{lineId}";
+        }
+
+        public static class Employee {
+            public static final String BASE = ADMIN_V1 + "/employees";
+            public static final String DETAIL = "/{code}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
         }
 
         public static class Order {
