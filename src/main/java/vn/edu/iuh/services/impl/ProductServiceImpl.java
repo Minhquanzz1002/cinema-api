@@ -22,8 +22,6 @@ import vn.edu.iuh.projections.v1.ProductProjection;
 import vn.edu.iuh.repositories.ProductPriceRepository;
 import vn.edu.iuh.repositories.ProductRepository;
 import vn.edu.iuh.services.ProductService;
-import vn.edu.iuh.specifications.GenericSpecifications;
-import vn.edu.iuh.specifications.ProductPriceSpecifications;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -58,11 +56,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BaseProductWithPriceProjection getProductWithCurrentPriceByCode(String code) {
         return productRepository.findWithPriceByCodeAndDeleted(code, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
-    }
-
-    @Override
-    public Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        return productPriceRepository.findAll(ProductPriceSpecifications.withFilters(code, status, false).and(GenericSpecifications.betweenDates(startDate, endDate)), pageable);
     }
 
     @Override
@@ -123,40 +116,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductByCode(code);
         product.setDeleted(true);
         productRepository.save(product);
-    }
-
-    @Override
-    public ProductPrice createProductPrice(String code, CreateProductPriceRequestDTO createProductPriceRequestDTO) {
-        Product product = getProductByCode(code);
-        ProductPrice productPrice = modelMapper.map(createProductPriceRequestDTO, ProductPrice.class);
-        productPrice.setProduct(product);
-        return productPriceRepository.save(productPrice);
-    }
-
-    @Override
-    public ProductPrice updateProductPrice(String code, int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
-        ProductPrice productPrice = productPriceRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá sản phẩm"));
-        if (productPrice.getStatus() != BaseStatus.ACTIVE) {
-            if (updateProductPriceRequestDTO.getPrice() != null) {
-                productPrice.setPrice(updateProductPriceRequestDTO.getPrice());
-            }
-            if (updateProductPriceRequestDTO.getStartDate() != null) {
-                productPrice.setStartDate(updateProductPriceRequestDTO.getStartDate());
-            }
-            if (updateProductPriceRequestDTO.getEndDate() != null) {
-                productPrice.setEndDate(updateProductPriceRequestDTO.getEndDate());
-            }
-            if (updateProductPriceRequestDTO.getStatus() != null) {
-                productPrice.setStatus(updateProductPriceRequestDTO.getStatus());
-            }
-            productPriceRepository.save(productPrice);
-            return productPrice;
-        } else {
-            if (updateProductPriceRequestDTO.getStatus() != null) {
-                productPrice.setStatus(updateProductPriceRequestDTO.getStatus());
-            }
-        }
-        return productPriceRepository.save(productPrice);
     }
 
     @Override

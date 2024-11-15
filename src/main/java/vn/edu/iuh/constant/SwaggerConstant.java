@@ -41,16 +41,39 @@ public class SwaggerConstant {
     public static final String PUT_ADMIN_MOVIE_SUM = "Cập nhật phim";
 
     public static class AdminSwagger {
+        public static class Actor {
+            public static final String CREATE_SUM = "Tạo diễn viên";
+            public static final String GET_ALL_SUM = "Lấy danh sách diễn viên";
+            public static final String GET_SUM = "Lấy thông tin diễn viên";
+            public static final String UPDATE_SUM = "Cập nhật diễn viên";
+            public static final String DELETE_SUM = "Xóa diễn viên";
+        }
+
+        public static class Director {
+            public static final String CREATE_SUM = "Tạo đạo diễn";
+            public static final String GET_ALL_SUM = "Lấy danh sách đạo diễn";
+            public static final String GET_SUM = "Lấy thông tin đạo diễn";
+            public static final String UPDATE_SUM = "Cập nhật đạo diễn";
+            public static final String DELETE_SUM = "Xóa đạo diễn";
+        }
 
         public static class Promotion {
+            public static final String CREATE_SUM = "Tạo chiến dịch khuyến mãi";
+            public static final String CREATE_LINES_SUM = "Tạo chương trình khuyến mãi";
             public static final String GET_ALL_SUM = "Lấy danh sách chiến dịch khuyến mãi";
             public static final String GET_SUM = "Lấy thông tin chiến dịch khuyến mãi";
-            public static final String DELETE_SUM = "Xóa chiến dịch khuyến mãi";
-            public static final String CREATE_SUM = "Tạo chiến dịch khuyến mãi";
-            public static final String UPDATE_SUM = "Cập nhật chiến dịch khuyến mãi";
             public static final String GET_ALL_LINES_SUM = "Lấy danh sách chương trình khuyến mãi";
-            public static final String CREATE_LINES_SUM = "Tạo chương trình khuyến mãi";
+            public static final String UPDATE_SUM = "Cập nhật chiến dịch khuyến mãi";
+            public static final String DELETE_SUM = "Xóa chiến dịch khuyến mãi";
+        }
 
+        public static class Product {
+            public static final String CREATE_SUM = "Tạo sản phẩm";
+            public static final String GET_ALL_SUM = "Lấy danh sách sản phẩm";
+            public static final String GET_ALL_ACTIVE_SUM = "Lấy danh sách sản phẩm hoạt động";
+            public static final String GET_SUM = "Lấy thông tin sản phẩm";
+            public static final String UPDATE_SUM = "Cập nhật sản phẩm";
+            public static final String DELETE_SUM = "Xóa sản phẩm";
         }
 
         public static class TicketPrice {
@@ -70,6 +93,17 @@ public class SwaggerConstant {
             public static final String CREATE_SUM = "Tạo rạp";
             public static final String UPDATE_SUM = "Cập nhật rạp";
             public static final String GET_ROOMS_SUM = "Lấy danh sách phòng chiếu";
+        }
+
+        public static class Order {
+            public static final String CREATE_SUM = "Tạo đơn hàng";
+            public static final String GET_ALL_SUM = "Lấy danh sách đơn hàng";
+            public static final String GET_SUM = "Lấy thông tin đơn hàng";
+            public static final String UPDATE_PRODUCTS_SUM = "Cập nhật sản phẩm trong đơn hàng";
+            public static final String UPDATE_SEATS_SUM = "Cập nhật ghế trong đơn hàng";
+            public static final String CANCEL_SUM = "Hủy đơn hàng";
+            public static final String COMPLETE_SUM = "Hoàn thành đơn hàng";
+            public static final String REFUND_SUM = "Hoàn đơn";
         }
     }
 

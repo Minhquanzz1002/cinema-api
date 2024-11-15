@@ -2,7 +2,6 @@ package vn.edu.iuh.services.impl;
 
 import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +11,7 @@ import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 
+import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
 import vn.edu.iuh.models.City;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -62,7 +62,7 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     public Cinema getCinemaById(Integer id) {
         return cinemaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy rạp với id: " + id));
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp với id: " + id));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CinemaServiceImpl implements CinemaService {
     public Cinema createCinema(CreateCinemaRequestDTO request) {
         // Validate city exists
         City city = cityRepository.findById(request.getCityId())
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
 
         Cinema cinema = Cinema.builder()
                 .code(generateCinemaCode())
@@ -96,7 +96,7 @@ public class CinemaServiceImpl implements CinemaService {
         // Validate city exists if cityId is provided
         if (request.getCityId() != null) {
             City city = cityRepository.findById(request.getCityId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
+                    .orElseThrow(() -> new DataNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
             cinema.setCity(city);
         }
 

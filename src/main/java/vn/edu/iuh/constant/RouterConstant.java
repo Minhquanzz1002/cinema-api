@@ -51,12 +51,23 @@ public class RouterConstant {
     public static class AdminPaths {
         private static final String ADMIN_V1 = ADMIN + V1;
 
+        public static class Actor {
+            public static final String BASE = ADMIN_V1 + "/actors";
+            public static final String DETAIL = "/{code}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+        }
+
         public static class Cinema {
             public static final String BASE = ADMIN_V1 + "/cinemas";
             public static final String DETAIL = "/{id}";
             public static final String UPDATE = "/{id}";
             public static final String DELETE = "/{id}";
             public static final String GET_ROOMS = "/{id}/rooms";
+        }
+
+        public static class Director {
+            public static final String BASE = ADMIN_V1 + "/directors";
         }
 
         public static class Promotion {
@@ -68,6 +79,13 @@ public class RouterConstant {
             public static final String CREATE_LINES = "/{id}/lines";
         }
 
+        public static class Product {
+            public static final String BASE = ADMIN_V1 + "/products";
+            public static final String DETAIL = "/{code}";
+            public static final String DELETE = "/{code}";
+            public static final String UPDATE = "/{code}";
+        }
+
         public static class TicketPrice {
             public static final String BASE = ADMIN_V1 + "/ticket-prices";
             public static final String DETAIL = "/{id}";
@@ -75,6 +93,16 @@ public class RouterConstant {
             public static final String DELETE = "/{id}";
             public static final String CREATE_LINES = "/{id}/lines";
             public static final String LINE_DETAIL = "/{id}/lines/{lineId}";
+        }
+
+        public static class Order {
+            public static final String BASE = ADMIN_V1 + "/orders";
+            public static final String DETAIL = "/{code}";
+            public static final String UPDATE_PRODUCTS = "/{orderId}/products";
+            public static final String UPDATE_SEATS = "/{orderId}/seats";
+            public static final String COMPLETE = "/{orderId}/complete";
+            public static final String CANCEL = "/{orderId}";
+            public static final String REFUND = "/{orderId}/refund";
         }
     }
 }

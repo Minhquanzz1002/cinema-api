@@ -17,7 +17,7 @@ import static vn.edu.iuh.constant.SwaggerConstant.*;
 @RequestMapping(ADMIN_CALLBACK_BASE_PATH)
 @RestController
 @CrossOrigin("*")
-@Tag(name = "Callback Controller Admin V1", description = "Quản lý callback")
+@Tag(name = "ADMIN V1: Callback Management", description = "Quản lý callback")
 public class CallbackController {
     private final ZaloPayService zaloPayService;
 

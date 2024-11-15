@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/v1/customers")
-@Tag(name = "Movie Controller Admin V1", description = "Quản lý phim")
+@Tag(name = "ADMIN V1: Movie Management", description = "Quản lý phim")
 public class CustomerController {
     private final CustomerService customerService;
 
