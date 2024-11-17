@@ -8,62 +8,66 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.req.*;
+import vn.edu.iuh.dto.req.ChangePasswordRequestDTO;
+import vn.edu.iuh.dto.req.EmailRequestDTO;
+import vn.edu.iuh.dto.req.LoginRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.dto.res.UserAuthResponseDTO;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
-import static vn.edu.iuh.constant.RouterConstant.ADMIN_AUTH_BASE_PATH;
-import static vn.edu.iuh.constant.RouterConstant.POST_ADMIN_LOGIN_SUB_PATH;
-import static vn.edu.iuh.constant.SwaggerConstant.POST_LOGIN_DESC;
-import static vn.edu.iuh.constant.SwaggerConstant.POST_LOGIN_SUM;
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
+import static vn.edu.iuh.constant.SwaggerConstant.*;
 
 @Slf4j
 @RestController("authControllerAdminV1")
 @RequiredArgsConstructor
-@RequestMapping(ADMIN_AUTH_BASE_PATH)
+@RequestMapping(AdminPaths.Auth.BASE)
 @Tag(name = "ADMIN V1: Authentication", description = "Xác thực người dùng")
 public class AuthController {
     private final AuthService authService;
 
-    @Operation(summary = POST_LOGIN_SUM, description = POST_LOGIN_DESC)
-    @PostMapping(POST_ADMIN_LOGIN_SUB_PATH)
-    public SuccessResponse<UserAuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", authService.login(loginRequestDTO, true));
+    @Operation(summary = AdminSwagger.Auth.LOGIN_SUM, description = POST_LOGIN_DESC)
+    @PostMapping(AdminPaths.Auth.LOGIN)
+    public SuccessResponse<UserAuthResponseDTO> login(
+            @RequestBody @Valid LoginRequestDTO loginRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                authService.login(loginRequestDTO, true)
+        );
     }
 
     @Operation(
-            summary = "Thông tin người dùng",
+            summary = AdminSwagger.Auth.PROFILE_SUM,
             description = "Lấy thông tin người dùng thông qua JWT",
             security = {
                     @SecurityRequirement(name = "bearerAuth")
             }
     )
-    @GetMapping("/profile")
+    @GetMapping(AdminPaths.Auth.PROFILE)
     public SuccessResponse<?> profile(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return authService.getProfile(userPrincipal);
     }
 
     @Operation(
-            summary = "Quên mật khẩu",
-            description = "Gửi mật khẩu mới (8 ký tự) tới email"
-    )
-    @PostMapping("/forgot-password")
+            summary = AdminSwagger.Auth.FORGOT_PASSWORD_SUM,
+            description = "Gửi mật khẩu mới (8 ký tự) tới email")
+    @PostMapping(AdminPaths.Auth.FORGOT_PASSWORD)
     public SuccessResponse<?> forgotPassword(@RequestBody @Valid EmailRequestDTO emailRequestDTO) {
         return authService.forgotPassword(emailRequestDTO.getEmail());
     }
 
-    @Operation(
-            summary = "Đăng xuất"
-    )
-    @PostMapping("/logout")
+    @Operation(summary = AdminSwagger.Auth.LOGOUT_SUM)
+    @PostMapping(AdminPaths.Auth.LOGOUT)
     public SuccessResponse<UserAuthResponseDTO> logout() {
         return null;
     }
 
     @Operation(
-            summary = "Đổi mật khẩu",
+            summary = AdminSwagger.Auth.CHANGE_PASSWORD_SUM,
             security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping("/change-password")
     public SuccessResponse<UserAuthResponseDTO> changePassword(

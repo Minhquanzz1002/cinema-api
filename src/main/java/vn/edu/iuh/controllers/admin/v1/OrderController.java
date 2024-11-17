@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
@@ -22,44 +23,79 @@ import vn.edu.iuh.projections.admin.v1.AdminOrderProjection;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.OrderService;
 
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
+import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/admin/v1/orders")
+@RequestMapping(AdminPaths.Order.BASE)
 @RestController("orderControllerAdminV1")
-@Tag(name = "Order Controller Admin V1", description = "Quản lý đặt hàng")
+@Tag(name = "ADMIN V1: Order Management", description = "Quản lý đặt hàng")
 public class OrderController {
     private final OrderService orderService;
 
-    @GetMapping
-    public SuccessResponse<Page<AdminOrderResponseDTO>> getOrders(@PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable,
-                                                                  @RequestParam(required = false) LocalDate fromDate, @RequestParam(required = false) LocalDate toDate,
-                                                                  @RequestParam(required = false) String code, @RequestParam(required = false) OrderStatus status) {
-        Page<AdminOrderResponseDTO> orderPage = orderService.getAllOrders(code, status, fromDate, toDate, pageable);
-        return new SuccessResponse<>(200, "success", "Thành công", orderPage);
-    }
-
-    @GetMapping("/{code}")
-    public SuccessResponse<AdminOrderOverviewProjection> getOrderByCode(@PathVariable String code) {
-        AdminOrderOverviewProjection order = orderService.getOrderByCode(code);
-        return new SuccessResponse<>(200, "success", "Thành công", order);
-    }
-
+    @Operation(summary = AdminSwagger.Order.CREATE_SUM)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public SuccessResponse<AdminOrderProjection> createOrderByEmployee(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                       @RequestBody CreateOrderRequestDTO createOrderRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", orderService.createOrderByEmployee(userPrincipal, createOrderRequestDTO));
+    public SuccessResponse<AdminOrderProjection> createOrderByEmployee(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody CreateOrderRequestDTO createOrderRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Thành công",
+                orderService.createOrderByEmployee(userPrincipal, createOrderRequestDTO)
+        );
     }
 
-    @PutMapping("/{orderId}/products")
-    public SuccessResponse<AdminOrderProjection> updateProductsInOrderByEmployee(@PathVariable UUID orderId,
-                                                                                 @RequestBody OrderUpdateProductRequestDTO orderUpdateProductRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", orderService.updateProductsInOrderByEmployee(orderId, orderUpdateProductRequestDTO));
+    @Operation(summary = AdminSwagger.Order.GET_ALL_SUM)
+    @GetMapping
+    public SuccessResponse<Page<AdminOrderResponseDTO>> getOrders(
+            @PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(required = false) LocalDate fromDate,
+            @RequestParam(required = false) LocalDate toDate,
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) OrderStatus status
+    ) {
+        Page<AdminOrderResponseDTO> orderPage = orderService.getAllOrders(code, status, fromDate, toDate, pageable);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                orderPage
+        );
     }
 
-    @PutMapping("/{orderId}/seats")
+    @Operation(summary = AdminSwagger.Order.GET_SUM)
+    @GetMapping(AdminPaths.Order.DETAIL)
+    public SuccessResponse<AdminOrderOverviewProjection> getOrderByCode(@PathVariable String code) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công", orderService.getOrderByCode(code)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Order.UPDATE_PRODUCTS_SUM)
+    @PutMapping(AdminPaths.Order.UPDATE_PRODUCTS)
+    public SuccessResponse<AdminOrderProjection> updateProductsInOrderByEmployee(
+            @PathVariable UUID orderId,
+            @RequestBody OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                orderService.updateProductsInOrderByEmployee(orderId, orderUpdateProductRequestDTO)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Order.UPDATE_SEATS_SUM)
+    @PutMapping(AdminPaths.Order.UPDATE_SEATS)
     public SuccessResponse<AdminOrderProjection> updateSeatsInOrderByEmployee(
             @PathVariable UUID orderId,
             @RequestBody OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
@@ -72,21 +108,41 @@ public class OrderController {
         );
     }
 
-    @DeleteMapping("/{orderId}")
+    @Operation(summary = AdminSwagger.Order.COMPLETE_SUM)
+    @PutMapping(AdminPaths.Order.COMPLETE)
+    public SuccessResponse<AdminOrderProjection> completeOrder(@PathVariable UUID orderId) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                orderService.completeOrder(orderId)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Order.REFUND_SUM)
+    @PutMapping(AdminPaths.Order.REFUND)
+    public SuccessResponse<Void> refundOrder(
+            @PathVariable UUID orderId,
+            @RequestBody RefundOrderRequestDTO refundOrderRequestDTO
+    ) {
+        orderService.refundOrder(orderId, refundOrderRequestDTO);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Hoàn đơn thành công",
+                null
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Order.CANCEL_SUM)
+    @DeleteMapping(AdminPaths.Order.CANCEL)
     public SuccessResponse<Void> cancelOrder(@PathVariable UUID orderId) {
         orderService.cancelOrder(orderId);
-        return new SuccessResponse<>(200, "success", "Hủy đơn hàng thành công", null);
-    }
-
-    @PutMapping("/{orderId}/complete")
-    public SuccessResponse<AdminOrderProjection> completeOrder(@PathVariable UUID orderId) {
-        return new SuccessResponse<>(200, "success", "Thành công", orderService.completeOrder(orderId));
-    }
-
-    @Operation(summary = "Hoàn đơn")
-    @PutMapping("/{orderId}/refund")
-    public SuccessResponse<Void> refundOrder(@PathVariable UUID orderId, @RequestBody RefundOrderRequestDTO refundOrderRequestDTO) {
-        orderService.refundOrder(orderId, refundOrderRequestDTO);
-        return new SuccessResponse<>(200, "success", "Hoàn đơn thành công", null);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Hủy đơn hàng thành công",
+                null
+        );
     }
 }
