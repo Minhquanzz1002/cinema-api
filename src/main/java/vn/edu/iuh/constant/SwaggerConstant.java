@@ -1,8 +1,6 @@
 package vn.edu.iuh.constant;
 
 public class SwaggerConstant {
-    // FOR ADMIN AUTH
-    public static final String POST_LOGIN_SUM = "Đăng nhập";
 
     // FOR ADMIN REPORT
     public static final String GET_ADMIN_REPORT_DAILY_SUM = "Lấy báo cáo doanh thu theo ngày";
@@ -40,6 +38,14 @@ public class SwaggerConstant {
             public static final String GET_SUM = "Lấy thông tin diễn viên";
             public static final String UPDATE_SUM = "Cập nhật diễn viên";
             public static final String DELETE_SUM = "Xóa diễn viên";
+        }
+
+        public static class Auth {
+            public static final String LOGIN_SUM = "Đăng nhập";
+            public static final String PROFILE_SUM = "Thông tin người dùng";
+            public static final String FORGOT_PASSWORD_SUM = "Quên mật khẩu";
+            public static final String LOGOUT_SUM = "Đăng xuất";
+            public static final String CHANGE_PASSWORD_SUM = "Đổi mật khẩu";
         }
 
         public static class Callback {

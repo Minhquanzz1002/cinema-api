@@ -22,6 +22,11 @@ public class CustomerController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/phone/{phone}")
     public SuccessResponse<List<AdminCustomerWithNameAndPhoneProjection>> getCustomersWithPhone(@PathVariable String phone) {
-        return new SuccessResponse<>(200, "success", "Thành công", customerService.getCustomersWithPhone(phone));
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                customerService.getCustomersWithPhone(phone)
+        );
     }
 }

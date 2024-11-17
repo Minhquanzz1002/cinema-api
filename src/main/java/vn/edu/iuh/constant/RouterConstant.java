@@ -5,18 +5,11 @@ public class RouterConstant {
     private static final String ADMIN = "/admin";
 
     // BASE ADMIN API PATH ====================================
-    public static final String ADMIN_AUTH_BASE_PATH = "/admin/v1/auth";
     public static final String ADMIN_REPORT_BASE_PATH = "/admin/v1/reports";
     public static final String ADMIN_PAYMENT_BASE_PATH = "/admin/v1/payments";
     public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
     public static final String ADMIN_SHOWTIME_BASE_PATH = "/admin/v1/show-times";
     public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
-
-    // BASE API PATH ==========================================
-    public static final String PAYMENT_BASE_PATH = "/v1/payments";
-
-    // ENDPOINT URL ADMIN AUTH ================================
-    public static final String POST_ADMIN_LOGIN_SUB_PATH = "/login";
 
     // ENDPOINT URL ADMIN REPORT ===============================
     public static final String GET_ADMIN_REPORT_DAILY_SUB_PATH = "/daily";
@@ -49,6 +42,14 @@ public class RouterConstant {
             public static final String DETAIL = "/{code}";
             public static final String UPDATE = "/{id}";
             public static final String DELETE = "/{id}";
+        }
+
+        public static class Auth {
+            public static final String BASE = ADMIN_V1 + "/auth";
+            public static final String PROFILE = "/profile";
+            public static final String FORGOT_PASSWORD = "/forgot-password";
+            public static final String LOGIN = "/login";
+            public static final String LOGOUT = "/logout";
         }
 
         public static class Callback {
