@@ -1,17 +1,6 @@
 package vn.edu.iuh.constant;
 
 public class SwaggerConstant {
-    // FOR ADMIN EMPLOYEE
-    public static final String POST_ADMIN_EMPLOYEE_SUM = "Thêm mới nhân viên";
-
-    // FOR ADMIN MOVIE
-    public static final String GET_ADMIN_MOVIE_FOR_SALE_SUM = "Lấy danh sách phim cho bán vé";
-    public static final String GET_ALL_ADMIN_MOVIE_SUM = "Lấy tất cả phim";
-    public static final String GET_ADMIN_MOVIE_SUM = "Lấy thông tin phim";
-    public static final String GET_ADMIN_MOVIE_FOR_FILTER_SUM = "Lấy thông tin bộ lọc phim";
-    public static final String DELETE_ADMIN_MOVIE_SUM = "Xóa phim";
-    public static final String POST_ADMIN_MOVIE_SUM = "Thêm phim";
-    public static final String PUT_ADMIN_MOVIE_SUM = "Cập nhật phim";
 
     public static class AdminSwagger {
         public static class Actor {
@@ -40,6 +29,16 @@ public class SwaggerConstant {
             public static final String GET_SUM = "Lấy thông tin đạo diễn";
             public static final String UPDATE_SUM = "Cập nhật đạo diễn";
             public static final String DELETE_SUM = "Xóa đạo diễn";
+        }
+
+        public static class Movie {
+            public static final String CREATE_SUM = "Tạo phim";
+            public static final String GET_ALL_SUM = "Lấy danh sách phim";
+            public static final String GET_SUM = "Lấy thông tin phim";
+            public static final String GET_FOR_SALE_SUM = "Lấy danh sách phim cho bán vé";
+            public static final String FILTER_SUM = "Lấy bộ lọc phim";
+            public static final String UPDATE_SUM = "Cập nhật phim";
+            public static final String DELETE_SUM = "Xóa phim";
         }
 
         public static class Payment {
@@ -93,6 +92,14 @@ public class SwaggerConstant {
             public static final String GET_ROOMS_SUM = "Lấy danh sách phòng chiếu";
         }
 
+        public static class Room {
+            public static final String CREATE_SUM = "Tạo phòng chiếu";
+            public static final String GET_ALL_SUM = "Lấy danh sách phòng chiếu";
+            public static final String GET_SUM = "Lấy thông tin phòng chiếu";
+            public static final String UPDATE_SUM = "Cập nhật phòng chiếu";
+            public static final String DELETE_SUM = "Xóa phòng chiếu";
+        }
+
         public static class Refund {
             public static final String GET_ALL_SUM = "Lấy danh sách hóa đơn hoàn trả";
             public static final String GET_SUM = "Lấy thông tin hóa đơn hoàn trả";
@@ -126,6 +133,7 @@ public class SwaggerConstant {
         }
 
         public static class Employee {
+            public static final String CREATE_SUM = "Tạo nhân viên";
             public static final String GET_ALL_SUM = "Lấy danh sách nhân viên";
             public static final String GET_SUM = "Lấy thông tin nhân viên";
             public static final String DELETE_SUM = "Xóa nhân viên";

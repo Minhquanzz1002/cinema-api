@@ -32,7 +32,7 @@ import static vn.edu.iuh.constant.SwaggerConstant.*;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    @Operation(summary = POST_ADMIN_EMPLOYEE_SUM)
+    @Operation(summary = AdminSwagger.Employee.CREATE_SUM)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "Created successfully")

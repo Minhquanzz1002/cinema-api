@@ -4,17 +4,6 @@ public class RouterConstant {
     private static final String V1 = "/v1";
     private static final String ADMIN = "/admin";
 
-    // BASE ADMIN API PATH ====================================
-    public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
-    public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
-
-    // ENDPOINT URL ADMIN MOVIE =============================
-    public static final String GET_ADMIN_MOVIE_FOR_SALE_SUB_PATH = "/sales";
-    public static final String GET_ADMIN_MOVIE_FOR_FILTER_SUB_PATH = "/filters";
-    public static final String GET_ADMIN_MOVIE_SUB_PATH = "/{code}";
-    public static final String DELETE_ADMIN_MOVIE_SUB_PATH = "/{id}";
-    public static final String PUT_ADMIN_MOVIE_SUB_PATH = "/{id}";
-
     public static class AdminPaths {
         private static final String ADMIN_V1 = ADMIN + V1;
 
@@ -48,6 +37,15 @@ public class RouterConstant {
 
         public static class Director {
             public static final String BASE = ADMIN_V1 + "/directors";
+        }
+
+        public static class Movie {
+            public static final String BASE = ADMIN_V1 + "/movies";
+            public static final String DETAIL = "/{code}";
+            public static final String DELETE = "/{id}";
+            public static final String UPDATE = "/{id}";
+            public static final String SALE = "/sales";
+            public static final String FILTER = "/filters";
         }
 
         public static class Payment {
@@ -99,6 +97,13 @@ public class RouterConstant {
         public static class Refund {
             public static final String BASE = ADMIN_V1 + "/refunds";
             public static final String DETAIL = "/{code}";
+        }
+
+        public static class Room {
+            public static final String BASE = ADMIN_V1 + "/rooms";
+            public static final String DETAIL = "/{id}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
         }
 
         public static class Report {
