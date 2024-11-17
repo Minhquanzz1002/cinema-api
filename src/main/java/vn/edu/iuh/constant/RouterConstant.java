@@ -5,14 +5,9 @@ public class RouterConstant {
     private static final String ADMIN = "/admin";
 
     // BASE ADMIN API PATH ====================================
-    public static final String ADMIN_REPORT_BASE_PATH = "/admin/v1/reports";
     public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
     public static final String ADMIN_SHOWTIME_BASE_PATH = "/admin/v1/show-times";
     public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
-
-    // ENDPOINT URL ADMIN REPORT ===============================
-    public static final String GET_ADMIN_REPORT_DAILY_SUB_PATH = "/daily";
-    public static final String GET_ADMIN_REPORT_PROMOTION_SUB_PATH = "/promotion";
 
 
     // ENDPOINT URL SHOW TIME =============================
@@ -113,6 +108,12 @@ public class RouterConstant {
         public static class Refund {
             public static final String BASE = ADMIN_V1 + "/refunds";
             public static final String DETAIL = "/{code}";
+        }
+
+        public static class Report {
+            public static final String BASE = ADMIN_V1 + "/reports";
+            public static final String DAILY = "/daily";
+            public static final String PROMOTION = "/promotion";
         }
 
         public static class Order {

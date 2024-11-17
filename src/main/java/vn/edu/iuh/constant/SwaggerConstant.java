@@ -1,11 +1,6 @@
 package vn.edu.iuh.constant;
 
 public class SwaggerConstant {
-
-    // FOR ADMIN REPORT
-    public static final String GET_ADMIN_REPORT_DAILY_SUM = "Lấy báo cáo doanh thu theo ngày";
-    public static final String GET_ADMIN_REPORT_PROMOTION_SUM = "Lấy báo cáo khuyến mãi";
-
     // FOR ADMIN EMPLOYEE
     public static final String POST_ADMIN_EMPLOYEE_SUM = "Thêm mới nhân viên";
 
@@ -110,6 +105,11 @@ public class SwaggerConstant {
         public static class Refund {
             public static final String GET_ALL_SUM = "Lấy danh sách hóa đơn hoàn trả";
             public static final String GET_SUM = "Lấy thông tin hóa đơn hoàn trả";
+        }
+
+        public static class Report {
+            public static final String GET_REPORT_DAILY_SUM = "Lấy báo cáo doanh thu theo ngày";
+            public static final String GET_REPORT_PROMOTION_SUM = "Lấy báo cáo khuyến mãi";
         }
 
         public static class Order {
