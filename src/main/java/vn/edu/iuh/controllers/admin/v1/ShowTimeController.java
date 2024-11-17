@@ -20,73 +20,111 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import static vn.edu.iuh.constant.RouterConstant.*;
-import static vn.edu.iuh.constant.SwaggerConstant.*;
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
+import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(ADMIN_SHOWTIME_BASE_PATH)
+@RequestMapping(AdminPaths.ShowTime.BASE)
 @RestController("showTimeControllerAdminV1")
 @Tag(name = "ADMIN V1: Show Time Controller", description = "Quản lý lịch chiếu")
 public class ShowTimeController {
     private final ShowTimeService showTimeService;
 
-    @Operation(summary = GET_SHOW_TIME_FOR_SALE_SUB_PATH_SUM)
-    @GetMapping(GET_SHOW_TIME_FOR_SALE_SUB_PATH)
-    public SuccessResponse<List<AdminShowTimeForSaleResponseDTO>> getShowTimesForSales(@RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate startDate,
-                                                                                       @RequestParam Integer movieId,
-                                                                                       @RequestParam(required = false) Integer cinemaId) {
-        return new SuccessResponse<>(200, "success", "Thành công", showTimeService.getShowTimesForSales(cinemaId, movieId, startDate));
+    @Operation(summary = AdminSwagger.ShowTime.GENERATE_SUM)
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(AdminPaths.ShowTime.GENERATE)
+    public SuccessResponse<?> generateShowTime(
+            @RequestBody @Valid GenerateShowTimeRequestDTO body
+    ) {
+        showTimeService.generateShowTime(body);
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Tạo lịch chiếu thành công",
+                null
+        );
     }
 
-    @Operation(summary = GET_SHOW_TIME_FOR_FILTER_SUB_PATH_SUM)
-    @GetMapping(GET_SHOW_TIME_FOR_FILTER_SUB_PATH)
-    public SuccessResponse<ShowTimeFiltersResponseDTO> getShowTimeFilters() {
-        return new SuccessResponse<>(200, "success", "Thành công", showTimeService.getShowTimeFilters());
-    }
-
-    @Operation(summary = GET_SHOW_TIME_SUM)
-    @GetMapping
-    public SuccessResponse<AdminShowTimeResponseDTO> getAllShowTimes(@RequestParam int cinemaId,
-                                                                     @RequestParam(required = false) LocalDate startDate,
-                                                                     @RequestParam(required = false) Integer movieId,
-                                                                     @RequestParam(required = false) BaseStatus status) {
-        return new SuccessResponse<>(200, "success", "Thành công", showTimeService.getAllShowTimes(cinemaId, startDate, movieId, status));
-    }
-
-    @Operation(summary = POST_SHOW_TIME_SUM)
+    @Operation(summary = AdminSwagger.ShowTime.CREATE_SUM)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<?> createShowTime(@RequestBody @Valid CreateShowTimeRequestDTO createShowTimeRequestDTO) {
         showTimeService.createShowTime(createShowTimeRequestDTO);
-        return new SuccessResponse<>(201, "success", "Thêm lịch chiếu thành công", null);
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Thêm lịch chiếu thành công",
+                null
+        );
     }
 
-    @Operation(summary = DELETE_SHOW_TIME_SUB_PATH_SUM)
-    @DeleteMapping(DELETE_SHOW_TIME_SUB_PATH)
-    public SuccessResponse<?> deleteShowTime(@PathVariable UUID id) {
-        showTimeService.deleteShowTime(id);
-        return new SuccessResponse<>(200, "success", "Xóa lịch chiếu thành công", null);
-    }
-
-    @Operation(summary = PUT_SHOW_TIME_SUB_PATH_SUM)
-    @PutMapping(PUT_SHOW_TIME_SUB_PATH)
-    public SuccessResponse<?> updateShowTime(@PathVariable UUID id, @RequestBody @Valid CreateShowTimeRequestDTO createShowTimeRequestDTO) {
-        showTimeService.deleteShowTime(id);
-        showTimeService.createShowTime(createShowTimeRequestDTO);
-        return new SuccessResponse<>(200, "success", "Cập nhật lịch chiếu thành công", null);
-    }
-
-    @Operation(summary = POST_SHOW_TIME_GENERATE_SUM)
-    @PostMapping(POST_SHOW_TIME_GENERATE_SUB_PATH)
-    public SuccessResponse<?> generateShowTime(
-            @RequestBody @Valid GenerateShowTimeRequestDTO body
-            ) {
-        showTimeService.generateShowTime(body);
+    @Operation(summary = AdminSwagger.ShowTime.GET_FOR_SALE_SUM)
+    @GetMapping(AdminPaths.ShowTime.SALE)
+    public SuccessResponse<List<AdminShowTimeForSaleResponseDTO>> getShowTimesForSales(
+            @RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate startDate,
+            @RequestParam Integer movieId,
+            @RequestParam(required = false) Integer cinemaId
+    ) {
         return new SuccessResponse<>(
                 200,
                 "success",
-                "Tạo lịch chiếu thành công",
+                "Thành công",
+                showTimeService.getShowTimesForSales(cinemaId, movieId, startDate)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.ShowTime.FILTER_SUM)
+    @GetMapping(AdminPaths.ShowTime.FILTER)
+    public SuccessResponse<ShowTimeFiltersResponseDTO> getShowTimeFilters() {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                showTimeService.getShowTimeFilters()
+        );
+    }
+
+    @Operation(summary = AdminSwagger.ShowTime.GET_ALL_SUM)
+    @GetMapping
+    public SuccessResponse<AdminShowTimeResponseDTO> getAllShowTimes(
+            @RequestParam int cinemaId,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) Integer movieId,
+            @RequestParam(required = false) BaseStatus status
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                showTimeService.getAllShowTimes(cinemaId, startDate, movieId, status)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.ShowTime.UPDATE_SUM)
+    @PutMapping(AdminPaths.ShowTime.UPDATE)
+    public SuccessResponse<?> updateShowTime(
+            @PathVariable UUID id,
+            @RequestBody @Valid CreateShowTimeRequestDTO createShowTimeRequestDTO
+    ) {
+        showTimeService.deleteShowTime(id);
+        showTimeService.createShowTime(createShowTimeRequestDTO);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Cập nhật lịch chiếu thành công",
+                null
+        );
+    }
+
+    @Operation(summary = AdminSwagger.ShowTime.DELETE_SUM)
+    @DeleteMapping(AdminPaths.ShowTime.DELETE)
+    public SuccessResponse<?> deleteShowTime(@PathVariable UUID id) {
+        showTimeService.deleteShowTime(id);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Xóa lịch chiếu thành công",
                 null
         );
     }

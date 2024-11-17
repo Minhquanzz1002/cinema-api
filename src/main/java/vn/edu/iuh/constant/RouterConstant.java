@@ -6,16 +6,7 @@ public class RouterConstant {
 
     // BASE ADMIN API PATH ====================================
     public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
-    public static final String ADMIN_SHOWTIME_BASE_PATH = "/admin/v1/show-times";
     public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
-
-
-    // ENDPOINT URL SHOW TIME =============================
-    public static final String GET_SHOW_TIME_FOR_FILTER_SUB_PATH = "/filters";
-    public static final String GET_SHOW_TIME_FOR_SALE_SUB_PATH = "/sales";
-    public static final String POST_SHOW_TIME_GENERATE_SUB_PATH = "/generate";
-    public static final String PUT_SHOW_TIME_SUB_PATH = "/{id}";
-    public static final String DELETE_SHOW_TIME_SUB_PATH = "/{id}";
 
     // ENDPOINT URL ADMIN MOVIE =============================
     public static final String GET_ADMIN_MOVIE_FOR_SALE_SUB_PATH = "/sales";
@@ -114,6 +105,15 @@ public class RouterConstant {
             public static final String BASE = ADMIN_V1 + "/reports";
             public static final String DAILY = "/daily";
             public static final String PROMOTION = "/promotion";
+        }
+
+        public static class ShowTime {
+            public static final String BASE = ADMIN_V1 + "/show-times";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+            public static final String SALE = "/sales";
+            public static final String FILTER = "/filters";
+            public static final String GENERATE = "/generate";
         }
 
         public static class Order {
