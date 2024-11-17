@@ -22,19 +22,33 @@ import vn.edu.iuh.services.MovieService;
 
 import java.util.List;
 
-import static vn.edu.iuh.constant.RouterConstant.*;
-import static vn.edu.iuh.constant.SwaggerConstant.*;
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
+import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping(ADMIN_MOVIE_BASE_PATH)
+@RequestMapping(AdminPaths.Movie.BASE)
 @RestController("movieControllerAdminV1")
 @Tag(name = "ADMIN V1: Movie Controller", description = "Quản lý phim")
 public class MovieController {
     private final MovieService movieService;
 
-    @Operation(summary = GET_ADMIN_MOVIE_FOR_SALE_SUM)
-    @GetMapping(GET_ADMIN_MOVIE_FOR_SALE_SUB_PATH)
+    @Operation(summary = AdminSwagger.Movie.CREATE_SUM)
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public SuccessResponse<Movie> createMovie(
+            @RequestBody @Valid CreateMovieRequestDTO createMovieRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Thêm phim thành công",
+                movieService.createMovie(createMovieRequestDTO)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Movie.GET_FOR_SALE_SUM)
+    @GetMapping(AdminPaths.Movie.SALE)
     public SuccessResponse<List<AdminMovieResponseDTO>> getMoviesForSales() {
         return new SuccessResponse<>(
                 200,
@@ -44,7 +58,7 @@ public class MovieController {
         );
     }
 
-    @Operation(summary = GET_ALL_ADMIN_MOVIE_SUM)
+    @Operation(summary = AdminSwagger.Movie.GET_ALL_SUM)
     @GetMapping
     public SuccessResponse<Page<AdminMovieResponseDTO>> getMovies(
             @PageableDefault(sort = "title") Pageable pageable,
@@ -60,8 +74,8 @@ public class MovieController {
         );
     }
 
-    @Operation(summary = GET_ADMIN_MOVIE_FOR_FILTER_SUM)
-    @GetMapping(GET_ADMIN_MOVIE_FOR_FILTER_SUB_PATH)
+    @Operation(summary = AdminSwagger.Movie.FILTER_SUM)
+    @GetMapping(AdminPaths.Movie.FILTER)
     public SuccessResponse<MovieFiltersResponseDTO> getMovieFilters() {
         return new SuccessResponse<>(
                 200,
@@ -71,8 +85,8 @@ public class MovieController {
         );
     }
 
-    @Operation(summary = GET_ADMIN_MOVIE_SUM)
-    @GetMapping(GET_ADMIN_MOVIE_SUB_PATH)
+    @Operation(summary = AdminSwagger.Movie.GET_SUM)
+    @GetMapping(AdminPaths.Movie.DETAIL)
     public SuccessResponse<?> getMovieByCode(@PathVariable String code) {
         return new SuccessResponse<>(
                 200,
@@ -82,20 +96,8 @@ public class MovieController {
         );
     }
 
-    @Operation(summary = DELETE_ADMIN_MOVIE_SUM)
-    @DeleteMapping(DELETE_ADMIN_MOVIE_SUB_PATH)
-    public SuccessResponse<?> deleteMovie(@PathVariable int id) {
-        movieService.deleteMovie(id);
-        return new SuccessResponse<>(
-                200,
-                "success",
-                "Xóa phim thành công",
-                null
-        );
-    }
-
-    @Operation(summary = PUT_ADMIN_MOVIE_SUM)
-    @PutMapping(PUT_ADMIN_MOVIE_SUB_PATH)
+    @Operation(summary = AdminSwagger.Movie.UPDATE_SUM)
+    @PutMapping(AdminPaths.Movie.UPDATE)
     public SuccessResponse<Movie> updateMovie(
             @PathVariable int id,
             @RequestBody @Valid UpdateMovieRequestDTO updateMovieRequestDTO
@@ -108,15 +110,15 @@ public class MovieController {
         );
     }
 
-    @Operation(summary = POST_ADMIN_MOVIE_SUM)
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public SuccessResponse<Movie> createMovie(@RequestBody @Valid CreateMovieRequestDTO createMovieRequestDTO) {
+    @Operation(summary = AdminSwagger.Movie.DELETE_SUM)
+    @DeleteMapping(AdminPaths.Movie.DELETE)
+    public SuccessResponse<?> deleteMovie(@PathVariable int id) {
+        movieService.deleteMovie(id);
         return new SuccessResponse<>(
-                201,
+                200,
                 "success",
-                "Thêm phim thành công",
-                movieService.createMovie(createMovieRequestDTO)
+                "Xóa phim thành công",
+                null
         );
     }
 }

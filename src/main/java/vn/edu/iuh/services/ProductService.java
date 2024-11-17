@@ -26,8 +26,6 @@ public interface ProductService {
 
     BaseProductWithPriceProjection getProductWithCurrentPriceByCode(String code);
 
-    Page<ProductPrice> getProductPricesHistory(String code, BaseStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable);
-
     Product createProduct(CreateProductRequestDTO createProductRequestDTO);
 
     BaseProductProjection updateProduct(String code, UpdateProductRequestDTO updateProductRequestDTO);
@@ -35,10 +33,6 @@ public interface ProductService {
     Product getProductByCode(String code);
 
     void deleteProduct(String code);
-
-    ProductPrice createProductPrice(String code, CreateProductPriceRequestDTO createProductPriceRequestDTO);
-
-    ProductPrice updateProductPrice(String code, int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO);
 
     List<BaseProductProjection> getListProducts(String search);
 }

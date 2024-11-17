@@ -15,13 +15,18 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/v1/customers")
-@Tag(name = "Movie Controller Admin V1", description = "Quản lý phim")
+@Tag(name = "ADMIN V1: Movie Management", description = "Quản lý phim")
 public class CustomerController {
     private final CustomerService customerService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/phone/{phone}")
     public SuccessResponse<List<AdminCustomerWithNameAndPhoneProjection>> getCustomersWithPhone(@PathVariable String phone) {
-        return new SuccessResponse<>(200, "success", "Thành công", customerService.getCustomersWithPhone(phone));
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                customerService.getCustomersWithPhone(phone)
+        );
     }
 }

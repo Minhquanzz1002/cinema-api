@@ -18,20 +18,20 @@ import vn.edu.iuh.services.ReportService;
 import java.time.LocalDate;
 import java.util.List;
 
-import static vn.edu.iuh.constant.RouterConstant.*;
-import static vn.edu.iuh.constant.SwaggerConstant.*;
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
+import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(ADMIN_REPORT_BASE_PATH)
+@RequestMapping(AdminPaths.Report.BASE)
 @Tag(name = "ADMIN V1: Report Controller", description = "Báo cáo")
 public class ReportController {
     private final ReportService reportService;
 
-    @Operation(summary = GET_ADMIN_REPORT_DAILY_SUM)
+    @Operation(summary = AdminSwagger.Report.GET_REPORT_DAILY_SUM)
     @PreAuthorize(SecurityConstant.HAS_ROLE_SUPER_ADMIN)
-    @GetMapping(GET_ADMIN_REPORT_DAILY_SUB_PATH)
+    @GetMapping(AdminPaths.Report.DAILY)
     public SuccessResponse<List<AdminDailyReportResponseDTO>> getDailyReport(
             @RequestParam(required = false) LocalDate fromDate,
             @RequestParam(required = false) LocalDate toDate
@@ -44,9 +44,9 @@ public class ReportController {
         );
     }
 
-    @Operation(summary = GET_ADMIN_REPORT_PROMOTION_SUM)
+    @Operation(summary = AdminSwagger.Report.GET_REPORT_PROMOTION_SUM)
     @PreAuthorize(SecurityConstant.HAS_ROLE_SUPER_ADMIN)
-    @GetMapping(GET_ADMIN_REPORT_PROMOTION_SUB_PATH)
+    @GetMapping(AdminPaths.Report.PROMOTION)
     public SuccessResponse<List<AdminPromotionSummaryResponseDTO>> getPromotionReport(
             @RequestParam(required = false) LocalDate fromDate,
             @RequestParam(required = false) LocalDate toDate,

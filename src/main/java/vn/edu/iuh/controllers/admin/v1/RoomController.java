@@ -19,18 +19,35 @@ import vn.edu.iuh.dto.admin.v1.req.UpdateRoomDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.services.RoomService;
 
-import static vn.edu.iuh.constant.RouterConstant.ADMIN_ROOM_BASE_PATH;
+import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
 
 @Slf4j
 @RestController("roomControllerAdminV1")
-@RequestMapping(ADMIN_ROOM_BASE_PATH)
+@RequestMapping(AdminPaths.Room.BASE)
 @RequiredArgsConstructor
-@Tag(name = "Room Controller Admin V1", description = "Quản lý phòng chiếu")
+@Tag(name = "ADMIN V1: Room Management", description = "Quản lý phòng chiếu")
 public class RoomController {
     private final RoomService roomService;
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = AdminSwagger.Room.CREATE_SUM)
+    @ApiResponse(responseCode = "201", description = "Created successfully")
+    public SuccessResponse<RoomDTO> createRoom(
+            @Valid @RequestBody CreateRoomDTO dto
+    ) {
+        RoomDTO room = roomService.createRoom(dto);
+        return new SuccessResponse<>(
+                HttpStatus.CREATED.value(),
+                "success",
+                "Thêm phòng chiếu thành công",
+                room
+        );
+    }
+
     @GetMapping
-    @Operation(summary = "Get all rooms with pagination and filters")
+    @Operation(summary = AdminSwagger.Room.GET_ALL_SUM)
     @ApiResponse(responseCode = "200", description = "Success")
     public SuccessResponse<Page<RoomDTO>> getRooms(
             @Parameter(description = "Search by name or id")
@@ -46,8 +63,8 @@ public class RoomController {
         );
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get room details by ID")
+    @GetMapping(AdminPaths.Room.DETAIL)
+    @Operation(summary = AdminSwagger.Room.GET_SUM)
     @ApiResponse(responseCode = "200", description = "Success")
     public SuccessResponse<RoomDTO> getRoom(
             @Parameter(description = "Room ID")
@@ -62,24 +79,8 @@ public class RoomController {
         );
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create new room")
-    @ApiResponse(responseCode = "201", description = "Created successfully")
-    public SuccessResponse<RoomDTO> createRoom(
-            @Valid @RequestBody CreateRoomDTO dto
-    ) {
-        RoomDTO room = roomService.createRoom(dto);
-        return new SuccessResponse<>(
-                HttpStatus.CREATED.value(),
-                "success",
-                "Thêm phòng chiếu thành công",
-                room
-        );
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update room information")
+    @PutMapping(AdminPaths.Room.UPDATE)
+    @Operation(summary = AdminSwagger.Room.UPDATE_SUM)
     @ApiResponse(responseCode = "200", description = "Updated successfully")
     public SuccessResponse<RoomDTO> updateRoom(
             @Parameter(description = "Room ID")
@@ -95,8 +96,8 @@ public class RoomController {
         );
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete room")
+    @DeleteMapping(AdminPaths.Room.DELETE)
+    @Operation(summary = AdminSwagger.Room.DELETE_SUM)
     @ApiResponse(responseCode = "200", description = "Deleted successfully")
     public SuccessResponse<Void> deleteRoom(
             @Parameter(description = "Room ID")
