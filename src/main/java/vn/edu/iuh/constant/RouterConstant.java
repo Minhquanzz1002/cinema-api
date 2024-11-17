@@ -106,6 +106,11 @@ public class RouterConstant {
             public static final String DELETE = "/{id}";
         }
 
+        public static class Refund {
+            public static final String BASE = ADMIN_V1 + "/refunds";
+            public static final String DETAIL = "/{code}";
+        }
+
         public static class Order {
             public static final String BASE = ADMIN_V1 + "/orders";
             public static final String DETAIL = "/{code}";

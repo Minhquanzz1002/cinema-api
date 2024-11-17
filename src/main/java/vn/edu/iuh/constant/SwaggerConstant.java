@@ -100,6 +100,11 @@ public class SwaggerConstant {
             public static final String GET_ROOMS_SUM = "Lấy danh sách phòng chiếu";
         }
 
+        public static class Refund {
+            public static final String GET_ALL_SUM = "Lấy danh sách hóa đơn hoàn trả";
+            public static final String GET_SUM = "Lấy thông tin hóa đơn hoàn trả";
+        }
+
         public static class Order {
             public static final String CREATE_SUM = "Tạo đơn hàng";
             public static final String GET_ALL_SUM = "Lấy danh sách đơn hàng";
