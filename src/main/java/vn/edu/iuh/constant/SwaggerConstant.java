@@ -6,10 +6,6 @@ public class SwaggerConstant {
     public static final String GET_ADMIN_REPORT_DAILY_SUM = "Lấy báo cáo doanh thu theo ngày";
     public static final String GET_ADMIN_REPORT_PROMOTION_SUM = "Lấy báo cáo khuyến mãi";
 
-    // FOR ADMIN PAYMENT
-    public static final String POST_ADMIN_PAYMENT_ZALOPAY_SUM = "Tạo đơn hàng ZaloPay";
-    public static final String GET_ADMIN_PAYMENT_ZALOPAY_SUM = "Lấy thông tin đơn hàng ZaloPay";
-
     // FOR ADMIN EMPLOYEE
     public static final String POST_ADMIN_EMPLOYEE_SUM = "Thêm mới nhân viên";
 
@@ -58,6 +54,11 @@ public class SwaggerConstant {
             public static final String GET_SUM = "Lấy thông tin đạo diễn";
             public static final String UPDATE_SUM = "Cập nhật đạo diễn";
             public static final String DELETE_SUM = "Xóa đạo diễn";
+        }
+
+        public static class Payment {
+            public static final String CREATE_ORDER_ZALOPAY_SUM = "Tạo đơn hàng ZaloPay";
+            public static final String STATUS_ORDER_ZALOPAY_SUM = "Lấy thông tin đơn hàng ZaloPay";
         }
 
         public static class Promotion {

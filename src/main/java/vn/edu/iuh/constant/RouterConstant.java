@@ -6,7 +6,6 @@ public class RouterConstant {
 
     // BASE ADMIN API PATH ====================================
     public static final String ADMIN_REPORT_BASE_PATH = "/admin/v1/reports";
-    public static final String ADMIN_PAYMENT_BASE_PATH = "/admin/v1/payments";
     public static final String ADMIN_ROOM_BASE_PATH = "/admin/v1/rooms";
     public static final String ADMIN_SHOWTIME_BASE_PATH = "/admin/v1/show-times";
     public static final String ADMIN_MOVIE_BASE_PATH = "/admin/v1/movies";
@@ -14,10 +13,6 @@ public class RouterConstant {
     // ENDPOINT URL ADMIN REPORT ===============================
     public static final String GET_ADMIN_REPORT_DAILY_SUB_PATH = "/daily";
     public static final String GET_ADMIN_REPORT_PROMOTION_SUB_PATH = "/promotion";
-
-    // ENDPOINT URL ADMIN ZALOPAY PAYMENT ======================
-    public static final String POST_ADMIN_ZALOPAY_SUB_PATH = "/zalo-pay";
-    public static final String GET_ADMIN_ZALOPAY_SUB_PATH = "/zalo-pay";
 
 
     // ENDPOINT URL SHOW TIME =============================
@@ -67,6 +62,14 @@ public class RouterConstant {
 
         public static class Director {
             public static final String BASE = ADMIN_V1 + "/directors";
+        }
+
+        public static class Payment {
+            public static final String BASE = ADMIN_V1 + "/payments";
+            public static final String CREATE_ORDER_ZALOPAY = "/zalo-pay";
+            public static final String STATUS_ORDER_ZALOPAY = "/zalo-pay";
+            public static final String DELETE = "/{id}";
+            public static final String UPDATE = "/{id}";
         }
 
         public static class Promotion {
