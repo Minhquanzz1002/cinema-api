@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class AdminDailyReportResponseDTO {
+public class AdminEmployeeReportResponseDTO {
     private String employeeCode;
     private String employeeName;
     private LocalDate date;
@@ -15,7 +15,7 @@ public class AdminDailyReportResponseDTO {
     private float totalDiscount;
     private float finalAmount;
 
-    public AdminDailyReportResponseDTO(String employeeCode, String employeeName, LocalDate date, float totalPrice, float totalDiscount, float finalAmount) {
+    public AdminEmployeeReportResponseDTO(String employeeCode, String employeeName, LocalDate date, float totalPrice, float totalDiscount, float finalAmount) {
         this.employeeCode = employeeCode;
         this.employeeName = employeeName;
         this.date = date;

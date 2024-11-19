@@ -1332,7 +1332,7 @@ public class DataInitializer implements CommandLineRunner {
                         .status(UserStatus.ACTIVE)
                         .build());
 
-                userRepository.save(User.builder()
+                User nvbh1 = userRepository.save(User.builder()
                         .code("NVBH00000001")
                         .name("Nguyễn Văn A")
                         .phone("0354927403")
@@ -1344,9 +1344,9 @@ public class DataInitializer implements CommandLineRunner {
                         .status(UserStatus.ACTIVE)
                         .build());
 
-                insertOrders(user1, "HD00000001", 404, 405, 309000, OrderStatus.COMPLETED);
-                insertOrders(user2, "HD00000002", 406, null, 209000, OrderStatus.COMPLETED);
-                Order order = insertOrders(user2, "HD00000003", 408, null, 209000, OrderStatus.CANCELLED);
+                insertOrders(user1, 404, 405, 309000, OrderStatus.COMPLETED, nvbh1);
+                insertOrders(user1, 406, null, 209000, OrderStatus.COMPLETED, user2);
+                Order order = insertOrders(user1, 408, null, 209000, OrderStatus.CANCELLED, user2);
 
                 Refund refund = Refund.builder()
                         .order(order)
@@ -1499,7 +1499,7 @@ public class DataInitializer implements CommandLineRunner {
         );
     }
 
-    private Order insertOrders(User user, String orderCode, int seatId1, Integer seatId2, float totalPrice, OrderStatus status) {
+    private Order insertOrders(User user, int seatId1, Integer seatId2, float totalPrice, OrderStatus status, User createdBy) {
         Order order = orderRepository.save(
                 Order.builder()
                         .orderDate(LocalDateTime.now().minusDays(1))
@@ -1513,7 +1513,7 @@ public class DataInitializer implements CommandLineRunner {
                         .finalAmount(totalPrice)
                         .user(user)
                         .status(status)
-                        .createdBy(user.getId())
+                        .createdBy(createdBy.getId())
                         .build()
         );
 

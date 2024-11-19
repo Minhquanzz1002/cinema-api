@@ -106,7 +106,8 @@ public class SwaggerConstant {
         }
 
         public static class Report {
-            public static final String GET_REPORT_DAILY_SUM = "Lấy báo cáo doanh thu theo ngày";
+            public static final String GET_REPORT_EMPLOYEE_SALE_SUM = "Lấy báo cáo doanh số theo nhân viên bán hàng";
+            public static final String GET_REPORT_MOVIE_SALE_SUM = "Lấy báo cáo doanh số theo phim";
             public static final String GET_REPORT_PROMOTION_SUM = "Lấy báo cáo khuyến mãi";
         }
 
