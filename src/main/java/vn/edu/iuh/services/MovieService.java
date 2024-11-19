@@ -15,14 +15,36 @@ import vn.edu.iuh.projections.v1.MovieProjection;
 import java.util.List;
 
 public interface MovieService {
-    SuccessResponse<Page<MovieProjection>> getMovies(Pageable pageable, String title, MovieStatus status);
+    SuccessResponse<Page<MovieProjection>> getMovies(
+            Pageable pageable,
+            String title,
+            MovieStatus status
+    );
+
     SuccessResponse<Movie> getMovie(String slug);
+
     MovieFiltersResponseDTO getMovieFilters();
-    Page<AdminMovieResponseDTO> getAllMovies(String search, String country, AgeRating ageRating, MovieStatus status, Pageable pageable);
+
+    Page<AdminMovieResponseDTO> getAllMovies(
+            String search,
+            String country,
+            AgeRating ageRating,
+            MovieStatus status,
+            Pageable pageable
+    );
+
     Movie getMovieByCode(String code);
+
     Movie getMovieById(int id);
+
     void deleteMovie(int id);
+
     Movie createMovie(CreateMovieRequestDTO createMovieRequestDTO);
-    Movie updateMovie(int id, UpdateMovieRequestDTO updateMovieRequestDTO);
+
+    Movie updateMovie(
+            int id,
+            UpdateMovieRequestDTO updateMovieRequestDTO
+    );
+
     List<AdminMovieResponseDTO> getMoviesForSales();
 }
