@@ -108,7 +108,9 @@ public class RouterConstant {
 
         public static class Report {
             public static final String BASE = ADMIN_V1 + "/reports";
-            public static final String DAILY = "/daily";
+            public static final String EMPLOYEE_SALE = "/employee-sales";
+
+            public static final String MOVIE_SALE = "/movie-sales";
             public static final String PROMOTION = "/promotion";
         }
 
