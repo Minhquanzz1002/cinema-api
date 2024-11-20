@@ -1,5 +1,6 @@
 package vn.edu.iuh.controllers.admin.v1;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import vn.edu.iuh.services.TicketPriceLineService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/v1/ticket-price-lines")
+@Tag(name = "ADMIN V1: Ticket Price Line Management", description = "Quản lý chi tiết giá vé")
 public class TicketPriceLineController {
     private final TicketPriceLineService ticketPriceLineService;
 

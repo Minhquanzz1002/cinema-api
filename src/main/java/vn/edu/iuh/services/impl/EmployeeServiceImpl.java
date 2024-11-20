@@ -16,7 +16,6 @@ import vn.edu.iuh.dto.admin.v1.req.EmployeeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateEmployeeDTO;
 import vn.edu.iuh.models.Role;
 import vn.edu.iuh.models.User;
-import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.repositories.RoleRepository;
 import vn.edu.iuh.repositories.UserRepository;
@@ -138,21 +137,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private String generateEmployeeCode() {
-        // Implement employee code generation logic
-        // For example: EMP-[random UUID first 8 chars]
-//        return "EMP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        Optional<User> lastEmployee = userRepository.findTopByOrderByCodeDesc();
+        Optional<User> lastEmployee = userRepository.findTopByCodeStartingWithOrderByCodeDesc("NVBH");
 
         int nextNumber = 1;
 
         if (lastEmployee.isPresent()) {
             String lastCode = lastEmployee.get().getCode();
-            try {
-                String numericPart = lastCode.substring(4);
-                nextNumber = Integer.parseInt(numericPart) + 1;
-            } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                nextNumber = 1;
-            }
+            nextNumber = Integer.parseInt(lastCode.substring(4)) + 1;
         }
 
         return String.format("NVBH%08d", nextNumber);

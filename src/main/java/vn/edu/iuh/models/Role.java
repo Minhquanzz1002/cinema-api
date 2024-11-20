@@ -17,8 +17,11 @@ public class Role extends BaseEntity {
     private int id;
     @Column(nullable = false, updatable = false)
     private String name;
+    @Column(nullable = false)
+    private String description;
 
-    public Role(String name) {
+    public Role(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 }
