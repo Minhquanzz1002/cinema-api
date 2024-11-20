@@ -92,6 +92,10 @@ public class SwaggerConstant {
             public static final String GET_ROOMS_SUM = "Lấy danh sách phòng chiếu";
         }
 
+        public static class Role {
+            public static final String GET_ALL_SUM = "Lấy danh sách quyền";
+        }
+
         public static class Room {
             public static final String CREATE_SUM = "Tạo phòng chiếu";
             public static final String GET_ALL_SUM = "Lấy danh sách phòng chiếu";
@@ -118,6 +122,8 @@ public class SwaggerConstant {
             public static final String GET_FOR_SALE_SUM = "Lấy lịch chiếu cho bán vé tại quầy";
             public static final String FILTER_SUM = "Lấy bộ lọc lịch chiếu";
             public static final String UPDATE_SUM = "Cập nhật lịch chiếu";
+
+            public static final String ACTIVATE_MULTIPLE_SUM = "Kích hoạt nhiều lịch chiếu";
             public static final String DELETE_SUM = "Xóa lịch chiếu";
             public static final String GENERATE_SUM = "Tạo lịch chiếu tự động";
         }

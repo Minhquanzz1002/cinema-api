@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserResponseDTO {
     private String name;
+    private String avatar;
     private String email;
     private String phone;
     private boolean gender;

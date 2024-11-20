@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.dto.admin.v1.req.ActivateMultipleShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.GenerateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
@@ -297,6 +298,22 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
 
 
+    }
+
+    @Override
+    public String activateMultipleShowTime(ActivateMultipleShowTimeRequestDTO body) {
+        List<ShowTime> showTimes = showTimeRepository.findAllByCinema_IdAndStartDateAndRoom_IdInAndMovie_IdInAndStatusAndDeleted(
+                body.getCinemaId(),
+                body.getStartDate(),
+                body.getRoomIds(),
+                body.getMovieIds(),
+                BaseStatus.INACTIVE,
+                false
+        );
+
+        showTimes.forEach(showTime -> showTime.setStatus(BaseStatus.ACTIVE));
+        showTimeRepository.saveAll(showTimes);
+        return String.format("Đã kích hoạt %d lịch chiếu", showTimes.size());
     }
 
     private Movie findSuitableMovie(

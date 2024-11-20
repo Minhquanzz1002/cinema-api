@@ -23,27 +23,59 @@ import java.util.UUID;
 public interface ShowTimeRepository extends JpaRepository<ShowTime, UUID>, JpaSpecificationExecutor<ShowTime> {
     <T> List<T> findAllProjectionBy(Class<T> classType);
 
-    <T> List<T> findAllByMovieAndStartDateAndDeletedAndStatus(Movie movie, LocalDate startDate, boolean deleted, BaseStatus status, Class<T> classType);
+    <T> List<T> findAllByMovieAndStartDateAndDeletedAndStatus(
+            Movie movie,
+            LocalDate startDate,
+            boolean deleted,
+            BaseStatus status,
+            Class<T> classType
+    );
 
-    <T> List<T> findAllByMovieAndStartDateAndCinemaAndDeletedAndStatus(Movie movie, LocalDate startDate, Cinema cinema, boolean deleted, BaseStatus status, Class<T> classType);
+    <T> List<T> findAllByMovieAndStartDateAndCinemaAndDeletedAndStatus(
+            Movie movie,
+            LocalDate startDate,
+            Cinema cinema,
+            boolean deleted,
+            BaseStatus status,
+            Class<T> classType
+    );
 
     <T> Page<T> findAllByStatusAndDeleted(BaseStatus status, boolean deleted, Pageable pageable, Class<T> classType);
 
     @Query("""
-       SELECT CASE WHEN COUNT(st) > 0 THEN true ELSE false END
-       FROM ShowTime st
-       WHERE st.room = :room
-       AND st.startDate = :startDate
-       AND (
-           (st.startTime <= :endTime AND st.endTime >= :startTime) \s
-           OR\s
-           (st.startTime >= :startTime AND st.startTime <= :endTime)
-       )
-       AND st.deleted = false
-   """)
-    boolean existsByRoomAndStartDateAndStartTimeBetweenOrEndTimeBetween(Room room, LocalDate startDate, LocalTime startTime, LocalTime endTime);
+                SELECT CASE WHEN COUNT(st) > 0 THEN true ELSE false END
+                FROM ShowTime st
+                WHERE st.room = :room
+                AND st.startDate = :startDate
+                AND (
+                    (st.startTime <= :endTime AND st.endTime >= :startTime) \s
+                    OR\s
+                    (st.startTime >= :startTime AND st.startTime <= :endTime)
+                )
+                AND st.deleted = false
+            """)
+    boolean existsByRoomAndStartDateAndStartTimeBetweenOrEndTimeBetween(
+            Room room,
+            LocalDate startDate,
+            LocalTime startTime,
+            LocalTime endTime
+    );
 
     Optional<ShowTime> findByIdAndDeleted(UUID id, boolean deleted);
 
-    List<ShowTime> findByCinemaAndDeletedAndStartDateBetween(Cinema cinema, boolean deleted, LocalDate startDate, LocalDate endDate);
+    List<ShowTime> findByCinemaAndDeletedAndStartDateBetween(
+            Cinema cinema,
+            boolean deleted,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    List<ShowTime> findAllByCinema_IdAndStartDateAndRoom_IdInAndMovie_IdInAndStatusAndDeleted(
+            int cinemaId,
+            LocalDate startDate,
+            List<Integer> roomIds,
+            List<Integer> movieIds,
+            BaseStatus status,
+            boolean deleted
+    );
 }
