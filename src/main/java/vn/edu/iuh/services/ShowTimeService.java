@@ -1,5 +1,6 @@
 package vn.edu.iuh.services;
 
+import vn.edu.iuh.dto.admin.v1.req.ActivateMultipleShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.GenerateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
@@ -30,4 +31,6 @@ public interface ShowTimeService {
     List<AdminShowTimeForSaleResponseDTO> getShowTimesForSales(Integer cinemaId, Integer movieId, LocalDate date);
 
     void generateShowTime(GenerateShowTimeRequestDTO body);
+
+    String activateMultipleShowTime(ActivateMultipleShowTimeRequestDTO body);
 }

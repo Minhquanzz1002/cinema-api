@@ -99,6 +99,10 @@ public class RouterConstant {
             public static final String DETAIL = "/{code}";
         }
 
+        public static class Role {
+            public static final String BASE = ADMIN_V1 + "/roles";
+        }
+
         public static class Room {
             public static final String BASE = ADMIN_V1 + "/rooms";
             public static final String DETAIL = "/{id}";
@@ -119,6 +123,7 @@ public class RouterConstant {
             public static final String UPDATE = "/{id}";
             public static final String DELETE = "/{id}";
             public static final String SALE = "/sales";
+            public static final String ACTIVATE_MULTIPLE = "/activate-multiple";
             public static final String FILTER = "/filters";
             public static final String GENERATE = "/generate";
         }

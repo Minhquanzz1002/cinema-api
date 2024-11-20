@@ -1,6 +1,7 @@
 package vn.edu.iuh.constant;
 
 public class SecurityConstant {
+    public static final String ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
     public static final String ROLE_CLIENT = "ROLE_CLIENT";
     public static final String ROLE_EMPLOYEE_SALE = "ROLE_EMPLOYEE_SALE";

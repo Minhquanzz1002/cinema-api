@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.dto.admin.v1.req.ActivateMultipleShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.GenerateShowTimeRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
@@ -113,6 +114,18 @@ public class ShowTimeController {
                 200,
                 "success",
                 "Cập nhật lịch chiếu thành công",
+                null
+        );
+    }
+
+    @Operation(summary = AdminSwagger.ShowTime.ACTIVATE_MULTIPLE_SUM)
+    @PutMapping(AdminPaths.ShowTime.ACTIVATE_MULTIPLE)
+    public SuccessResponse<?> activateMultipleShowTime(@RequestBody ActivateMultipleShowTimeRequestDTO body) {
+        String resMessage = showTimeService.activateMultipleShowTime(body);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                resMessage,
                 null
         );
     }

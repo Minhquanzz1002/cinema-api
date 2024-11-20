@@ -38,8 +38,10 @@ public class User extends BaseEntity{
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+    @Column(columnDefinition = "TEXT")
+    private String avatar;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, updatable = false)
     private Role role;
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
