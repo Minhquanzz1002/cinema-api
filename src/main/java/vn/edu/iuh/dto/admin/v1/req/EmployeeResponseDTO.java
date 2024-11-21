@@ -23,4 +23,14 @@ public class EmployeeResponseDTO {
     private UserStatus status;
     private LocalDate createdAt;
     private LocalDate updatedAt;
+    private RoleDTO role;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RoleDTO {
+        private int id;
+        private String name;
+        private String description;
+    }
 }

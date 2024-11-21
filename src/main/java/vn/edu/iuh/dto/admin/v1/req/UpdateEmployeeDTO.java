@@ -26,6 +26,9 @@ public class UpdateEmployeeDTO {
     @Past(message = "Ngày sinh phải là ngày trong quá khứ")
     private LocalDate birthday;
 
+    @Pattern(regexp = "^.{6,}$|^$", message = "Mật khẩu phải có ít nhất 6 ký tự")
+    private String password;
+
     @NotNull(message = "Trạng thái không được để trống")
     private UserStatus status;
 }

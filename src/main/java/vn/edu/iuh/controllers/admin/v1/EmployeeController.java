@@ -52,10 +52,11 @@ public class EmployeeController {
     @ApiResponse(responseCode = "200", description = "Thành công")
     public SuccessResponse<Page<EmployeeResponseDTO>> getEmployees(
             @RequestParam(required = false) UserStatus status,
-            @Parameter(description = "Tìm kiếm theo ID hoặc tên")
+            @Parameter(description = "Tìm kiếm theo code, tên, số điện thoại")
             @RequestParam(required = false) String search,
+            @RequestParam(required = false, defaultValue = "") String role,
             @PageableDefault Pageable pageable) {
-        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(search, status, pageable);
+        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(search, status, role, pageable);
         return new SuccessResponse<>(
                 HttpStatus.OK.value(),
                 "success",
