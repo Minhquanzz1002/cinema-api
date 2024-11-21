@@ -15,9 +15,9 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificationExecutor<User> {
     Optional<User> findByEmail(String email);
 
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndDeleted(String email, boolean deleted);
 
-    boolean existsByPhone(String phone);
+    boolean existsByPhoneAndDeleted(String phone, boolean deleted);
 
     <T> List<T> findProjectionByPhoneContainingAndDeletedAndRole_Name(String phone, boolean deleted, String roleName, Class<T> classType);
 
@@ -32,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
 
     Optional<User> findTopByCodeStartingWithOrderByCodeDesc(String prefix);
+
+    Optional<User> findByIdAndDeleted(UUID id, boolean deleted);
 }

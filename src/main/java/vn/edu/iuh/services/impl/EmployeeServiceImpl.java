@@ -14,23 +14,28 @@ import org.springframework.web.server.ResponseStatusException;
 import vn.edu.iuh.dto.admin.v1.req.CreateEmployeeDTO;
 import vn.edu.iuh.dto.admin.v1.req.EmployeeResponseDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateEmployeeDTO;
+import vn.edu.iuh.exceptions.BadRequestException;
+import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Role;
 import vn.edu.iuh.models.User;
 import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.repositories.RoleRepository;
 import vn.edu.iuh.repositories.UserRepository;
 import vn.edu.iuh.services.EmployeeService;
+import vn.edu.iuh.specifications.GenericSpecifications;
 import vn.edu.iuh.specifications.UserSpecification;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static vn.edu.iuh.constant.SecurityConstant.ROLE_EMPLOYEE_SALE;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    private static final String ROLE_EMPLOYEE_SALE = "ROLE_EMPLOYEE_SALE";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -38,9 +43,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> getEmployees(String search, UserStatus status, Pageable pageable) {
-        Specification<User> specification = Specification.where(UserSpecification.hasRole(ROLE_EMPLOYEE_SALE))
+    public Page<EmployeeResponseDTO> getEmployees(String search, UserStatus status, String role, Pageable pageable) {
+        Specification<User> specification = Specification.where(UserSpecification.hasRole(role))
                 .and(UserSpecification.hasStatus(status))
+                .and(UserSpecification.excludeClientRole())
+                .and(GenericSpecifications.withDeleted(false))
                 .and(UserSpecification.hasSearchKey(search));
         Page<User> employees = userRepository.findAll(specification, pageable);
         return employees.map(emp -> modelMapper.map(emp, EmployeeResponseDTO.class));
@@ -57,19 +64,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeResponseDTO createEmployee(CreateEmployeeDTO dto) {
-        // Validate unique constraints
-        if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email đã tồn tại");
+        if (userRepository.existsByEmailAndDeleted(dto.getEmail(), false)) {
+            throw new BadRequestException("Email đã tồn tại");
         }
-        if (userRepository.existsByPhone(dto.getPhone())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Số điện thoại đã tồn tại");
+        if (userRepository.existsByPhoneAndDeleted(dto.getPhone(), false)) {
+            throw new BadRequestException("Số điện thoại đã tồn tại");
         }
 
-        Role role = roleRepository.findByName(ROLE_EMPLOYEE_SALE)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy vai trò nhân viên bán hàng"));
+        Role role = roleRepository.findByIdAndDeleted(dto.getRoleId(), false)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy vai trò"));
+
+        String prefix = "NV";
+        if (Objects.equals(role.getName(), ROLE_EMPLOYEE_SALE)) {
+            prefix = "NVBH";
+        }
 
         User employee = User.builder()
-                .code(generateEmployeeCode())
+                .code(generateEmployeeCode(prefix))
                 .name(dto.getName())
                 .gender(dto.isGender())
                 .email(dto.getEmail())
@@ -87,14 +98,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID id, UpdateEmployeeDTO dto) {
-        User employee = userRepository.findByIdAndDeletedFalseAndRole_Name(id, ROLE_EMPLOYEE_SALE)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy nhân viên"));
+        User employee = userRepository.findByIdAndDeleted(id, false)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy nhân viên"));
 
         // Validate phone if changed
-        if (!employee.getPhone().equals(dto.getPhone()) && userRepository.existsByPhone(dto.getPhone())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Số điện thoại đã tồn tại");
+        if (!employee.getPhone().equals(dto.getPhone()) && userRepository.existsByPhoneAndDeleted(dto.getPhone(), false)) {
+            throw new BadRequestException("Số điện thoại đã tồn tại");
         }
-
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            employee.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
         employee.setName(dto.getName());
         employee.setGender(dto.isGender());
         employee.setPhone(dto.getPhone());
@@ -107,8 +120,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public void deleteEmployee(UUID id) {
-        User employee = userRepository.findByIdAndDeletedFalseAndRole_Name(id, ROLE_EMPLOYEE_SALE)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy nhân viên"));
+        User employee = userRepository.findByIdAndDeleted(id, false)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy nhân viên"));
+
+        if (employee.getStatus() == UserStatus.ACTIVE) {
+            throw new BadRequestException("Không thể xóa nhân viên đang hoạt động");
+        }
 
         employee.setDeleted(true);
         userRepository.save(employee);
@@ -136,8 +153,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build();
     }
 
-    private String generateEmployeeCode() {
-        Optional<User> lastEmployee = userRepository.findTopByCodeStartingWithOrderByCodeDesc("NVBH");
+    private String generateEmployeeCode(String prefix) {
+        Optional<User> lastEmployee = userRepository.findTopByCodeStartingWithOrderByCodeDesc(prefix);
 
         int nextNumber = 1;
 
@@ -146,7 +163,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             nextNumber = Integer.parseInt(lastCode.substring(4)) + 1;
         }
 
-        return String.format("NVBH%08d", nextNumber);
+        return String.format("%s%08d", prefix, nextNumber);
 
     }
 }
