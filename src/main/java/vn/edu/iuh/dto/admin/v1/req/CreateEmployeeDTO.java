@@ -36,4 +36,8 @@ public class CreateEmployeeDTO {
 
     @NotNull(message = "Trạng thái không được để trống")
     private UserStatus status;
+
+    @NotNull(message = "Vai trò không được để trống")
+    private int roleId;
+
 }

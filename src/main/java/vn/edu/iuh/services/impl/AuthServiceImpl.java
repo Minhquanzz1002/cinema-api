@@ -47,11 +47,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SuccessResponse<?> register(RegisterRequestDTO registerRequestDTO) {
         String email = registerRequestDTO.getEmail();
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmailAndDeleted(email, false)) {
             throw new IllegalArgumentException("Email đã tồn tại");
         }
 
-        if (userRepository.existsByPhone(registerRequestDTO.getPhone())) {
+        if (userRepository.existsByPhoneAndDeleted(registerRequestDTO.getPhone(), false)) {
             throw new IllegalArgumentException("Số điện thoại đã tồn tại");
         }
 

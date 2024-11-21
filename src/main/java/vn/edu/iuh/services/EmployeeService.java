@@ -12,7 +12,7 @@ import vn.edu.iuh.models.enums.UserStatus;
 import java.util.UUID;
 
 public interface EmployeeService {
-    Page<EmployeeResponseDTO> getEmployees(String search, UserStatus status, Pageable pageable);
+    Page<EmployeeResponseDTO> getEmployees(String search, UserStatus status, String role, Pageable pageable);
 
     EmployeeResponseDTO getEmployee(UUID id);
 
