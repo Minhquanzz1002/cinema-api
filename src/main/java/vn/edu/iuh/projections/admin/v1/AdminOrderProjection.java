@@ -24,6 +24,8 @@ public interface AdminOrderProjection {
     ShowTimeDTO getShowTime();
     List<OrderDetailDTO> getOrderDetails();
 
+    PromotionLineDTO getPromotionLine();
+
     interface ShowTimeDTO {
         UUID getId();
         LocalDate getStartDate();
@@ -106,5 +108,11 @@ public interface AdminOrderProjection {
         SeatStatus getStatus();
         String getFullName();
 
+    }
+
+    interface PromotionLineDTO {
+        Integer getId();
+        String getCode();
+        String getName();
     }
 }

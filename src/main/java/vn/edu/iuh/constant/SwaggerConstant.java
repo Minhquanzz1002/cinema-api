@@ -134,6 +134,7 @@ public class SwaggerConstant {
             public static final String GET_SUM = "Lấy thông tin đơn hàng";
             public static final String UPDATE_PRODUCTS_SUM = "Cập nhật sản phẩm trong đơn hàng";
             public static final String UPDATE_SEATS_SUM = "Cập nhật ghế trong đơn hàng";
+            public static final String UPDATE_CUSTOMER_SUM = "Cập nhật thông tin khách hàng trong đơn hàng";
             public static final String CANCEL_SUM = "Hủy đơn hàng";
             public static final String COMPLETE_SUM = "Hoàn thành đơn hàng";
             public static final String REFUND_SUM = "Hoàn đơn";

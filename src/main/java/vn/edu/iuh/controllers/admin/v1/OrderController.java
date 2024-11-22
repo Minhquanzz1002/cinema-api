@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerInOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
 import vn.edu.iuh.dto.req.OrderUpdateSeatRequestDTO;
@@ -98,13 +99,27 @@ public class OrderController {
     @PutMapping(AdminPaths.Order.UPDATE_SEATS)
     public SuccessResponse<AdminOrderProjection> updateSeatsInOrderByEmployee(
             @PathVariable UUID orderId,
-            @RequestBody OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+            @RequestBody OrderUpdateSeatRequestDTO dto
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Thành công",
-                orderService.updateSeatsInOrderByEmployee(orderId, orderUpdateSeatRequestDTO)
+                orderService.updateSeatsInOrderByEmployee(orderId, dto)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Order.UPDATE_CUSTOMER_SUM)
+    @PutMapping(AdminPaths.Order.UPDATE_CUSTOMER)
+    public SuccessResponse<AdminOrderProjection> updateCustomerInOrderByEmployee(
+            @PathVariable UUID orderId,
+            @RequestBody UpdateCustomerInOrderRequestDTO dto
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                orderService.updateCustomerInOrderByEmployee(orderId, dto)
         );
     }
 
