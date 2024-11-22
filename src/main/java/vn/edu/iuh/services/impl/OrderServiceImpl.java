@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerInOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -370,6 +371,22 @@ public class OrderServiceImpl implements OrderService {
         applyPromotion(order);
 
         return orderRepository.findById(order.getId(), AdminOrderProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+    }
+
+    @Override
+    public AdminOrderProjection updateCustomerInOrderByEmployee(UUID orderId, UpdateCustomerInOrderRequestDTO dto) {
+        Order order = orderRepository.findByIdAndDeleted(orderId, false)
+                                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+
+        if (dto.getCustomerId() == null) {
+            order.setUser(null);
+        } else {
+            User user = User.builder().id(dto.getCustomerId()).build();
+            order.setUser(user);
+        }
+        orderRepository.save(order);
+        return orderRepository.findById(orderId, AdminOrderProjection.class)
+                             .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
     }
 
     @Override

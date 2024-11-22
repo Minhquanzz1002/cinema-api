@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerInOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
@@ -24,9 +25,15 @@ public interface OrderService {
 
     SuccessResponse<List<OrderProjection>> getOrderHistory(UserPrincipal userPrincipal);
 
-    SuccessResponse<OrderProjection> createOrder(UserPrincipal userPrincipal, OrderCreateRequestDTO orderCreateRequestDTO);
+    SuccessResponse<OrderProjection> createOrder(
+            UserPrincipal userPrincipal,
+            OrderCreateRequestDTO orderCreateRequestDTO
+    );
 
-    AdminOrderProjection createOrderByEmployee(UserPrincipal userPrincipal, CreateOrderRequestDTO createOrderRequestDTO);
+    AdminOrderProjection createOrderByEmployee(
+            UserPrincipal userPrincipal,
+            CreateOrderRequestDTO createOrderRequestDTO
+    );
 
     SuccessResponse<?> cancelOrder(UserPrincipal userPrincipal, UUID orderId);
 
@@ -34,19 +41,45 @@ public interface OrderService {
 
     SuccessResponse<OrderProjection> completeOrder(UserPrincipal userPrincipal, UUID orderId);
 
-    SuccessResponse<OrderProjection> updateProductsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO);
+    SuccessResponse<OrderProjection> updateProductsInOrder(
+            UserPrincipal userPrincipal,
+            UUID orderId,
+            OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+    );
 
-    AdminOrderProjection updateProductsInOrderByEmployee(UUID orderId, OrderUpdateProductRequestDTO orderUpdateProductRequestDTO);
+    AdminOrderProjection updateProductsInOrderByEmployee(
+            UUID orderId,
+            OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+    );
 
-    SuccessResponse<OrderProjection> updateSeatsInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO);
+    AdminOrderProjection updateCustomerInOrderByEmployee(UUID orderId, UpdateCustomerInOrderRequestDTO dto);
 
-    AdminOrderProjection updateSeatsInOrderByEmployee(UUID orderId, OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO);
+    SuccessResponse<OrderProjection> updateSeatsInOrder(
+            UserPrincipal userPrincipal,
+            UUID orderId,
+            OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+    );
 
-    SuccessResponse<OrderProjection> updateDiscountInOrder(UserPrincipal userPrincipal, UUID orderId, OrderUpdateDiscountDTO orderUpdateDiscountDTO);
+    AdminOrderProjection updateSeatsInOrderByEmployee(
+            UUID orderId,
+            OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+    );
+
+    SuccessResponse<OrderProjection> updateDiscountInOrder(
+            UserPrincipal userPrincipal,
+            UUID orderId,
+            OrderUpdateDiscountDTO orderUpdateDiscountDTO
+    );
 
     SuccessResponse<OrderProjection> clearDiscountInOrder(UserPrincipal userPrincipal, UUID orderId);
 
-    Page<AdminOrderResponseDTO> getAllOrders(String code, OrderStatus status, LocalDate fromDate, LocalDate toDate, Pageable pageable);
+    Page<AdminOrderResponseDTO> getAllOrders(
+            String code,
+            OrderStatus status,
+            LocalDate fromDate,
+            LocalDate toDate,
+            Pageable pageable
+    );
 
     AdminOrderOverviewProjection getOrderByCode(String code);
 
