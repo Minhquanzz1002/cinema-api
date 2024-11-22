@@ -133,6 +133,7 @@ public class RouterConstant {
             public static final String DETAIL = "/{code}";
             public static final String UPDATE_PRODUCTS = "/{orderId}/products";
             public static final String UPDATE_SEATS = "/{orderId}/seats";
+            public static final String UPDATE_CUSTOMER = "/{orderId}/customer";
             public static final String COMPLETE = "/{orderId}/complete";
             public static final String CANCEL = "/{orderId}";
             public static final String REFUND = "/{orderId}/refund";

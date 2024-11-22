@@ -17,6 +17,8 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static vn.edu.iuh.constant.SecurityConstant.ROLE_CLIENT;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -1447,7 +1449,7 @@ public class DataInitializer implements CommandLineRunner {
 
         if (roleRepository.count() == 0) {
             Role roleAdmin = roleRepository.save(new Role("ROLE_ADMIN", "Quản trị viên"));
-            Role roleClient = roleRepository.save(new Role("ROLE_CLIENT", "Khách hàng"));
+            Role roleClient = roleRepository.save(new Role(ROLE_CLIENT, "Khách hàng"));
             Role roleEmployeeSale = roleRepository.save(new Role("ROLE_EMPLOYEE_SALE", "Nhân viên bán hàng"));
 
             if (userRepository.count() == 0) {
@@ -1460,6 +1462,19 @@ public class DataInitializer implements CommandLineRunner {
                                                      .email("huubangle20002@gmail.com")
                                                      .password(passwordEncoder.encode("Cinema123123@"))
                                                      .gender(true)
+                                                     .role(roleClient)
+                                                     .status(UserStatus.ACTIVE)
+                                                     .build());
+
+                User client2 = userRepository.save(User.builder()
+                                                     .code("USER00000002")
+                                                     .name("Lê Hữu A")
+                                                     .phone("0837699807")
+                                                     .avatar("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/avatar%2F1.jpg?alt=media")
+                                                     .birthday(LocalDate.of(2002, 10, 10))
+                                                     .email("huubangle20001@gmail.com")
+                                                     .password(passwordEncoder.encode("Cinema123123@"))
+                                                     .gender(false)
                                                      .role(roleClient)
                                                      .status(UserStatus.ACTIVE)
                                                      .build());
