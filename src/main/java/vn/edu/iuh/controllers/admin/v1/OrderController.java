@@ -103,7 +103,7 @@ public class OrderController {
                 200,
                 "success",
                 "Thành công",
-                orderService.updateSeatsInOrderByEmployee(orderId, dto)
+                orderService.updateOrderSeatsByEmployee(orderId, dto)
         );
     }
 

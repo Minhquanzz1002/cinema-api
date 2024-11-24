@@ -11,7 +11,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.constant.RouterConstant.ClientPaths;
 import vn.edu.iuh.constant.SwaggerConstant.ClientSwagger;
-import vn.edu.iuh.dto.req.*;
+import vn.edu.iuh.dto.req.OrderCreateRequestDTO;
+import vn.edu.iuh.dto.req.OrderUpdateDiscountDTO;
+import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
+import vn.edu.iuh.dto.req.OrderUpdateSeatRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.projections.v1.OrderProjection;
 import vn.edu.iuh.security.UserPrincipal;
@@ -24,7 +27,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ClientPaths.Order.BASE)
-@Tag(name = "Order Controller", description = "Quản lý đặt vé")
+@Tag(name = "V1: Order Management", description = "Quản lý đặt vé")
 @SecurityRequirement(name = "bearerAuth")
 public class OrderController {
     private final OrderService orderService;
@@ -44,16 +47,23 @@ public class OrderController {
         );
     }
 
-    @Operation(
-            summary = "Cập nhật vé của đơn hàng"
-    )
-    @PutMapping("/{orderId}/seats")
+    @Operation(summary = ClientSwagger.Order.UPDATE_SEATS_SUM)
+    @PutMapping(ClientPaths.Order.UPDATE_SEATS)
     public SuccessResponse<OrderProjection> updateSeatInOrderDetail(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable UUID orderId,
             @RequestBody @Valid OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
     ) {
-        return orderService.updateSeatsInOrder(userPrincipal, orderId, orderUpdateSeatRequestDTO);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Cập nhật ghế thành công",
+                orderService.updateOrderSeatsByCustomer(
+                        userPrincipal,
+                        orderId,
+                        orderUpdateSeatRequestDTO
+                )
+        );
     }
 
     @Operation(summary = ClientSwagger.Order.UPDATE_PRODUCTS_SUM)
@@ -64,7 +74,7 @@ public class OrderController {
             @RequestBody @Valid OrderUpdateProductRequestDTO request
     ) {
         return new SuccessResponse<>(
-                201,
+                200,
                 "success",
                 "Cập nhật sản phẩm thành công",
                 orderService.updateOrderProductsByCustomer(
@@ -76,12 +86,12 @@ public class OrderController {
     }
 
     @Operation(
-            summary = "Xóa đơn hàng",
+            summary = ClientSwagger.Order.CANCEL_SUM,
             description = """
                     Dùng khi người dùng rời khỏi trang đặt vé
                     """
     )
-    @DeleteMapping("/{orderId}")
+    @DeleteMapping(ClientPaths.Order.CANCEL)
     public SuccessResponse<?> cancelOrder(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable UUID orderId

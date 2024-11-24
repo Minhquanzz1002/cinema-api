@@ -114,28 +114,55 @@ public interface OrderService {
     );
 
 
-    SuccessResponse<OrderProjection> updateSeatsInOrder(
-            UserPrincipal userPrincipal,
+    /**
+     * Updates seat assignments in an order for customers.
+     *
+     * @param principal The authenticated user's information
+     * @param orderId   The order ID
+     * @param request   The seat update details
+     * @return Updated order information
+     */
+    OrderProjection updateOrderSeatsByCustomer(
+            UserPrincipal principal,
             UUID orderId,
-            OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+            OrderUpdateSeatRequestDTO request
     );
 
-    AdminOrderProjection updateSeatsInOrderByEmployee(
+    /**
+     * Updates seat assignments in an order for employee.
+     *
+     * @param orderId The order ID
+     * @param request The seat update details
+     * @return Updated order information
+     */
+    AdminOrderProjection updateOrderSeatsByEmployee(
             UUID orderId,
-            OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+            OrderUpdateSeatRequestDTO request
     );
 
     SuccessResponse<OrderProjection> updateDiscountInOrder(
-            UserPrincipal userPrincipal,
+            UserPrincipal principal,
             UUID orderId,
-            OrderUpdateDiscountDTO orderUpdateDiscountDTO
+            OrderUpdateDiscountDTO request
     );
 
     SuccessResponse<OrderProjection> clearDiscountInOrder(UserPrincipal userPrincipal, UUID orderId);
 
+    /**
+     * Retrieves an order by code
+     *
+     * @param code The order code
+     * @return The order matching the code
+     */
     AdminOrderOverviewProjection getOrderByCode(String code);
 
-    void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO);
+    /**
+     * Processes a refund for an order. Admin only
+     *
+     * @param orderId The order ID
+     * @param request The refund details
+     */
+    void refundOrder(UUID orderId, RefundOrderRequestDTO request);
 
     /**
      * Customer method to cancel an order

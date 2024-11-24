@@ -294,153 +294,73 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    ;
-
     @Override
     @Transactional
-    public SuccessResponse<OrderProjection> updateSeatsInOrder(
-            UserPrincipal userPrincipal,
+    public OrderProjection updateOrderSeatsByCustomer(
+            UserPrincipal principal,
             UUID orderId,
-            OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+            OrderUpdateSeatRequestDTO request
     ) {
-        Order order = findByIdAndUser(orderId, userPrincipal.getId());
-
-        // Clear promotion
-        PromotionDetail promotionDetail = order.getPromotionDetail();
-        if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
-            promotionDetailRepository.save(promotionDetail);
-        }
-        order.setPromotionDetail(null);
-        order.setTotalDiscount(0);
-        order.setFinalAmount(order.getTotalPrice());
-        order.setPromotionLine(null);
-
-        ShowTime showTime = order.getShowTime();
-        DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
-        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(
-                dayType.name(),
-                showTime.getStartDate(),
-                showTime.getStartTime(),
-                false
-        );
-
-        if (prices.isEmpty()) {
-            throw new DataNotFoundException("Không tìm thấy giá vé cho lịch chiếu này");
-        }
-
-        Map<SeatType, Float> priceMap = prices.stream().collect(Collectors.toMap(
-                TicketPriceLineProjection::getSeatType,
-                TicketPriceLineProjection::getPrice
-        ));
-
-        List<OrderDetail> updatedOrderDetails = new ArrayList<>(order.getOrderDetails());
-        updatedOrderDetails.removeIf(od -> od.getType() == OrderDetailType.TICKET);
-
-        float totalPrice = calculateTotalPriceByType(order, OrderDetailType.PRODUCT);
-
-        List<Seat> seats = seatRepository.findAllById(orderUpdateSeatRequestDTO.getSeatIds());
-        for (Seat seat : seats) {
-            float price = priceMap.get(seat.getType());
-            totalPrice += price;
-            OrderDetail orderDetail = OrderDetail.builder()
-                                                 .price(price)
-                                                 .type(OrderDetailType.TICKET)
-                                                 .seat(seat)
-                                                 .order(order)
-                                                 .build();
-
-            updatedOrderDetails.add(orderDetail);
-        }
-
-        order.getOrderDetails().clear();
-        order.getOrderDetails().addAll(updatedOrderDetails);
-        order.setTotalPrice(totalPrice);
-        order.setFinalAmount(totalPrice);
-        order = orderRepository.save(order);
-
-        applyPromotion(order);
-
-        OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class)
-                                                         .orElseThrow(() -> new DataNotFoundException(
-                                                                 "Không tìm thấy đơn hàng"));
-        return new SuccessResponse<>(201, "success", "Cập nhật ghế thành công", orderProjection);
+        Order order = findByIdAndUser(orderId, principal.getId());
+        updateOrderSeats(order, request.getSeatIds());
+        return getOrderProjectionById(orderId, OrderProjection.class);
     }
 
     @Override
-    public AdminOrderProjection updateSeatsInOrderByEmployee(
+    public AdminOrderProjection updateOrderSeatsByEmployee(
             UUID orderId,
-            OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+            OrderUpdateSeatRequestDTO request
     ) {
-        Order order = orderRepository.findById(orderId)
-                                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        Order order = findById(orderId);
+        updateOrderSeats(order, request.getSeatIds());
+        return getOrderProjectionById(orderId, AdminOrderProjection.class);
+    }
 
-        // Clear promotion
-        PromotionDetail promotionDetail = order.getPromotionDetail();
-        if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
-            promotionDetailRepository.save(promotionDetail);
-        }
-        order.setPromotionDetail(null);
-        order.setTotalDiscount(0);
-        order.setFinalAmount(order.getTotalPrice());
-        order.setPromotionLine(null);
+    /**
+     * Core logic for updating seats in an order
+     */
+    private void updateOrderSeats(Order order, List<Integer> seatIds) {
+        clearPromotionFromOrder(order);
 
-        List<OrderDetail> updatedOrderDetails = new ArrayList<>(order.getOrderDetails());
-        updatedOrderDetails.removeIf(od -> od.getType() == OrderDetailType.TICKET);
+        Map<SeatType, Float> priceMap = getTicketPrices(order.getShowTime());
+
+        List<OrderDetail> updatedOrderDetails = order.getOrderDetails().stream()
+                                                     .filter(od -> od.getType() != OrderDetailType.TICKET)
+                                                     .collect(Collectors.toList());
 
         float totalPrice = calculateTotalPriceByType(order, OrderDetailType.PRODUCT);
 
-        ShowTime showTime = order.getShowTime();
-        DayType dayType = convertToDayType(showTime.getStartDate().getDayOfWeek());
-        List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(
-                dayType.name(),
-                showTime.getStartDate(),
-                showTime.getStartTime(),
-                false
-        );
+        List<OrderDetail> seatDetails = createSeatOrderDetails(seatIds, priceMap, order, totalPrice);
+        updatedOrderDetails.addAll(seatDetails);
 
-        if (prices.isEmpty()) {
-            throw new DataNotFoundException("Không tìm thấy giá vé cho lịch chiếu này");
-        }
+        updateOrderWithNewDetails(order, updatedOrderDetails, totalPrice);
+        applyPromotion(order);
+    }
 
-        Map<SeatType, Float> priceMap = prices.stream().collect(Collectors.toMap(
-                TicketPriceLineProjection::getSeatType,
-                TicketPriceLineProjection::getPrice
-        ));
-
-        List<Seat> seats = seatRepository.findAllById(orderUpdateSeatRequestDTO.getSeatIds());
+    private List<OrderDetail> createSeatOrderDetails(
+            List<Integer> seatIds,
+            Map<SeatType, Float> priceMap,
+            Order order,
+            float totalPrice
+    ) {
+        List<Seat> seats = validateAndGetSeats(seatIds);
+        List<OrderDetail> seatDetails = new ArrayList<>();
         for (Seat seat : seats) {
             float price = priceMap.get(seat.getType());
             totalPrice += price;
-            OrderDetail orderDetail = OrderDetail.builder()
-                                                 .price(price)
-                                                 .type(OrderDetailType.TICKET)
-                                                 .seat(seat)
-                                                 .order(order)
-                                                 .build();
-
-            updatedOrderDetails.add(orderDetail);
+            OrderDetail orderDetail = buildTicket(seat, price, order);
+            seatDetails.add(orderDetail);
         }
-
-        order.getOrderDetails().clear();
-        order.getOrderDetails().addAll(updatedOrderDetails);
-        order.setTotalPrice(totalPrice);
-        order.setFinalAmount(totalPrice);
-        order = orderRepository.save(order);
-
-        applyPromotion(order);
-
-        return getOrderProjectionById(orderId, AdminOrderProjection.class);
+        return seatDetails;
     }
 
     @Override
     public SuccessResponse<OrderProjection> updateDiscountInOrder(
-            UserPrincipal userPrincipal,
+            UserPrincipal principal,
             UUID orderId,
-            OrderUpdateDiscountDTO orderUpdateDiscountDTO
+            OrderUpdateDiscountDTO request
     ) {
-        Order order = this.findByIdAndUser(orderId, userPrincipal.getId());
+        Order order = this.findByIdAndUser(orderId, principal.getId());
 
         if (order.getPromotionLine() != null) {
             throw new BadRequestException("Đơn hàng đã áp mã giảm giá");
@@ -450,7 +370,7 @@ public class OrderServiceImpl implements OrderService {
         PromotionLine promotionLine = promotionLineRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndCode(
                                                                      currentDate,
                                                                      currentDate,
-                                                                     orderUpdateDiscountDTO.getCode()
+                                                                     request.getCode()
                                                              )
                                                              .orElseThrow(() -> new DataNotFoundException(
                                                                      "Mã giảm giá không tồn tại"));
@@ -643,7 +563,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO) {
+    public void refundOrder(UUID orderId, RefundOrderRequestDTO request) {
         Order order = orderRepository.findByIdAndDeletedAndStatus(orderId, false, OrderStatus.COMPLETED)
                                      .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
 
@@ -669,7 +589,7 @@ public class OrderServiceImpl implements OrderService {
                               .code(generateRefundCode())
                               .amount(order.getFinalAmount())
                               .refundMethod(RefundMethod.CASH)
-                              .reason(refundOrderRequestDTO.getReason())
+                              .reason(request.getReason())
                               .refundDate(LocalDateTime.now())
                               .status(RefundStatus.PENDING)
                               .build();
