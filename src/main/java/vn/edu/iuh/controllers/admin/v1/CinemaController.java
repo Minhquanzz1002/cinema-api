@@ -36,12 +36,12 @@ public class CinemaController {
     private final RoomService roomService;
 
     @GetMapping
-    @Operation(summary = "Get all cinemas with pagination and filters")
+    @Operation(summary = AdminSwagger.Cinema.GET_ALL_SUM)
     @ApiResponse(responseCode = "200", description = "Success")
     public SuccessResponse<Page<Cinema>> getAllCinemas(
-            @Parameter(description = "Search by name or code")
-            @RequestParam(required = false) String search,
-            @Parameter(description = "Filter by status")
+            @Parameter(description = "Tên hoặc code")
+            @RequestParam(required = false, defaultValue = "") String search,
+            @Parameter(description = "Trạng thái")
             @RequestParam(required = false) BaseStatus status,
             @PageableDefault Pageable pageable) {
         Page<Cinema> cinemas = cinemaService.getAllCinemas(search, status, pageable);
@@ -53,8 +53,8 @@ public class CinemaController {
         );
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get cinema details by ID")
+    @GetMapping(AdminPaths.Cinema.DETAIL)
+    @Operation(summary = AdminSwagger.Cinema.GET_SUM)
     @ApiResponse(responseCode = "200", description = "Success")
     public SuccessResponse<Cinema> getCinemaById(
             @Parameter(description = "Cinema ID")
@@ -70,7 +70,7 @@ public class CinemaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create new cinema")
+    @Operation(summary = AdminSwagger.Cinema.CREATE_SUM)
     @ApiResponse(responseCode = "201", description = "Created successfully")
     public SuccessResponse<Cinema> createCinema(
             @RequestBody @Valid CreateCinemaRequestDTO body) {
@@ -83,11 +83,11 @@ public class CinemaController {
         );
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Update cinema information")
+    @PutMapping(AdminPaths.Cinema.UPDATE)
+    @Operation(summary = AdminSwagger.Cinema.UPDATE_SUM)
     @ApiResponse(responseCode = "200", description = "Updated successfully")
     public SuccessResponse<Cinema> updateCinema(
-            @Parameter(description = "Cinema ID")
+            @Parameter(description = "Rạp ID")
             @PathVariable Integer id,
             @RequestBody @Valid UpdateCinemaRequestDTO body) {
         Cinema cinema = cinemaService.updateCinema(id, body);
@@ -99,8 +99,8 @@ public class CinemaController {
         );
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete cinema")
+    @DeleteMapping(AdminPaths.Cinema.DELETE)
+    @Operation(summary = AdminSwagger.Cinema.DELETE_SUM)
     @ApiResponse(responseCode = "200", description = "Deleted successfully")
     public SuccessResponse<Void> deleteCinema(
             @Parameter(description = "Cinema ID")
