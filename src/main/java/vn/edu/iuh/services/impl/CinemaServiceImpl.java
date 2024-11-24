@@ -61,7 +61,7 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     public Cinema getCinemaById(Integer id) {
-        return cinemaRepository.findById(id)
+        return cinemaRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp với id: " + id));
     }
 
@@ -118,10 +118,9 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
-    @Transactional
     public void deleteCinema(Integer id) {
         Cinema cinema = getCinemaById(id);
-        cinema.setStatus(BaseStatus.DELETED);
+        cinema.setDeleted(true);
         cinemaRepository.save(cinema);
     }
 

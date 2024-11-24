@@ -39,5 +39,7 @@ public class Cinema extends BaseEntity {
     private String slug;
     @OneToMany
     private List<Room> rooms;
-    private BaseStatus status;
+    @Builder.Default
+    @Column(nullable = false)
+    private BaseStatus status = BaseStatus.ACTIVE;
 }
