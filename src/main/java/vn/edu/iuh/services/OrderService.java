@@ -21,19 +21,47 @@ import java.util.List;
 import java.util.UUID;
 
 public interface OrderService {
+    /**
+     * Creates a new order
+     *
+     * @param principal The user information who creates the order
+     * @param dto       The order information
+     * @return Containing the created order information
+     */
+    OrderProjection createOrder(
+            UserPrincipal principal,
+            OrderCreateRequestDTO dto
+    );
+
+    /**
+     * Creates a new order by an employee
+     *
+     * @param dto The order information
+     * @return Containing the created order information
+     */
+    AdminOrderProjection createOrderByEmployee(CreateOrderRequestDTO dto);
+
+    /**
+     * Retrieves a paginated list of orders with filtering conditions
+     *
+     * @param code     Order code to search for (optional)
+     * @param status   Order status to search for (optional)
+     * @param fromDate Start date for filtering orders (optional)
+     * @param toDate   End date for filtering orders (optional)
+     * @param pageable Pagination information (page number, size, sort)
+     * @return Page containing AdminOrderResponseDTO with filtered and paginated orders
+     */
+    Page<AdminOrderResponseDTO> getAllOrders(
+            String code,
+            OrderStatus status,
+            LocalDate fromDate,
+            LocalDate toDate,
+            Pageable pageable
+    );
+
     Order findByIdAndUser(UUID orderId, User user);
 
     SuccessResponse<List<OrderProjection>> getOrderHistory(UserPrincipal userPrincipal);
-
-    SuccessResponse<OrderProjection> createOrder(
-            UserPrincipal userPrincipal,
-            OrderCreateRequestDTO orderCreateRequestDTO
-    );
-
-    AdminOrderProjection createOrderByEmployee(
-            UserPrincipal userPrincipal,
-            CreateOrderRequestDTO createOrderRequestDTO
-    );
 
     SuccessResponse<?> cancelOrder(UserPrincipal userPrincipal, UUID orderId);
 
@@ -72,14 +100,6 @@ public interface OrderService {
     );
 
     SuccessResponse<OrderProjection> clearDiscountInOrder(UserPrincipal userPrincipal, UUID orderId);
-
-    Page<AdminOrderResponseDTO> getAllOrders(
-            String code,
-            OrderStatus status,
-            LocalDate fromDate,
-            LocalDate toDate,
-            Pageable pageable
-    );
 
     AdminOrderOverviewProjection getOrderByCode(String code);
 

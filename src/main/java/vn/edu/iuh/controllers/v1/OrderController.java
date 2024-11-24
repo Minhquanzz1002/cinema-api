@@ -32,18 +32,27 @@ public class OrderController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public SuccessResponse<OrderProjection> createOrder(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                        @RequestBody @Valid OrderCreateRequestDTO orderCreateRequestDTO) {
-        return orderService.createOrder(userPrincipal, orderCreateRequestDTO);
+    public SuccessResponse<OrderProjection> createOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody @Valid OrderCreateRequestDTO orderCreateRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Tạo đơn hàng thành công",
+                orderService.createOrder(userPrincipal, orderCreateRequestDTO)
+        );
     }
 
     @Operation(
             summary = "Cập nhật vé của đơn hàng"
     )
     @PutMapping("/{orderId}/seats")
-    public SuccessResponse<OrderProjection> updateSeatInOrderDetail(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                    @PathVariable UUID orderId,
-                                                                    @RequestBody @Valid OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO) {
+    public SuccessResponse<OrderProjection> updateSeatInOrderDetail(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId,
+            @RequestBody @Valid OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+    ) {
         return orderService.updateSeatsInOrder(userPrincipal, orderId, orderUpdateSeatRequestDTO);
     }
 
@@ -51,9 +60,11 @@ public class OrderController {
             summary = "Cập nhật sản phẩm của đơn hàng"
     )
     @PutMapping("/{orderId}/products")
-    public SuccessResponse<OrderProjection> updateProductInOrderDetail(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                       @PathVariable UUID orderId,
-                                                                       @RequestBody @Valid OrderUpdateProductRequestDTO orderUpdateProductRequestDTO) {
+    public SuccessResponse<OrderProjection> updateProductInOrderDetail(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId,
+            @RequestBody @Valid OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+    ) {
         return orderService.updateProductsInOrder(userPrincipal, orderId, orderUpdateProductRequestDTO);
     }
 
@@ -64,7 +75,10 @@ public class OrderController {
                     """
     )
     @DeleteMapping("/{orderId}")
-    public SuccessResponse<?> cancelOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderId) {
+    public SuccessResponse<?> cancelOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId
+    ) {
         return orderService.cancelOrder(userPrincipal, orderId);
     }
 
@@ -83,9 +97,11 @@ public class OrderController {
                     """
     )
     @PutMapping("/{orderId}/discounts")
-    public SuccessResponse<OrderProjection> updatePromotionInOrder(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                   @PathVariable UUID orderId,
-                                                                   @RequestBody @Valid OrderUpdateDiscountDTO orderUpdateDiscountDTO) {
+    public SuccessResponse<OrderProjection> updatePromotionInOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId,
+            @RequestBody @Valid OrderUpdateDiscountDTO orderUpdateDiscountDTO
+    ) {
         return orderService.updateDiscountInOrder(userPrincipal, orderId, orderUpdateDiscountDTO);
     }
 
@@ -93,8 +109,10 @@ public class OrderController {
             summary = "Xóa khuyến mãi trong đơn hàng"
     )
     @PutMapping("/{orderId}/discounts/clear")
-    public SuccessResponse<OrderProjection> clearPromotionInOrder(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                   @PathVariable UUID orderId) {
+    public SuccessResponse<OrderProjection> clearPromotionInOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId
+    ) {
         return orderService.clearDiscountInOrder(userPrincipal, orderId);
     }
 
@@ -105,7 +123,10 @@ public class OrderController {
                     """
     )
     @PutMapping("/{orderId}/complete")
-    public SuccessResponse<?> completeOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderId) {
+    public SuccessResponse<?> completeOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId
+    ) {
         return orderService.completeOrder(userPrincipal, orderId);
     }
 

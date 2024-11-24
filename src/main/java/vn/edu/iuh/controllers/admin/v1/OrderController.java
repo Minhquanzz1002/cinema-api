@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
@@ -21,14 +20,13 @@ import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
 import vn.edu.iuh.projections.admin.v1.AdminOrderProjection;
-import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.OrderService;
-
-import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
-import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 
 import java.time.LocalDate;
 import java.util.UUID;
+
+import static vn.edu.iuh.constant.RouterConstant.AdminPaths;
+import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,14 +40,13 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<AdminOrderProjection> createOrderByEmployee(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody CreateOrderRequestDTO createOrderRequestDTO
+            @RequestBody CreateOrderRequestDTO dto
     ) {
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Thành công",
-                orderService.createOrderByEmployee(userPrincipal, createOrderRequestDTO)
+                orderService.createOrderByEmployee(dto)
         );
     }
 
