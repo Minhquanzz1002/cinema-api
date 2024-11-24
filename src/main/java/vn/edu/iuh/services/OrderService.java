@@ -87,15 +87,30 @@ public interface OrderService {
      */
     AdminOrderProjection updateOrderCustomer(UUID orderId, UpdateCustomerInOrderRequestDTO dto);
 
-    SuccessResponse<OrderProjection> updateProductsInOrder(
-            UserPrincipal userPrincipal,
+    /**
+     * Updates product information in an order for customers.
+     *
+     * @param principal The authenticated user's information
+     * @param orderId   The order ID
+     * @param request   The product update details
+     * @return Updated order information
+     */
+    OrderProjection updateOrderProductsByCustomer(
+            UserPrincipal principal,
             UUID orderId,
-            OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+            OrderUpdateProductRequestDTO request
     );
 
-    AdminOrderProjection updateProductsInOrderByEmployee(
+    /**
+     * Updates product information in an order for employees.
+     *
+     * @param orderId The order ID
+     * @param request The product update details
+     * @return Updated order information
+     */
+    AdminOrderProjection updateOrderProductsByEmployee(
             UUID orderId,
-            OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+            OrderUpdateProductRequestDTO request
     );
 
 

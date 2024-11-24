@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.constant.RouterConstant.ClientPaths;
+import vn.edu.iuh.constant.SwaggerConstant.ClientSwagger;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.projections.v1.OrderProjection;
@@ -21,26 +23,24 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/orders")
+@RequestMapping(ClientPaths.Order.BASE)
 @Tag(name = "Order Controller", description = "Quản lý đặt vé")
 @SecurityRequirement(name = "bearerAuth")
 public class OrderController {
     private final OrderService orderService;
 
-    @Operation(
-            summary = "Tạo đơn hàng"
-    )
+    @Operation(summary = ClientSwagger.Order.CREATE_SUM)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<OrderProjection> createOrder(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody @Valid OrderCreateRequestDTO orderCreateRequestDTO
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestBody @Valid OrderCreateRequestDTO request
     ) {
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Tạo đơn hàng thành công",
-                orderService.createOrder(userPrincipal, orderCreateRequestDTO)
+                orderService.createOrder(principal, request)
         );
     }
 
@@ -56,16 +56,23 @@ public class OrderController {
         return orderService.updateSeatsInOrder(userPrincipal, orderId, orderUpdateSeatRequestDTO);
     }
 
-    @Operation(
-            summary = "Cập nhật sản phẩm của đơn hàng"
-    )
-    @PutMapping("/{orderId}/products")
+    @Operation(summary = ClientSwagger.Order.UPDATE_PRODUCTS_SUM)
+    @PutMapping(ClientPaths.Order.UPDATE_PRODUCTS)
     public SuccessResponse<OrderProjection> updateProductInOrderDetail(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable UUID orderId,
-            @RequestBody @Valid OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+            @RequestBody @Valid OrderUpdateProductRequestDTO request
     ) {
-        return orderService.updateProductsInOrder(userPrincipal, orderId, orderUpdateProductRequestDTO);
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Cập nhật sản phẩm thành công",
+                orderService.updateOrderProductsByCustomer(
+                        principal,
+                        orderId,
+                        request
+                )
+        );
     }
 
     @Operation(

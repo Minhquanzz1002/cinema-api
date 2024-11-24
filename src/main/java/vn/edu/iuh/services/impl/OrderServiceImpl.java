@@ -208,97 +208,34 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public SuccessResponse<OrderProjection> updateProductsInOrder(
-            UserPrincipal userPrincipal,
+    public OrderProjection updateOrderProductsByCustomer(
+            UserPrincipal principal,
             UUID orderId,
-            OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+            OrderUpdateProductRequestDTO request
     ) {
-        Order order = findByIdAndUser(orderId, userPrincipal.getId());
-
-        // Clear promotion
-        PromotionDetail promotionDetail = order.getPromotionDetail();
-        if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
-            promotionDetailRepository.save(promotionDetail);
-        }
-        order.setPromotionDetail(null);
-        order.setTotalDiscount(0);
-        order.setFinalAmount(order.getTotalPrice());
-        order.setPromotionLine(null);
-
-        Map<Integer, OrderDetail> existingOrderDetails = order.getOrderDetails().stream()
-                                                              .filter(od -> od.getType() == OrderDetailType.PRODUCT)
-                                                              .collect(Collectors.toMap(
-                                                                      od -> od.getProduct().getId(),
-                                                                      Function.identity()
-                                                              ));
-
-        List<OrderDetail> updatedOrderDetails = new ArrayList<>(order.getOrderDetails());
-        updatedOrderDetails.removeIf(od -> od.getType() == OrderDetailType.PRODUCT);
-
-        float totalPrice = calculateTotalPriceByType(order, OrderDetailType.TICKET);
-
-        for (OrderProductRequestDTO product : orderUpdateProductRequestDTO.getProducts()) {
-            ProductProjection productProjection = productRepository.findWithPriceById(
-                    ProductStatus.ACTIVE,
-                    false,
-                    product.getId()
-            );
-
-            OrderDetail orderDetail = existingOrderDetails.get(product.getId());
-
-            if (orderDetail == null) {
-                orderDetail = OrderDetail.builder()
-                                         .price(productProjection.getPrice())
-                                         .product(Product.builder().id(productProjection.getId()).build())
-                                         .quantity(product.getQuantity())
-                                         .type(OrderDetailType.PRODUCT)
-                                         .order(order)
-                                         .build();
-            } else {
-                orderDetail.setQuantity(product.getQuantity());
-                existingOrderDetails.remove(product.getId());
-            }
-
-            orderDetail.setOrder(order);
-            updatedOrderDetails.add(orderDetail);
-
-            float productTotalPrice = productProjection.getPrice() * product.getQuantity();
-            totalPrice += productTotalPrice;
-
-        }
-        order.getOrderDetails().clear();
-        order.getOrderDetails().addAll(updatedOrderDetails);
-        order.setTotalPrice(totalPrice);
-        order.setFinalAmount(totalPrice);
-        order = orderRepository.save(order);
-
-        applyPromotion(order);
-
-        OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class)
-                                                         .orElseThrow(() -> new DataNotFoundException(
-                                                                 "Không tìm thấy đơn hàng"));
-        return new SuccessResponse<>(201, "success", "Cập nhật sản phẩm thành công", orderProjection);
+        Order order = findByIdAndUser(orderId, principal.getId());
+        updateOrderProducts(order, request);
+        return getOrderProjectionById(orderId, OrderProjection.class);
     }
 
     @Override
-    public AdminOrderProjection updateProductsInOrderByEmployee(
+    public AdminOrderProjection updateOrderProductsByEmployee(
             UUID orderId,
-            OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+            OrderUpdateProductRequestDTO request
     ) {
-        Order order = orderRepository.findById(orderId)
-                                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        Order order = findById(orderId);
+        updateOrderProducts(order, request);
+        return getOrderProjectionById(orderId, AdminOrderProjection.class);
+    }
 
-        // Clear promotion
-        PromotionDetail promotionDetail = order.getPromotionDetail();
-        if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
-            promotionDetailRepository.save(promotionDetail);
-        }
-        order.setPromotionDetail(null);
-        order.setTotalDiscount(0);
-        order.setFinalAmount(order.getTotalPrice());
-        order.setPromotionLine(null);
+    private void updateOrderProducts(Order order, OrderUpdateProductRequestDTO request) {
+        clearPromotionFromOrder(order);
+
+        List<OrderDetail> updatedOrderDetails = order.getOrderDetails().stream()
+                                                     .filter(od -> od.getType() != OrderDetailType.PRODUCT)
+                                                     .collect(Collectors.toList());
+
+        float totalPrice = calculateTotalPriceByType(order, OrderDetailType.TICKET);
 
         Map<Integer, OrderDetail> existingOrderDetails = order.getOrderDetails().stream()
                                                               .filter(od -> od.getType() == OrderDetailType.PRODUCT)
@@ -307,51 +244,57 @@ public class OrderServiceImpl implements OrderService {
                                                                       Function.identity()
                                                               ));
 
-        List<OrderDetail> updatedOrderDetails = new ArrayList<>(order.getOrderDetails());
-        updatedOrderDetails.removeIf(od -> od.getType() == OrderDetailType.PRODUCT);
-
-        float totalPrice = calculateTotalPriceByType(order, OrderDetailType.TICKET);
-
-        for (OrderProductRequestDTO product : orderUpdateProductRequestDTO.getProducts()) {
-            ProductProjection productProjection = productRepository.findWithPriceById(
-                    ProductStatus.ACTIVE,
-                    false,
-                    product.getId()
+        for (OrderProductRequestDTO product : request.getProducts()) {
+            OrderDetail orderDetail = processProductUpdate(
+                    product,
+                    existingOrderDetails,
+                    order
             );
 
-            OrderDetail orderDetail = existingOrderDetails.get(product.getId());
-
-            if (orderDetail == null) {
-                orderDetail = OrderDetail.builder()
-                                         .price(productProjection.getPrice())
-                                         .product(Product.builder().id(productProjection.getId()).build())
-                                         .quantity(product.getQuantity())
-                                         .type(OrderDetailType.PRODUCT)
-                                         .order(order)
-                                         .build();
-            } else {
-                orderDetail.setQuantity(product.getQuantity());
-                existingOrderDetails.remove(product.getId());
-            }
-
-            orderDetail.setOrder(order);
             updatedOrderDetails.add(orderDetail);
-
-            float productTotalPrice = productProjection.getPrice() * product.getQuantity();
-            totalPrice += productTotalPrice;
-
+            totalPrice += orderDetail.getPrice() * orderDetail.getQuantity();
         }
+        updateOrderWithNewDetails(order, updatedOrderDetails, totalPrice);
+        applyPromotion(order);
+    }
+
+    private void updateOrderWithNewDetails(Order order, List<OrderDetail> newDetails, float totalPrice) {
         order.getOrderDetails().clear();
-        order.getOrderDetails().addAll(updatedOrderDetails);
+        order.getOrderDetails().addAll(newDetails);
         order.setTotalPrice(totalPrice);
         order.setFinalAmount(totalPrice);
-        order = orderRepository.save(order);
-
-        applyPromotion(order);
-
-        return orderRepository.findById(order.getId(), AdminOrderProjection.class)
-                              .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        orderRepository.save(order);
     }
+
+    private OrderDetail processProductUpdate(
+            OrderProductRequestDTO product,
+            Map<Integer, OrderDetail> existingDetails,
+            Order order
+    ) {
+        ProductProjection productInfo = productRepository.findWithPriceById(
+                ProductStatus.ACTIVE,
+                false,
+                product.getId()
+        );
+
+        OrderDetail orderDetail = existingDetails.get(product.getId());
+
+        if (orderDetail == null) {
+            return OrderDetail.builder()
+                              .price(productInfo.getPrice())
+                              .product(Product.builder().id(productInfo.getId()).build())
+                              .quantity(product.getQuantity())
+                              .type(OrderDetailType.PRODUCT)
+                              .order(order)
+                              .build();
+        } else {
+            orderDetail.setQuantity(product.getQuantity());
+            existingDetails.remove(product.getId());
+            return orderDetail;
+        }
+    }
+
+    ;
 
     @Override
     @Transactional
@@ -836,6 +779,18 @@ public class OrderServiceImpl implements OrderService {
                                    Collectors.summingInt(od -> 1)
                            ));
 
+    }
+
+    private void clearPromotionFromOrder(Order order) {
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+        order.setPromotionDetail(null);
+        order.setTotalDiscount(0);
+        order.setFinalAmount(order.getTotalPrice());
+        order.setPromotionLine(null);
     }
 
 

@@ -89,7 +89,7 @@ public class OrderController {
                 200,
                 "success",
                 "Thành công",
-                orderService.updateProductsInOrderByEmployee(orderId, orderUpdateProductRequestDTO)
+                orderService.updateOrderProductsByEmployee(orderId, orderUpdateProductRequestDTO)
         );
     }
 
