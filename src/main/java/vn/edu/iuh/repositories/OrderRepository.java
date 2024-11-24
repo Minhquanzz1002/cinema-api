@@ -29,7 +29,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
 
     <T> Optional<T> findByCode(String code, Class<T> classType);
 
-    Optional<Order> findByIdAndUser(UUID id, User user);
+    Optional<Order> findByIdAndUserAndDeleted(UUID id, User user, boolean deleted);
 
     Optional<Order> findByIdAndUserAndDeletedAndStatus(UUID id, User user, boolean deleted, OrderStatus status);
 

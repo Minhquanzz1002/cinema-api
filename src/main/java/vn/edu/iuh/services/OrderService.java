@@ -59,7 +59,22 @@ public interface OrderService {
             Pageable pageable
     );
 
-    Order findByIdAndUser(UUID orderId, User user);
+    /**
+     * Retrieves an order by ID and user ID
+     *
+     * @param orderId The order ID
+     * @param userId  The user ID
+     * @return The order matching both IDs
+     */
+    Order findByIdAndUser(UUID orderId, UUID userId);
+
+    /**
+     * Retrieves an order by ID
+     *
+     * @param orderId The order ID
+     * @return The order matching the ID
+     */
+    Order findById(UUID orderId);
 
     SuccessResponse<List<OrderProjection>> getOrderHistory(UserPrincipal userPrincipal);
 
@@ -67,7 +82,6 @@ public interface OrderService {
 
     void cancelOrder(UUID orderId);
 
-    SuccessResponse<OrderProjection> completeOrder(UserPrincipal userPrincipal, UUID orderId);
 
     SuccessResponse<OrderProjection> updateProductsInOrder(
             UserPrincipal userPrincipal,
@@ -105,5 +119,18 @@ public interface OrderService {
 
     void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO);
 
+    /**
+     * @param principal The authenticated user's information
+     * @param orderId   The order ID
+     * @return OrderProjection with completed order information
+     */
+    OrderProjection completeOrder(UserPrincipal principal, UUID orderId);
+
+    /**
+     * Administrator method to completes an order
+     *
+     * @param orderId The order ID
+     * @return AdminOrderProjection with completed order information
+     */
     AdminOrderProjection completeOrder(UUID orderId);
 }

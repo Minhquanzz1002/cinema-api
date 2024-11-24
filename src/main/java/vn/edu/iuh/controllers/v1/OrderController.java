@@ -127,7 +127,12 @@ public class OrderController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable UUID orderId
     ) {
-        return orderService.completeOrder(userPrincipal, orderId);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Đặt vé thành công",
+                orderService.completeOrder(userPrincipal, orderId)
+        );
     }
 
     @Operation(

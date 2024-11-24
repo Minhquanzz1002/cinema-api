@@ -69,12 +69,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findByIdAndUser(UUID orderId, User user) {
-        return orderRepository.findByIdAndUser(orderId, user)
-                              .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
-    }
-
-    @Override
     public SuccessResponse<List<OrderProjection>> getOrderHistory(UserPrincipal userPrincipal) {
         List<OrderStatus> statuses = List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED);
         List<OrderProjection> orders = orderRepository.findAllByUserAndStatusIn(
@@ -120,8 +114,7 @@ public class OrderServiceImpl implements OrderService {
         applyPromotion(order);
 
         saveOrderToRedis(order.getId());
-        return orderRepository.findById(order.getId(), projectionType)
-                              .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        return getOrderProjectionById(order.getId(), projectionType);
     }
 
     private ShowTime validateAndGetShowTime(UUID showTimeId) {
@@ -170,9 +163,38 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<AdminOrderResponseDTO> getAllOrders(
+            String code,
+            OrderStatus status,
+            LocalDate fromDate,
+            LocalDate toDate,
+            Pageable pageable
+    ) {
+        Page<Order> orders = orderRepository.findAll(
+                OrderSpecifications.withFilters(code, status, fromDate, toDate)
+                                   .and(GenericSpecifications.withDeleted(false)),
+                pageable
+        );
+        return orders.map(order -> modelMapper.map(order, AdminOrderResponseDTO.class));
+    }
+
+    @Override
+    public Order findByIdAndUser(UUID orderId, UUID userId) {
+        User user = User.builder().id(userId).build();
+        return orderRepository.findByIdAndUserAndDeleted(orderId, user, false)
+                              .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+    }
+
+    @Override
+    public Order findById(UUID orderId) {
+        return orderRepository.findByIdAndDeleted(orderId, false)
+                              .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+    }
+
+    @Override
     @Transactional
     public SuccessResponse<?> cancelOrder(UserPrincipal userPrincipal, UUID orderId) {
-        Order order = findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
+        Order order = findByIdAndUser(orderId, userPrincipal.getId());
         if (order.getStatus() == OrderStatus.COMPLETED) {
             throw new BadRequestException("Không thể hủy đơn hàng đã hoàn thành");
         }
@@ -206,25 +228,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public SuccessResponse<OrderProjection> completeOrder(UserPrincipal userPrincipal, UUID orderId) {
-        Order order = this.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
-        order.setStatus(OrderStatus.COMPLETED);
-        orderRepository.save(order);
-        OrderProjection orderProjection = orderRepository.findById(order.getId(), OrderProjection.class)
-                                                         .orElseThrow(() -> new DataNotFoundException(
-                                                                 "Không tìm thấy đơn hàng"));
-        return new SuccessResponse<>(200, "success", "Đặt vé thành công", orderProjection);
-    }
-
-    @Override
     @Transactional
     public SuccessResponse<OrderProjection> updateProductsInOrder(
             UserPrincipal userPrincipal,
             UUID orderId,
             OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
     ) {
-        Order order = orderRepository.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build())
-                                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        Order order = findByIdAndUser(orderId, userPrincipal.getId());
 
         // Clear promotion
         PromotionDetail promotionDetail = order.getPromotionDetail();
@@ -387,7 +397,7 @@ public class OrderServiceImpl implements OrderService {
             UUID orderId,
             OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
     ) {
-        Order order = this.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
+        Order order = findByIdAndUser(orderId, userPrincipal.getId());
 
         // Clear promotion
         PromotionDetail promotionDetail = order.getPromotionDetail();
@@ -515,7 +525,7 @@ public class OrderServiceImpl implements OrderService {
 
         applyPromotion(order);
 
-        return getOrderProjectionCreatedByEmployee(orderId);
+        return getOrderProjectionById(orderId, AdminOrderProjection.class);
     }
 
     @Override
@@ -524,7 +534,7 @@ public class OrderServiceImpl implements OrderService {
             UUID orderId,
             OrderUpdateDiscountDTO orderUpdateDiscountDTO
     ) {
-        Order order = this.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
+        Order order = this.findByIdAndUser(orderId, userPrincipal.getId());
 
         if (order.getPromotionLine() != null) {
             throw new BadRequestException("Đơn hàng đã áp mã giảm giá");
@@ -705,7 +715,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public SuccessResponse<OrderProjection> clearDiscountInOrder(UserPrincipal userPrincipal, UUID orderId) {
-        Order order = this.findByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
+        Order order = this.findByIdAndUser(orderId, userPrincipal.getId());
 
 
         order.setTotalDiscount(0);
@@ -717,22 +727,6 @@ public class OrderServiceImpl implements OrderService {
                                                          .orElseThrow(() -> new DataNotFoundException(
                                                                  "Không tìm thấy đơn hàng"));
         return new SuccessResponse<>(201, "success", "Xóa khuyến mãi thành công", orderProjection);
-    }
-
-    @Override
-    public Page<AdminOrderResponseDTO> getAllOrders(
-            String code,
-            OrderStatus status,
-            LocalDate fromDate,
-            LocalDate toDate,
-            Pageable pageable
-    ) {
-        Page<Order> orders = orderRepository.findAll(
-                OrderSpecifications.withFilters(code, status, fromDate, toDate)
-                                   .and(GenericSpecifications.withDeleted(false)),
-                pageable
-        );
-        return orders.map(order -> modelMapper.map(order, AdminOrderResponseDTO.class));
     }
 
     @Override
@@ -779,12 +773,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public AdminOrderProjection completeOrder(UUID orderId) {
-        Order order = orderRepository.findByIdAndDeleted(orderId, false)
-                                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        Order order = findById(orderId);
         order.setStatus(OrderStatus.COMPLETED);
         orderRepository.save(order);
-        return orderRepository.findById(order.getId(), AdminOrderProjection.class)
-                              .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+        return getOrderProjectionById(orderId, AdminOrderProjection.class);
+    }
+
+    @Override
+    public OrderProjection completeOrder(UserPrincipal principal, UUID orderId) {
+        Order order = findByIdAndUser(orderId, principal.getId());
+        order.setStatus(OrderStatus.COMPLETED);
+        orderRepository.save(order);
+        return getOrderProjectionById(orderId, OrderProjection.class);
     }
 
     private String generateOrderCode() {
@@ -935,8 +935,8 @@ public class OrderServiceImpl implements OrderService {
                           .build();
     }
 
-    private AdminOrderProjection getOrderProjectionCreatedByEmployee(UUID orderId) {
-        return orderRepository.findById(orderId, AdminOrderProjection.class)
+    private <T> T getOrderProjectionById(UUID orderId, Class<T> projectionType) {
+        return orderRepository.findById(orderId, projectionType)
                               .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
     }
 }
