@@ -79,7 +79,8 @@ public class OrderController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable UUID orderId
     ) {
-        return orderService.cancelOrder(userPrincipal, orderId);
+        orderService.cancelOrderByCustomer(userPrincipal, orderId);
+        return new SuccessResponse<>(200, "success", "Xóa đơn hàng thành công", null);
     }
 
     @Operation(

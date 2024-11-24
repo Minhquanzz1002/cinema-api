@@ -9,7 +9,6 @@ import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
 import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Order;
-import vn.edu.iuh.models.User;
 import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
 import vn.edu.iuh.projections.admin.v1.AdminOrderProjection;
@@ -78,10 +77,15 @@ public interface OrderService {
 
     SuccessResponse<List<OrderProjection>> getOrderHistory(UserPrincipal userPrincipal);
 
-    SuccessResponse<?> cancelOrder(UserPrincipal userPrincipal, UUID orderId);
-
-    void cancelOrder(UUID orderId);
-
+    /**
+     * Updates customer information in an order. Admin only
+     *
+     * @param orderId The order ID
+     * @param dto     The updated customer information
+     * @return Updated order information with administrative details
+     * @throws vn.edu.iuh.exceptions.DataNotFoundException If the order is not found
+     */
+    AdminOrderProjection updateOrderCustomer(UUID orderId, UpdateCustomerInOrderRequestDTO dto);
 
     SuccessResponse<OrderProjection> updateProductsInOrder(
             UserPrincipal userPrincipal,
@@ -94,7 +98,6 @@ public interface OrderService {
             OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
     );
 
-    AdminOrderProjection updateCustomerInOrderByEmployee(UUID orderId, UpdateCustomerInOrderRequestDTO dto);
 
     SuccessResponse<OrderProjection> updateSeatsInOrder(
             UserPrincipal userPrincipal,
@@ -120,6 +123,23 @@ public interface OrderService {
     void refundOrder(UUID orderId, RefundOrderRequestDTO refundOrderRequestDTO);
 
     /**
+     * Customer method to cancel an order
+     *
+     * @param userPrincipal The authenticated user's information
+     * @param orderId       The order ID
+     */
+    void cancelOrderByCustomer(UserPrincipal userPrincipal, UUID orderId);
+
+    /**
+     * Administrator method to cancel an order
+     *
+     * @param orderId The order ID
+     */
+    void cancelOrderByEmployee(UUID orderId);
+
+    /**
+     * Customer method to completes an order
+     *
      * @param principal The authenticated user's information
      * @param orderId   The order ID
      * @return OrderProjection with completed order information

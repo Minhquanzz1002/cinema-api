@@ -60,6 +60,7 @@ public class OrderServiceImpl implements OrderService {
     private final ModelMapper modelMapper;
 
     public static final String ORDER_KEY_PREFIX = "order:";
+    private final UserRepository userRepository;
 
     @Async
     public void saveOrderToRedis(UUID orderId) {
@@ -192,39 +193,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
-    public SuccessResponse<?> cancelOrder(UserPrincipal userPrincipal, UUID orderId) {
-        Order order = findByIdAndUser(orderId, userPrincipal.getId());
-        if (order.getStatus() == OrderStatus.COMPLETED) {
-            throw new BadRequestException("Không thể hủy đơn hàng đã hoàn thành");
+    public AdminOrderProjection updateOrderCustomer(UUID orderId, UpdateCustomerInOrderRequestDTO dto) {
+        Order order = findById(orderId);
+        UUID newCustomerId = dto.getCustomerId();
+
+        if (newCustomerId != null && !userRepository.existsByIdAndDeleted(newCustomerId, false)) {
+            throw new DataNotFoundException("Không tìm thấy khách hàng");
         }
 
-        // Update promotion usage count
-        PromotionDetail promotionDetail = order.getPromotionDetail();
-        if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
-            promotionDetailRepository.save(promotionDetail);
-        }
-
-        orderRepository.deleteByIdAndUser(orderId, User.builder().id(userPrincipal.getId()).build());
-        return new SuccessResponse<>(200, "success", "Xóa đơn hàng thành công", null);
-    }
-
-    @Override
-    public void cancelOrder(UUID orderId) {
-        Order order = orderRepository.findById(orderId)
-                                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
-        if (order.getStatus() == OrderStatus.COMPLETED) {
-            throw new BadRequestException("Không thể hủy đơn hàng đã hoàn thành");
-        }
-
-        PromotionDetail promotionDetail = order.getPromotionDetail();
-        if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
-            promotionDetailRepository.save(promotionDetail);
-        }
-
-        orderRepository.deleteById(orderId);
+        order.setUser(newCustomerId != null ? User.builder().id(dto.getCustomerId()).build() : null);
+        orderRepository.save(order);
+        return getOrderProjectionById(orderId, AdminOrderProjection.class);
     }
 
     @Override
@@ -371,22 +350,6 @@ public class OrderServiceImpl implements OrderService {
         applyPromotion(order);
 
         return orderRepository.findById(order.getId(), AdminOrderProjection.class)
-                              .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
-    }
-
-    @Override
-    public AdminOrderProjection updateCustomerInOrderByEmployee(UUID orderId, UpdateCustomerInOrderRequestDTO dto) {
-        Order order = orderRepository.findByIdAndDeleted(orderId, false)
-                                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
-
-        if (dto.getCustomerId() == null) {
-            order.setUser(null);
-        } else {
-            User user = User.builder().id(dto.getCustomerId()).build();
-            order.setUser(user);
-        }
-        orderRepository.save(order);
-        return orderRepository.findById(orderId, AdminOrderProjection.class)
                               .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
     }
 
@@ -769,6 +732,33 @@ public class OrderServiceImpl implements OrderService {
                               .build();
         refundRepository.save(refund);
         orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrderByCustomer(UserPrincipal principal, UUID orderId) {
+        Order order = findByIdAndUser(orderId, principal.getId());
+        cancelOrder(order);
+    }
+
+    @Override
+    public void cancelOrderByEmployee(UUID orderId) {
+        Order order = findById(orderId);
+        cancelOrder(order);
+    }
+
+    private void cancelOrder(Order order) {
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new BadRequestException("Không thể hủy đơn hàng đã hoàn thành");
+        }
+
+        PromotionDetail promotionDetail = order.getPromotionDetail();
+        if (promotionDetail != null) {
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
+            promotionDetailRepository.save(promotionDetail);
+        }
+
+        orderRepository.deleteById(order.getId());
     }
 
     @Override

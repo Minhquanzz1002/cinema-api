@@ -74,7 +74,8 @@ public class OrderController {
         return new SuccessResponse<>(
                 200,
                 "success",
-                "Thành công", orderService.getOrderByCode(code)
+                "Thành công",
+                orderService.getOrderByCode(code)
         );
     }
 
@@ -116,7 +117,7 @@ public class OrderController {
                 200,
                 "success",
                 "Thành công",
-                orderService.updateCustomerInOrderByEmployee(orderId, dto)
+                orderService.updateOrderCustomer(orderId, dto)
         );
     }
 
@@ -149,7 +150,7 @@ public class OrderController {
     @Operation(summary = AdminSwagger.Order.CANCEL_SUM)
     @DeleteMapping(AdminPaths.Order.CANCEL)
     public SuccessResponse<Void> cancelOrder(@PathVariable UUID orderId) {
-        orderService.cancelOrder(orderId);
+        orderService.cancelOrderByEmployee(orderId);
         return new SuccessResponse<>(
                 200,
                 "success",
