@@ -29,7 +29,7 @@ public class RefundController {
     public SuccessResponse<Page<AdminRefundOverviewResponseDTO>> getAllRefunds(
             @RequestParam(required = false) String refundCode,
             @RequestParam(required = false) String orderCode,
-            @PageableDefault Pageable pageable
+            @PageableDefault(sort = "refundDate") Pageable pageable
     ) {
         return new SuccessResponse<>(
                 200,

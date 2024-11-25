@@ -24,7 +24,23 @@ public interface PromotionService {
 
     Page<AdminPromotionLineOverviewProjection> getPromotionLines(int id, Pageable pageable);
 
-    Page<AdminPromotionResponseDTO> getAllPromotions(Pageable pageable, String search, BaseStatus status, LocalDate startDate, LocalDate endDate);
+    /**
+     * Retrieves a paginated list of promotions based on filtering conditions
+     *
+     * @param pageable  Pageable containing pagination information (page number, page size, sort)
+     * @param search    Search keyword (can be promotion code or name)
+     * @param status    Status of promotion (ACTIVE, INACTIVE)
+     * @param startDate Start date to filter promotions
+     * @param endDate   End date to filter promotions
+     * @return Page object containing the list of promotions filtered and paginated according to conditions
+     */
+    Page<AdminPromotionResponseDTO> getAllPromotions(
+            Pageable pageable,
+            String search,
+            BaseStatus status,
+            LocalDate startDate,
+            LocalDate endDate
+    );
 
     Promotion createPromotion(CreatePromotionRequestDTO createPromotionRequestDTO);
 

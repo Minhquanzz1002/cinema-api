@@ -139,4 +139,15 @@ public class RouterConstant {
             public static final String REFUND = "/{orderId}/refund";
         }
     }
+
+    public static class ClientPaths {
+        public static class Order {
+            public static final String BASE = V1 + "/orders";
+            public static final String DETAIL = "/{code}";
+            public static final String UPDATE_PRODUCTS = "/{orderId}/products";
+            public static final String UPDATE_SEATS = "/{orderId}/seats";
+            public static final String COMPLETE = "/{orderId}/complete";
+            public static final String CANCEL = "/{orderId}";
+        }
+    }
 }

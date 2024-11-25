@@ -149,6 +149,18 @@ public class SwaggerConstant {
         }
     }
 
+    public static class ClientSwagger {
+
+        public static class Order {
+            public static final String CREATE_SUM = "Tạo đơn hàng";
+            public static final String GET_SUM = "Lấy thông tin đơn hàng";
+            public static final String UPDATE_PRODUCTS_SUM = "Cập nhật sản phẩm trong đơn hàng";
+            public static final String UPDATE_SEATS_SUM = "Cập nhật ghế trong đơn hàng";
+            public static final String CANCEL_SUM = "Hủy đơn hàng";
+            public static final String APPLY_PROMOTION_SUM = "Áp mã khuyến mãi";
+        }
+    }
+
     // FOR ADMIN AUTH DESC
     public static final String POST_LOGIN_DESC = """
             Access token: 24 hours

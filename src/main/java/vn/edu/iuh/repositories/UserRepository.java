@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
     boolean existsByPhoneAndDeleted(String phone, boolean deleted);
 
+    boolean existsByIdAndDeleted(UUID id, boolean deleted);
+
     <T> List<T> findProjectionByPhoneContainingAndDeletedAndRole_Name(String phone, boolean deleted, String roleName, Class<T> classType);
 
     Optional<User> findByIdAndDeletedFalseAndRole_Name(UUID id, String roleName);
