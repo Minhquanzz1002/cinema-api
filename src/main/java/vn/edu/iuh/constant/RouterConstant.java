@@ -17,6 +17,7 @@ public class RouterConstant {
         public static class Auth {
             public static final String BASE = ADMIN_V1 + "/auth";
             public static final String PROFILE = "/profile";
+            public static final String UPDATE_PROFILE = "/profile";
             public static final String FORGOT_PASSWORD = "/forgot-password";
             public static final String LOGIN = "/login";
             public static final String LOGOUT = "/logout";
@@ -141,6 +142,15 @@ public class RouterConstant {
     }
 
     public static class ClientPaths {
+        public static class Auth {
+            public static final String BASE = V1 + "/auth";
+            public static final String PROFILE = "/profile";
+            public static final String UPDATE_PROFILE = "/profile";
+            public static final String FORGOT_PASSWORD = "/forgot-password";
+            public static final String LOGIN = "/login";
+            public static final String LOGOUT = "/logout";
+        }
+
         public static class Order {
             public static final String BASE = V1 + "/orders";
             public static final String DETAIL = "/{code}";

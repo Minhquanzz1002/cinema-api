@@ -113,15 +113,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public SuccessResponse<UserResponseDTO> updateProfile(UserPrincipal userPrincipal, UpdateProfileRequestDTO updateProfileRequestDTO) {
-        User user = getUserByEmail(userPrincipal.getEmail());
-        user.setName(updateProfileRequestDTO.getName());
-        user.setPhone(updateProfileRequestDTO.getPhone());
-        user.setGender(updateProfileRequestDTO.getGender());
-        user.setBirthday(updateProfileRequestDTO.getBirthday());
+    public UserResponseDTO updateProfile(UserPrincipal principal, UpdateProfileRequestDTO request) {
+        User user = getUserByEmail(principal.getEmail());
+        user.setName(request.getName());
+        user.setPhone(request.getPhone());
+        user.setGender(request.getGender());
+        user.setBirthday(request.getBirthday());
         user = userRepository.save(user);
-        UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-        return new SuccessResponse<>(200, "success", "Cập nhật thông tin thành công", userResponseDTO);
+        return modelMapper.map(user, UserResponseDTO.class);
     }
 
     @Override

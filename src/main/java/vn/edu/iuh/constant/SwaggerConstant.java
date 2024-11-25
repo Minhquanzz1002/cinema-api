@@ -14,9 +14,11 @@ public class SwaggerConstant {
         public static class Auth {
             public static final String LOGIN_SUM = "Đăng nhập";
             public static final String PROFILE_SUM = "Thông tin người dùng";
+            public static final String UPDATE_PROFILE_SUM = "Cập nhật thông tin người dùng";
             public static final String FORGOT_PASSWORD_SUM = "Quên mật khẩu";
             public static final String LOGOUT_SUM = "Đăng xuất";
             public static final String CHANGE_PASSWORD_SUM = "Đổi mật khẩu";
+            public static final String UPDATE_PROFILE_DESC = "Quy ước: Nam là `true`, Nữ là `false`";
         }
 
         public static class Callback {
@@ -150,6 +152,15 @@ public class SwaggerConstant {
     }
 
     public static class ClientSwagger {
+        public static class Auth {
+            public static final String LOGIN_SUM = "Đăng nhập";
+            public static final String PROFILE_SUM = "Thông tin người dùng";
+            public static final String UPDATE_PROFILE_SUM = "Cập nhật thông tin người dùng";
+            public static final String FORGOT_PASSWORD_SUM = "Quên mật khẩu";
+            public static final String LOGOUT_SUM = "Đăng xuất";
+            public static final String CHANGE_PASSWORD_SUM = "Đổi mật khẩu";
+            public static final String UPDATE_PROFILE_DESC = "Quy ước: Nam là `true`, Nữ là `false`";
+        }
 
         public static class Order {
             public static final String CREATE_SUM = "Tạo đơn hàng";

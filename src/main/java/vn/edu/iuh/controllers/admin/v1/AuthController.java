@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.req.ChangePasswordRequestDTO;
 import vn.edu.iuh.dto.req.EmailRequestDTO;
 import vn.edu.iuh.dto.req.LoginRequestDTO;
+import vn.edu.iuh.dto.req.UpdateProfileRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.dto.res.UserAuthResponseDTO;
+import vn.edu.iuh.dto.res.UserResponseDTO;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
@@ -50,6 +52,26 @@ public class AuthController {
     @GetMapping(AdminPaths.Auth.PROFILE)
     public SuccessResponse<?> profile(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return authService.getProfile(userPrincipal);
+    }
+
+    @Operation(
+            summary = AdminSwagger.Auth.UPDATE_PROFILE_SUM,
+            description = AdminSwagger.Auth.UPDATE_PROFILE_DESC,
+            security = {
+                    @SecurityRequirement(name = "bearerAuth")
+            }
+    )
+    @PutMapping(AdminPaths.Auth.UPDATE_PROFILE)
+    public SuccessResponse<UserResponseDTO> changeProfile(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestBody @Valid UpdateProfileRequestDTO request
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Cập nhật thông tin thành công",
+                authService.updateProfile(principal, request)
+        );
     }
 
     @Operation(
