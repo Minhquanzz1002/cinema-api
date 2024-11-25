@@ -19,6 +19,8 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecificationExecutor<Order> {
+    boolean existsByCode(String code);
+    
     <T> List<T> findAllByUserAndStatusIn(User user, List<OrderStatus> statuses, Class<T> classType);
 
     <T> Optional<T> findById(UUID id, Class<T> classType);

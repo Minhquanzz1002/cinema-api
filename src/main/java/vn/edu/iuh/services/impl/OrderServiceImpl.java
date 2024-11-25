@@ -1,6 +1,8 @@
 package vn.edu.iuh.services.impl;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -18,6 +20,7 @@ import vn.edu.iuh.dto.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
+import vn.edu.iuh.exceptions.InternalServerErrorException;
 import vn.edu.iuh.models.*;
 import vn.edu.iuh.models.enums.*;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
@@ -58,6 +61,10 @@ public class OrderServiceImpl implements OrderService {
     private final TicketPriceLineRepository ticketPriceLineRepository;
     private final StringRedisTemplate redisTemplate;
     private final ModelMapper modelMapper;
+    private static final int MAX_ATTEMPTS = 1000000;
+    private static final int SEQUENCE_LENGTH = 6;
+    private static final String DATE_PATTERN = "yyMMdd";
+    private static final String ORDER_CODE_PREFIX = "HD";
 
     public static final String ORDER_KEY_PREFIX = "order:";
     private final UserRepository userRepository;
@@ -232,13 +239,13 @@ public class OrderServiceImpl implements OrderService {
         clearPromotionFromOrder(order);
 
         List<OrderDetail> updatedOrderDetails = order.getOrderDetails().stream()
-                                                     .filter(od -> od.getType() != OrderDetailType.PRODUCT)
+                                                     .filter(od -> od.getType() == OrderDetailType.TICKET || (od.getType() == OrderDetailType.PRODUCT && od.isGift()))
                                                      .collect(Collectors.toList());
 
         float totalPrice = calculateTotalPriceByType(order, OrderDetailType.TICKET);
 
         Map<Integer, OrderDetail> existingOrderDetails = order.getOrderDetails().stream()
-                                                              .filter(od -> od.getType() == OrderDetailType.PRODUCT)
+                                                              .filter(od -> od.getType() == OrderDetailType.PRODUCT && !od.isGift())
                                                               .collect(Collectors.toMap(
                                                                       od -> od.getProduct().getId(),
                                                                       Function.identity()
@@ -591,7 +598,7 @@ public class OrderServiceImpl implements OrderService {
                               .refundMethod(RefundMethod.CASH)
                               .reason(request.getReason())
                               .refundDate(LocalDateTime.now())
-                              .status(RefundStatus.PENDING)
+                              .status(RefundStatus.COMPLETED)
                               .build();
         refundRepository.save(refund);
         orderRepository.save(order);
@@ -641,9 +648,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private String generateOrderCode() {
-        long orderCount = orderRepository.count();
+        long initialCount = orderRepository.count();
         LocalDateTime now = LocalDateTime.now();
-        return String.format("HD%s%06d", now.format(DateTimeFormatter.ofPattern("yyMMdd")), (orderCount % 1000000) + 1);
+        String dateStr = now.format(DateTimeFormatter.ofPattern("yyMMdd"));
+
+        for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+            long sequenceNumber = ((initialCount + attempt) % 1000000) + 1;
+            String code = String.format("%s%s%06d", ORDER_CODE_PREFIX, dateStr, sequenceNumber);
+            if (!orderRepository.existsByCode(code)) {
+                return code;
+            }
+        }
+        throw new InternalServerErrorException("Không thể tạo mã đơn hàng");
     }
 
     private String generateRefundCode() {
@@ -686,6 +702,36 @@ public class OrderServiceImpl implements OrderService {
                                .orElse(null);
     }
 
+    private PromotionDetail findBestApplicablePromotionForPromotionBuyTicketsGetProducts(
+            List<PromotionDetail> promotionDetails,
+            Order order
+    ) {
+        Map<SeatType, Integer> seatTypeQuantity = calculateSeatTypeQuantity(order.getOrderDetails());
+        List<ProductProjection> products = productService.getProducts();
+        return promotionDetails.stream()
+                               .filter(this::isPromotionDetailValid)
+                               .filter(detail -> meetsRequiredSeatQuantity(seatTypeQuantity, detail))
+                               .max(Comparator.comparing(detail -> calculatePromotionValue(detail, products)))
+                               .orElse(null);
+    }
+
+    private float calculatePromotionValue(PromotionDetail detail, List<ProductProjection> products) {
+        return products.stream()
+                       .filter(product -> product.getId() == detail.getGiftProduct().getId())
+                       .findFirst()
+                       .map(product -> product.getPrice() * detail.getGiftQuantity())
+                       .orElse(0f);
+    }
+
+    private boolean isPromotionDetailValid(PromotionDetail detail) {
+        return detail.getStatus() == BaseStatus.ACTIVE
+                && detail.getCurrentUsageCount() < detail.getUsageLimit();
+    }
+
+    private boolean meetsRequiredSeatQuantity(Map<SeatType, Integer> seatTypeQuantity, PromotionDetail detail) {
+        return seatTypeQuantity.getOrDefault(detail.getRequiredSeatType(), 0) >= detail.getRequiredSeatQuantity();
+    }
+
     private float calculatorDiscount(float totalPrice, PromotionDetail detail) {
         float discountValue = totalPrice * (detail.getDiscountValue() / 100);
         return Math.min(discountValue, detail.getMaxDiscountValue());
@@ -724,6 +770,19 @@ public class OrderServiceImpl implements OrderService {
             return;
         }
 
+        BestPromotionResult bestResult = findBestPromotionResult(order, promotionLines);
+
+        if (bestResult != null) {
+            switch (bestResult.getPromotionLine().getType()) {
+                case CASH_REBATE, PRICE_DISCOUNT -> applyCashDiscount(order, bestResult);
+                case BUY_TICKETS_GET_PRODUCTS -> applyProductGift(order, bestResult);
+            }
+            orderRepository.save(order);
+            updatePromotionUsage(bestResult.getPromotionDetail());
+        }
+    }
+
+    private BestPromotionResult findBestPromotionResult(Order order, List<PromotionLine> promotionLines) {
         PromotionDetail bestPromotion = null;
         float highestDiscountValue = 0;
         PromotionLine selectedPromotionLine = null;
@@ -756,19 +815,93 @@ public class OrderServiceImpl implements OrderService {
                         }
                     }
                 }
+                case BUY_TICKETS_GET_PRODUCTS -> {
+                    PromotionDetail promotionDetail = findBestApplicablePromotionForPromotionBuyTicketsGetProducts(
+                            promotionLine.getPromotionDetails(),
+                            order
+                    );
+
+
+                    if (promotionDetail != null) {
+                        float giftValue = calculateGiftProductValue(promotionDetail);
+                        if (giftValue > highestDiscountValue) {
+                            bestPromotion = promotionDetail;
+                            highestDiscountValue = giftValue;
+                            selectedPromotionLine = promotionLine;
+                        }
+                    }
+                }
             }
         }
+        return bestPromotion != null ? new BestPromotionResult(selectedPromotionLine, bestPromotion, highestDiscountValue) : null;
+    }
 
-        if (bestPromotion != null) {
-            order.setTotalDiscount(highestDiscountValue);
-            order.setFinalAmount(order.getTotalPrice() - highestDiscountValue);
-            order.setPromotionDetail(bestPromotion);
-            order.setPromotionLine(selectedPromotionLine);
-            orderRepository.save(order);
+    private void applyCashDiscount(Order order, BestPromotionResult result) {
+        order.setTotalDiscount(result.getDiscountValue());
+        order.setFinalAmount(order.getTotalPrice() - result.getDiscountValue());
+        order.setPromotionDetail(result.getPromotionDetail());
+        order.setPromotionLine(result.getPromotionLine());
+        orderRepository.save(order);
+    }
 
-            bestPromotion.setCurrentUsageCount(bestPromotion.getCurrentUsageCount() + 1);
-            promotionDetailRepository.save(bestPromotion);
+    private void applyProductGift(Order order, BestPromotionResult result) {
+        PromotionDetail detail = result.getPromotionDetail();
+
+        Optional<OrderDetail> existingProduct = order.getOrderDetails().stream()
+                .filter(od -> od.getType() == OrderDetailType.PRODUCT
+                        && od.getProduct().getId() == detail.getGiftProduct().getId())
+                .findFirst();
+
+
+        if (existingProduct.isPresent()) {
+            OrderDetail productDetail = existingProduct.get();
+
+            if (productDetail.getQuantity() <= detail.getGiftQuantity()) {
+                productDetail.setGift(true);
+                productDetail.setPrice(0);
+                productDetail.setQuantity(detail.getGiftQuantity());
+            } else {
+                productDetail.setQuantity(productDetail.getQuantity() - detail.getGiftQuantity());
+                OrderDetail giftDetail = OrderDetail.builder()
+                        .product(detail.getGiftProduct())
+                        .quantity(detail.getGiftQuantity())
+                        .price(0)
+                        .type(OrderDetailType.PRODUCT)
+                        .order(order)
+                        .build();
+                order.getOrderDetails().add(giftDetail);
+            }
+        } else {
+            OrderDetail giftDetail = OrderDetail.builder()
+                    .product(detail.getGiftProduct())
+                    .quantity(detail.getGiftQuantity())
+                    .price(0)
+                    .type(OrderDetailType.PRODUCT)
+                    .isGift(true)
+                    .order(order)
+                    .build();
+            order.getOrderDetails().add(giftDetail);
         }
+
+        order.setTotalDiscount(0);
+        order.setPromotionDetail(detail);
+        order.setPromotionLine(result.getPromotionLine());
+    }
+
+    @Async
+    public void updatePromotionUsage(PromotionDetail detail) {
+        detail.setCurrentUsageCount(detail.getCurrentUsageCount() + 1);
+        promotionDetailRepository.save(detail);
+    }
+
+
+    private float calculateGiftProductValue(PromotionDetail promotionDetail) {
+        List<ProductProjection> products = productService.getProducts();
+        return products.stream()
+                       .filter(product -> Objects.equals(product.getId(), promotionDetail.getGiftProduct().getId()))
+                       .findFirst()
+                       .map(product -> product.getPrice() * promotionDetail.getGiftQuantity())
+                       .orElse(0f);
     }
 
     private TicketOrderResult addTicketsToOrder(Order order, List<Integer> seatIds, ShowTime showTime) {
@@ -803,5 +936,13 @@ public class OrderServiceImpl implements OrderService {
     private <T> T getOrderProjectionById(UUID orderId, Class<T> projectionType) {
         return orderRepository.findById(orderId, projectionType)
                               .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class BestPromotionResult {
+        private final PromotionLine promotionLine;
+        private final PromotionDetail promotionDetail;
+        private final float discountValue;
     }
 }
