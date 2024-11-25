@@ -15,9 +15,15 @@ public interface AuthService {
 
     SuccessResponse<UserResponseDTO> getProfile(UserPrincipal userPrincipal);
 
-    SuccessResponse<UserResponseDTO> updateProfile(UserPrincipal userPrincipal, UpdateProfileRequestDTO updateProfileRequestDTO);
+    UserResponseDTO updateProfile(
+            UserPrincipal principal,
+            UpdateProfileRequestDTO request
+    );
 
     SuccessResponse<?> forgotPassword(String email);
 
-    SuccessResponse<UserAuthResponseDTO> changePassword(UserPrincipal userPrincipal, ChangePasswordRequestDTO changePasswordRequestDTO);
+    SuccessResponse<UserAuthResponseDTO> changePassword(
+            UserPrincipal userPrincipal,
+            ChangePasswordRequestDTO changePasswordRequestDTO
+    );
 }
