@@ -624,7 +624,7 @@ public class OrderServiceImpl implements OrderService {
 
         PromotionDetail promotionDetail = order.getPromotionDetail();
         if (promotionDetail != null) {
-            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() + 1);
+            promotionDetail.setCurrentUsageCount(promotionDetail.getCurrentUsageCount() - 1);
             promotionDetailRepository.save(promotionDetail);
         }
 
@@ -635,6 +635,8 @@ public class OrderServiceImpl implements OrderService {
     public AdminOrderProjection completeOrder(UUID orderId) {
         Order order = findById(orderId);
         order.setStatus(OrderStatus.COMPLETED);
+        order.setPaymentMethod(PaymentMethod.CASH);
+        order.setPaymentStatus(PaymentStatus.PAID);
         orderRepository.save(order);
         return getOrderProjectionById(orderId, AdminOrderProjection.class);
     }
@@ -643,6 +645,8 @@ public class OrderServiceImpl implements OrderService {
     public OrderProjection completeOrder(UserPrincipal principal, UUID orderId) {
         Order order = findByIdAndUser(orderId, principal.getId());
         order.setStatus(OrderStatus.COMPLETED);
+        order.setPaymentMethod(PaymentMethod.CASH);
+        order.setPaymentStatus(PaymentStatus.PAID);
         orderRepository.save(order);
         return getOrderProjectionById(orderId, OrderProjection.class);
     }
