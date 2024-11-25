@@ -7,10 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceLineRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateTicketPriceLineRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateTicketPriceRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.*;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.TicketPrice;
@@ -80,6 +77,43 @@ public class TicketPriceServiceImpl implements TicketPriceService {
     public TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO) {
         TicketPrice ticketPrice = modelMapper.map(createTicketPriceRequestDTO, TicketPrice.class);
         return ticketPriceRepository.save(ticketPrice);
+    }
+
+    @Override
+    public TicketPrice copyTicketPrice(int id, CopyTicketPriceRequestDTO request) {
+        TicketPrice original = findById(id);
+
+        TicketPrice copy = new TicketPrice();
+        copy.setName(original.getName() + " - Sao chép");
+        copy.setStatus(BaseStatus.INACTIVE);
+        copy.setStartDate(request.getStartDate());
+        copy.setEndDate(request.getEndDate());
+
+        TicketPrice saved = ticketPriceRepository.save(copy);
+        original.getTicketPriceLines().stream()
+                .filter(line -> !line.isDeleted())
+                .forEach(line -> {
+                    TicketPriceLine copyLine = new TicketPriceLine();
+                    copyLine.setApplyForDays(line.getApplyForDays());
+                    copyLine.setStartTime(line.getStartTime());
+                    copyLine.setEndTime(line.getEndTime());
+                    copyLine.setAudienceType(line.getAudienceType());
+                    copyLine.setTicketPrice(saved);
+                    copyLine.setStatus(BaseStatus.INACTIVE);
+                    TicketPriceLine savedLine = ticketPriceLineRepository.save(copyLine);
+
+                    line.getTicketPriceDetails().stream()
+                        .filter(detail -> !detail.isDeleted())
+                        .forEach(detail -> {
+                            TicketPriceDetail copyDetail = new TicketPriceDetail();
+                            copyDetail.setPrice(detail.getPrice());
+                            copyDetail.setSeatType(detail.getSeatType());
+                            copyDetail.setTicketPriceLine(savedLine);
+                            copyDetail.setStatus(BaseStatus.INACTIVE);
+                            ticketPriceDetailRepository.save(copyDetail);
+                        });
+                });
+        return saved;
     }
 
     @Override
@@ -168,8 +202,10 @@ public class TicketPriceServiceImpl implements TicketPriceService {
 
             if (hasTimeConflict(currentTimeDetails, overlappingTimeDetails)) {
                 throw new BadRequestException(
-                        String.format("Đã tồn tại giá vé có cùng thời gian hoạt động trong khoảng từ %s đến %s",
-                                      startDate, endDate)
+                        String.format(
+                                "Đã tồn tại giá vé có cùng thời gian hoạt động trong khoảng từ %s đến %s",
+                                startDate, endDate
+                        )
                 );
             }
         }
@@ -331,8 +367,10 @@ public class TicketPriceServiceImpl implements TicketPriceService {
             for (TimeDetail time2 : details2) {
                 // Kiểm tra xem có ngày nào trùng nhau không
                 if (hasOverlappingDays(time1.dayTypes(), time2.dayTypes()) &&
-                        isTimeOverlapping(time1.startTime(), time1.endTime(),
-                                          time2.startTime(), time2.endTime())) {
+                        isTimeOverlapping(
+                                time1.startTime(), time1.endTime(),
+                                time2.startTime(), time2.endTime()
+                        )) {
                     return true;
                 }
             }

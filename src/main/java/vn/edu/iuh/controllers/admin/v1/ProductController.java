@@ -72,7 +72,7 @@ public class ProductController {
     @Operation(summary = AdminSwagger.Product.GET_ALL_SUM)
     @GetMapping
     public SuccessResponse<Page<BaseProductWithPriceProjection>> getAllProducts(
-            @PageableDefault Pageable pageable,
+            @PageableDefault(sort = {"status", "price"}) Pageable pageable,
             @RequestParam(defaultValue = "", required = false) String search,
             @RequestParam(required = false) ProductStatus status
     ) {
