@@ -84,6 +84,7 @@ public class RouterConstant {
             public static final String DETAIL = "/{id}";
             public static final String UPDATE = "/{id}";
             public static final String DELETE = "/{id}";
+            public static final String COPY = "/{id}/copy";
             public static final String CREATE_LINES = "/{id}/lines";
             public static final String LINE_DETAIL = "/{id}/lines/{lineId}";
         }

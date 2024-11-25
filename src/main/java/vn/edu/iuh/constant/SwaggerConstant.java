@@ -80,6 +80,7 @@ public class SwaggerConstant {
             public static final String GET_ALL_SUM = "Lấy bảng giá vé";
             public static final String DELETE_SUM = "Xóa bảng giá vé";
             public static final String CREATE_SUM = "Tạo bảng giá vé";
+            public static final String COPY_SUM = "Sao chép bảng giá vé";
             public static final String UPDATE_SUM = "Cập nhật bảng giá vé";
             public static final String CREATE_LINES_SUM = "Tạo giá vé";
             public static final String UPDATE_LINES_SUM = "Cập nhật giá vé";
