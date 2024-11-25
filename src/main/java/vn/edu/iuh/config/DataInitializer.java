@@ -1739,15 +1739,6 @@ public class DataInitializer implements CommandLineRunner {
                            .build()
         );
 
-        ticketPriceRepository.save(
-                TicketPrice.builder()
-                           .startDate(LocalDate.of(2025, 1, 1))
-                           .endDate(LocalDate.of(2025, 12, 31))
-                           .name("Giá vé 2025")
-                           .status(BaseStatus.INACTIVE)
-                           .build()
-        );
-
         TicketPriceLine ticketPriceLine1 = ticketPriceLineRepository.save(
                 TicketPriceLine.builder()
                                .ticketPrice(month9_TicketPrice)
@@ -1807,6 +1798,48 @@ public class DataInitializer implements CommandLineRunner {
         );
 
         insertTicketPriceDetails(ticketPriceLine5, new float[]{95000, 105000, 180000});
+
+        TicketPrice ticketPrice2025_1 = ticketPriceRepository.save(
+                TicketPrice.builder()
+                           .startDate(LocalDate.of(2025, 1, 1))
+                           .endDate(LocalDate.of(2025, 12, 31))
+                           .name("Giá vé 2025")
+                           .status(BaseStatus.INACTIVE)
+                           .build()
+        );
+
+        TicketPriceLine ticketPrice2025_Monday = ticketPriceLineRepository.save(
+                TicketPriceLine.builder()
+                               .ticketPrice(ticketPrice2025_1)
+                               .applyForDays(List.of(DayType.MONDAY))
+                               .startTime(LocalTime.of(0, 0))
+                               .endTime(LocalTime.of(13, 59))
+                               .audienceType(AudienceType.ADULT)
+                               .build()
+        );
+
+        insertTicketPriceDetails(ticketPrice2025_Monday, new float[]{95000, 105000, 180000});
+
+        TicketPrice ticketPrice2025_2 = ticketPriceRepository.save(
+                TicketPrice.builder()
+                           .startDate(LocalDate.of(2025, 1, 1))
+                           .endDate(LocalDate.of(2025, 12, 31))
+                           .name("Giá vé 2025 bổ sung")
+                           .status(BaseStatus.INACTIVE)
+                           .build()
+        );
+
+        TicketPriceLine ticketPrice2025_2_Monday = ticketPriceLineRepository.save(
+                TicketPriceLine.builder()
+                               .ticketPrice(ticketPrice2025_2)
+                               .applyForDays(List.of(DayType.MONDAY))
+                               .startTime(LocalTime.of(14, 0))
+                               .endTime(LocalTime.of(23, 59))
+                               .audienceType(AudienceType.ADULT)
+                               .build()
+        );
+
+        insertTicketPriceDetails(ticketPrice2025_2_Monday, new float[]{55000, 95000, 170000});
     }
 
     private void insertTicketPriceDetails(TicketPriceLine line, float[] prices) {
