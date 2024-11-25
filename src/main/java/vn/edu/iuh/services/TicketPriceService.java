@@ -10,6 +10,23 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import java.time.LocalDate;
 
 public interface TicketPriceService {
+    TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO);
+
+    /**
+     * Copy a ticket price with new start and end date
+     *
+     * @param id      ID of original ticket price
+     * @param request DTO contains new start and end date
+     * @return Copied ticket price with new start and end date
+     */
+    TicketPrice copyTicketPrice(int id, CopyTicketPriceRequestDTO request);
+
+    /**
+     * Find ticket price by ID
+     *
+     * @param id ID of ticket price
+     * @return Ticket price
+     */
     TicketPrice findById(int id);
 
     TicketPrice getByDate(LocalDate date);
@@ -22,7 +39,6 @@ public interface TicketPriceService {
             Pageable pageable
     );
 
-    TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO);
 
     TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequestDTO updateTicketPriceRequestDTO);
 

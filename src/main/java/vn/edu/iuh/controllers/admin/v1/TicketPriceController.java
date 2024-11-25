@@ -10,10 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceLineRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreateTicketPriceRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateTicketPriceLineRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateTicketPriceRequestDTO;
+import vn.edu.iuh.dto.admin.v1.req.*;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.ValidationException;
 import vn.edu.iuh.models.TicketPrice;
@@ -36,7 +33,7 @@ public class TicketPriceController {
     @Operation(summary = AdminSwagger.TicketPrice.GET_ALL_SUM)
     @GetMapping
     public SuccessResponse<Page<TicketPrice>> getTicketPrices(
-            @PageableDefault Pageable pageable,
+            @PageableDefault(sort = {"startDate", "endDate"}) Pageable pageable,
             @RequestParam(required = false, defaultValue = "") String name,
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
@@ -64,6 +61,21 @@ public class TicketPriceController {
                 "success",
                 "Thêm bảng giá vé thành công",
                 ticketPriceService.createTicketPrice(createTicketPriceRequestDTO)
+        );
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = AdminSwagger.TicketPrice.COPY_SUM)
+    @PostMapping(AdminPaths.TicketPrice.COPY)
+    public SuccessResponse<TicketPrice> copyTicketPrice(
+            @PathVariable int id,
+            @RequestBody @Valid CopyTicketPriceRequestDTO request
+    ) {
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Sao chép bảng giá vé thành công",
+                ticketPriceService.copyTicketPrice(id, request)
         );
     }
 
@@ -112,7 +124,16 @@ public class TicketPriceController {
     }
 
     @PutMapping("/{id}/lines/{lineId}")
-    public SuccessResponse<?> updateTicketPriceLine(@PathVariable int id, @PathVariable int lineId, @RequestBody @Valid UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Cập nhật giá vé thành công", ticketPriceService.updateTicketPriceLine(id, lineId, updateTicketPriceLineRequestDTO));
+    public SuccessResponse<?> updateTicketPriceLine(
+            @PathVariable int id,
+            @PathVariable int lineId,
+            @RequestBody @Valid UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Cập nhật giá vé thành công",
+                ticketPriceService.updateTicketPriceLine(id, lineId, updateTicketPriceLineRequestDTO)
+        );
     }
 }
