@@ -10,9 +10,17 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import java.time.LocalDate;
 
 public interface TicketPriceService {
+    TicketPrice findById(int id);
+
     TicketPrice getByDate(LocalDate date);
 
-    Page<TicketPrice> getAllTicketPrices(String name, BaseStatus status, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<TicketPrice> getAllTicketPrices(
+            String name,
+            BaseStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable
+    );
 
     TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO);
 
@@ -22,7 +30,14 @@ public interface TicketPriceService {
 
     TicketPrice getTicketPriceById(int id);
 
-    TicketPriceLine createTicketPriceLine(int ticketPriceId, CreateTicketPriceLineRequestDTO createTicketPriceLineRequestDTO);
+    TicketPriceLine createTicketPriceLine(
+            int ticketPriceId,
+            CreateTicketPriceLineRequestDTO createTicketPriceLineRequestDTO
+    );
 
-    TicketPriceLine updateTicketPriceLine(int ticketPriceId, int lineId, UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO);
+    TicketPriceLine updateTicketPriceLine(
+            int ticketPriceId,
+            int lineId,
+            UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO
+    );
 }
