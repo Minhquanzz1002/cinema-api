@@ -9,7 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.req.*;
+import vn.edu.iuh.constant.RouterConstant.ClientPaths;
+import vn.edu.iuh.constant.SwaggerConstant.ClientSwagger;
+import vn.edu.iuh.dto.req.OrderCreateRequestDTO;
+import vn.edu.iuh.dto.req.OrderUpdateDiscountDTO;
+import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
+import vn.edu.iuh.dto.req.OrderUpdateSeatRequestDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.projections.v1.OrderProjection;
 import vn.edu.iuh.security.UserPrincipal;
@@ -21,51 +26,78 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/orders")
-@Tag(name = "Order Controller", description = "Quản lý đặt vé")
+@RequestMapping(ClientPaths.Order.BASE)
+@Tag(name = "V1: Order Management", description = "Quản lý đặt vé")
 @SecurityRequirement(name = "bearerAuth")
 public class OrderController {
     private final OrderService orderService;
 
-    @Operation(
-            summary = "Tạo đơn hàng"
-    )
+    @Operation(summary = ClientSwagger.Order.CREATE_SUM)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public SuccessResponse<OrderProjection> createOrder(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                        @RequestBody @Valid OrderCreateRequestDTO orderCreateRequestDTO) {
-        return orderService.createOrder(userPrincipal, orderCreateRequestDTO);
+    public SuccessResponse<OrderProjection> createOrder(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestBody @Valid OrderCreateRequestDTO request
+    ) {
+        return new SuccessResponse<>(
+                201,
+                "success",
+                "Tạo đơn hàng thành công",
+                orderService.createOrder(principal, request)
+        );
+    }
+
+    @Operation(summary = ClientSwagger.Order.UPDATE_SEATS_SUM)
+    @PutMapping(ClientPaths.Order.UPDATE_SEATS)
+    public SuccessResponse<OrderProjection> updateSeatInOrderDetail(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId,
+            @RequestBody @Valid OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Cập nhật ghế thành công",
+                orderService.updateOrderSeatsByCustomer(
+                        userPrincipal,
+                        orderId,
+                        orderUpdateSeatRequestDTO
+                )
+        );
+    }
+
+    @Operation(summary = ClientSwagger.Order.UPDATE_PRODUCTS_SUM)
+    @PutMapping(ClientPaths.Order.UPDATE_PRODUCTS)
+    public SuccessResponse<OrderProjection> updateProductInOrderDetail(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable UUID orderId,
+            @RequestBody @Valid OrderUpdateProductRequestDTO request
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Cập nhật sản phẩm thành công",
+                orderService.updateOrderProductsByCustomer(
+                        principal,
+                        orderId,
+                        request
+                )
+        );
     }
 
     @Operation(
-            summary = "Cập nhật vé của đơn hàng"
-    )
-    @PutMapping("/{orderId}/seats")
-    public SuccessResponse<OrderProjection> updateSeatInOrderDetail(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                    @PathVariable UUID orderId,
-                                                                    @RequestBody @Valid OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO) {
-        return orderService.updateSeatsInOrder(userPrincipal, orderId, orderUpdateSeatRequestDTO);
-    }
-
-    @Operation(
-            summary = "Cập nhật sản phẩm của đơn hàng"
-    )
-    @PutMapping("/{orderId}/products")
-    public SuccessResponse<OrderProjection> updateProductInOrderDetail(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                       @PathVariable UUID orderId,
-                                                                       @RequestBody @Valid OrderUpdateProductRequestDTO orderUpdateProductRequestDTO) {
-        return orderService.updateProductsInOrder(userPrincipal, orderId, orderUpdateProductRequestDTO);
-    }
-
-    @Operation(
-            summary = "Xóa đơn hàng",
+            summary = ClientSwagger.Order.CANCEL_SUM,
             description = """
                     Dùng khi người dùng rời khỏi trang đặt vé
                     """
     )
-    @DeleteMapping("/{orderId}")
-    public SuccessResponse<?> cancelOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderId) {
-        return orderService.cancelOrder(userPrincipal, orderId);
+    @DeleteMapping(ClientPaths.Order.CANCEL)
+    public SuccessResponse<?> cancelOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId
+    ) {
+        orderService.cancelOrderByCustomer(userPrincipal, orderId);
+        return new SuccessResponse<>(200, "success", "Xóa đơn hàng thành công", null);
     }
 
     @Operation(
@@ -83,9 +115,11 @@ public class OrderController {
                     """
     )
     @PutMapping("/{orderId}/discounts")
-    public SuccessResponse<OrderProjection> updatePromotionInOrder(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                   @PathVariable UUID orderId,
-                                                                   @RequestBody @Valid OrderUpdateDiscountDTO orderUpdateDiscountDTO) {
+    public SuccessResponse<OrderProjection> updatePromotionInOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId,
+            @RequestBody @Valid OrderUpdateDiscountDTO orderUpdateDiscountDTO
+    ) {
         return orderService.updateDiscountInOrder(userPrincipal, orderId, orderUpdateDiscountDTO);
     }
 
@@ -93,8 +127,10 @@ public class OrderController {
             summary = "Xóa khuyến mãi trong đơn hàng"
     )
     @PutMapping("/{orderId}/discounts/clear")
-    public SuccessResponse<OrderProjection> clearPromotionInOrder(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                                   @PathVariable UUID orderId) {
+    public SuccessResponse<OrderProjection> clearPromotionInOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId
+    ) {
         return orderService.clearDiscountInOrder(userPrincipal, orderId);
     }
 
@@ -105,8 +141,16 @@ public class OrderController {
                     """
     )
     @PutMapping("/{orderId}/complete")
-    public SuccessResponse<?> completeOrder(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable UUID orderId) {
-        return orderService.completeOrder(userPrincipal, orderId);
+    public SuccessResponse<?> completeOrder(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID orderId
+    ) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Đặt vé thành công",
+                orderService.completeOrder(userPrincipal, orderId)
+        );
     }
 
     @Operation(

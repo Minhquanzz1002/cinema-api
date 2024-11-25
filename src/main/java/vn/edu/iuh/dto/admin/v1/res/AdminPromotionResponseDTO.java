@@ -14,9 +14,7 @@ public class AdminPromotionResponseDTO {
     private int id;
     private String code;
     private String name;
-    private String imagePortrait;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String description;
     private BaseStatus status;
 }

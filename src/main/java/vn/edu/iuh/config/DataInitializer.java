@@ -1538,7 +1538,7 @@ public class DataInitializer implements CommandLineRunner {
                          .startDate(currentDate.withDayOfMonth(1))
                          .endDate(YearMonth.now().atEndOfMonth())
                          .code("KM" + currentDate.getMonthValue() + currentDate.getYear())
-                         .status(BaseStatus.INACTIVE)
+                         .status(BaseStatus.ACTIVE)
                          .build()
         );
 
@@ -2013,7 +2013,7 @@ public class DataInitializer implements CommandLineRunner {
                        .name("iCombo 2 Big STD")
                        .description("02 Ly nước ngọt size L + 01 Hộp bắp")
                        .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/products%2Fmenuboard-coonline-2024-combo2-copy-min_1711699849615.jpg?alt=media")
-                       .status(ProductStatus.INACTIVE)
+                       .status(ProductStatus.ACTIVE)
                        .build()
         );
 

@@ -9,6 +9,7 @@ import vn.edu.iuh.models.enums.SeatType;
 @Data
 @Entity
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "promotion_details")
