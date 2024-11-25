@@ -24,7 +24,7 @@ public interface TicketPriceRepository extends JpaRepository<TicketPrice, Intege
            "(:startDate BETWEEN tp.startDate AND tp.endDate) OR " +
            "(:endDate BETWEEN tp.startDate AND tp.endDate) OR " +
            "(tp.startDate BETWEEN :startDate AND :endDate)" +
-           "AND tp.deleted = false")
+           "AND tp.deleted = false AND tp.status = 'ACTIVE'")
     List<TicketPrice> findOverlappingTicketPrices(LocalDate startDate, LocalDate endDate);
 
     Optional<TicketPrice> findByIdAndDeleted(int id, boolean deleted);
