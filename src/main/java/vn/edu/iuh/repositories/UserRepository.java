@@ -24,9 +24,7 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     <T> List<T> findProjectionByPhoneContainingAndDeletedAndRole_Name(String phone, boolean deleted, String roleName, Class<T> classType);
 
     Optional<User> findByIdAndDeletedFalseAndRole_Name(UUID id, String roleName);
-
-    Page<User> findByDeletedFalseAndRole_Name(String roleName, Pageable pageable);
-
+    Optional<User> findByIdAndDeletedAndRole_Name(UUID id, boolean deleted, String roleName);
     Page<User> findByPhoneContainingOrNameContainingAndDeletedFalseAndRole_Name(
             String phone, String name, String roleName, Pageable pageable);
 

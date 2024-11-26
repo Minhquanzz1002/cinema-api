@@ -86,6 +86,12 @@ public class SwaggerConstant {
             public static final String UPDATE_LINES_SUM = "Cập nhật giá vé";
         }
 
+        public static class Customer {
+            public static final String GET_ALL_SUM = "Lấy danh sách khách hàng";
+            public static final String DELETE_SUM = "Xóa khách hàng";
+            public static final String UPDATE_SUM = "Cập nhật khách hàng";
+        }
+
         public static class Cinema {
             public static final String GET_ALL_SUM = "Lấy danh sách rạp";
             public static final String GET_SUM = "Lấy thông tin rạp";
