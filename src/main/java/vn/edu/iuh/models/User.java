@@ -1,5 +1,6 @@
 package vn.edu.iuh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import vn.edu.iuh.models.enums.UserStatus;
@@ -30,6 +31,7 @@ public class User extends BaseEntity{
     private String email;
     @Column(nullable = false, unique = true)
     private String phone;
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
     @Builder.Default
@@ -43,6 +45,7 @@ public class User extends BaseEntity{
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, updatable = false)
     private Role role;
-    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders;
 }

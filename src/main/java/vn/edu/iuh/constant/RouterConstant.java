@@ -23,6 +23,12 @@ public class RouterConstant {
             public static final String LOGOUT = "/logout";
         }
 
+        public static class Customer {
+            public static final String BASE = ADMIN_V1 + "/customers";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
+        }
+
         public static class Callback {
             public static final String BASE = ADMIN_V1 + "/callback";
             public static final String ZALOPAY = "/zalo-pay";
