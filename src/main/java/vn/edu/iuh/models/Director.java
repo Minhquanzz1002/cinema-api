@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import vn.edu.iuh.models.enums.BaseStatus;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class Director extends BaseEntity {
     private String code;
     @Column(nullable = false)
     private String name;
-    private Date birthday;
+    private LocalDate birthday;
     private String image;
     private String country;
     private String bio;

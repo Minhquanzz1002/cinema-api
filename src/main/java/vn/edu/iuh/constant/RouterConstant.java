@@ -44,6 +44,9 @@ public class RouterConstant {
 
         public static class Director {
             public static final String BASE = ADMIN_V1 + "/directors";
+            public static final String DETAIL = "/{code}";
+            public static final String UPDATE = "/{id}";
+            public static final String DELETE = "/{id}";
         }
 
         public static class Movie {
@@ -70,6 +73,10 @@ public class RouterConstant {
             public static final String UPDATE = "/{id}";
             public static final String GET_LINES = "/{id}/lines";
             public static final String CREATE_LINES = "/{id}/lines";
+        }
+
+        public static class Producer {
+            public static final String BASE = ADMIN_V1 + "/producers";
         }
 
         public static class Product {
@@ -145,6 +152,10 @@ public class RouterConstant {
             public static final String COMPLETE = "/{orderId}/complete";
             public static final String CANCEL = "/{orderId}";
             public static final String REFUND = "/{orderId}/refund";
+        }
+
+        public static class Genre {
+            public static final String BASE = ADMIN_V1 + "/genres";
         }
     }
 

@@ -58,6 +58,10 @@ public class SwaggerConstant {
             public static final String DELETE_SUM = "Xóa chiến dịch khuyến mãi";
         }
 
+        public static class Producer {
+            public static final String CREATE_SUM = "Tạo nhà sản xuất";
+        }
+
         public static class Product {
             public static final String CREATE_SUM = "Tạo sản phẩm";
             public static final String GET_ALL_SUM = "Lấy danh sách sản phẩm";
@@ -155,6 +159,10 @@ public class SwaggerConstant {
             public static final String GET_SUM = "Lấy thông tin nhân viên";
             public static final String DELETE_SUM = "Xóa nhân viên";
             public static final String UPDATE_SUM = "Cập nhật nhân viên";
+        }
+
+        public static class Genre {
+            public static final String CREATE_SUM = "Tạo thể loại";
         }
     }
 

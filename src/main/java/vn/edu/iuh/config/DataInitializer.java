@@ -697,6 +697,7 @@ public class DataInitializer implements CommandLineRunner {
                                  .name("Tuấn Trần")
                                  .code("DV000002")
                                  .country("Việt Nam")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Ftuan-tran.webp?alt=media")
                                  .build()
                     );
 
@@ -705,12 +706,14 @@ public class DataInitializer implements CommandLineRunner {
                                  .name("Lê Giang")
                                  .code("DV000003")
                                  .country("Việt Nam")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fle-giang.webp?alt=media")
                                  .build()
                     );
 
                     Actor diepBaoNgocActor = actorRepository.save(
                             Actor.builder()
                                  .name("Diệp Bảo Ngọc")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fdbn-tren-phim-truong-4-2098.jpg?alt=media")
                                  .code("DV000004")
                                  .country("Việt Nam")
                                  .build()
@@ -719,6 +722,7 @@ public class DataInitializer implements CommandLineRunner {
                     Actor ryanReynoldsActor = actorRepository.save(
                             Actor.builder()
                                  .name("Ryan Reynolds")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FRyan%20Reynolds.jpg?alt=media")
                                  .code("DV000005")
                                  .build()
                     );
@@ -726,6 +730,7 @@ public class DataInitializer implements CommandLineRunner {
                     Actor hughJackmanActor = actorRepository.save(
                             Actor.builder()
                                  .name("Hugh Jackman")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FHugh%20Jackman.jpg?alt=media")
                                  .code("DV000006")
                                  .build()
                     );
@@ -733,6 +738,7 @@ public class DataInitializer implements CommandLineRunner {
                     Actor patrickStewartActor = actorRepository.save(
                             Actor.builder()
                                  .name("Patrick Stewart")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FPatrick%20Stewart.jpg?alt=media")
                                  .code("DV000007")
                                  .build()
                     );
@@ -741,6 +747,7 @@ public class DataInitializer implements CommandLineRunner {
                             Actor.builder()
                                  .name("Trúc Anh")
                                  .code("DV000008")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FTrucAnh.webp?alt=media")
                                  .country("Việt Nam")
                                  .build()
                     );
@@ -749,6 +756,7 @@ public class DataInitializer implements CommandLineRunner {
                             Actor.builder()
                                  .name("Trần Nghĩa")
                                  .code("DV000009")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Ftrannghia.jpg?alt=media")
                                  .country("Việt Nam")
                                  .build()
                     );
@@ -757,6 +765,7 @@ public class DataInitializer implements CommandLineRunner {
                             Actor.builder()
                                  .name("Thái Hòa")
                                  .code("DV000010")
+                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fdien-vien-thai-hoa.jpg?alt=media")
                                  .country("Việt Nam")
                                  .build()
                     );
@@ -855,6 +864,10 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000001")
                                     .name("Shawn Levy")
+                                    .birthday(LocalDate.of(1968, 7, 23))
+                                    .bio("Shawn Adam Levy, thường được biết đến với tên gọi Shawn Levy, là một nam nhà làm phim kiêm diễn viên người Canada gốc Do Thái.")
+                                    .country("Canada")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FShawn%20Levy.jpg?alt=media")
                                     .build()
                     );
 
@@ -862,6 +875,7 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000002")
                                     .name("Trung Lùn")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Ftrung-lun-1726469956247139623202.webp?alt=media")
                                     .build()
                     );
 
@@ -869,6 +883,7 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000003")
                                     .name("Victor Vũ")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fvictorvu1-1637755775-7758-1637757291.jpg?alt=media")
                                     .build()
                     );
 
@@ -876,6 +891,7 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000004")
                                     .name("Jaturong Mokjok")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FJaturong%20Mokjok.jpg?alt=media")
                                     .build()
                     );
 
@@ -883,6 +899,7 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000005")
                                     .name("Vũ Ngọc Đãng")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fvungocdang.jpg?alt=media")
                                     .build()
                     );
 
@@ -890,6 +907,7 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000006")
                                     .name("Damian Mc Carthy")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FDamian%20Mc%20Carthy.jpg?alt=media")
                                     .build()
                     );
 
@@ -897,6 +915,7 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000007")
                                     .name("Alain Resnais")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FAlain%20Resnais.jpg?alt=media")
                                     .build()
                     );
 
@@ -904,6 +923,7 @@ public class DataInitializer implements CommandLineRunner {
                             Director.builder()
                                     .code("DD000008")
                                     .name("Nguyễn Hữu Hoàng")
+                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fthumb_660_94420a8b-7168-4e1f-b0f4-3ce93e890c1b.jpg?alt=media")
                                     .build()
                     );
 
