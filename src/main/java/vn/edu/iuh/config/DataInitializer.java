@@ -334,7 +334,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 insertLayout(layout1, room4QuangTrungCinema, 77);
 
-                cinemaRepository.save(
+                Cinema trungChanhCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Trung Chánh")
@@ -353,8 +353,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-trung-chanh")
                               .build()
                 );
+                insertRooms(trungChanhCinema, layout1, layout2, layout3);
 
-                cinemaRepository.save(
+                Cinema huynhTanPhatCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Huỳnh Tấn Phát")
@@ -373,8 +374,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-huynh-tan-phat")
                               .build()
                 );
+                insertRooms(huynhTanPhatCinema, layout1, layout2, layout3);
 
-                cinemaRepository.save(
+                Cinema nguyenVanQuaCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Nguyễn Văn Quá")
@@ -393,7 +395,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-nguyen-van-qua")
                               .build()
                 );
-                cinemaRepository.save(
+                insertRooms(nguyenVanQuaCinema, layout1, layout2, layout3);
+
+                Cinema linhTrungCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Co.opXtra Linh Trung")
@@ -412,7 +416,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-linh-trung")
                               .build()
                 );
-                cinemaRepository.save(
+                insertRooms(linhTrungCinema, layout1, layout2, layout3);
+
+                Cinema truongTrinhCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Trường Chinh")
@@ -431,7 +437,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-truong-trinh")
                               .build()
                 );
-                cinemaRepository.save(
+                insertRooms(truongTrinhCinema, layout1, layout2, layout3);
+
+                Cinema mallParcCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Parc Mall Q8")
@@ -450,8 +458,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-parc-mall-q8")
                               .build()
                 );
+                insertRooms(mallParcCinema, layout1, layout2, layout3);
 
-                cinemaRepository.save(
+                Cinema longBienCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy MIPEC Long Biên")
@@ -470,8 +479,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-mipec-long-bien")
                               .build()
                 );
+                insertRooms(longBienCinema, layout1, layout2, layout3);
 
-                cinemaRepository.save(
+                Cinema trangThiCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Tràng Thi")
@@ -490,8 +500,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-trang-thi")
                               .build()
                 );
+                insertRooms(trangThiCinema, layout1, layout2, layout3);
 
-                cinemaRepository.save(
+                 Cinema benTreCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Bến Tre")
@@ -510,9 +521,10 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-ben-tre")
                               .build()
                 );
+                insertRooms(benTreCinema, layout1, layout2, layout3);
 
 
-                cinemaRepository.save(
+                 Cinema daNangCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Đà Nẵng")
@@ -531,8 +543,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-da-nang")
                               .build()
                 );
+                insertRooms(daNangCinema, layout1, layout2, layout3);
 
-                cinemaRepository.save(
+                Cinema caMauCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Cà Mau")
@@ -551,8 +564,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-ca-mau")
                               .build()
                 );
+                insertRooms(caMauCinema, layout1, layout2, layout3);
 
-                cinemaRepository.save(
+                Cinema vinhCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Vinh")
@@ -571,7 +585,9 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-vinh")
                               .build()
                 );
-                cinemaRepository.save(
+                insertRooms(vinhCinema, layout1, layout2, layout3);
+
+                Cinema haiPhongCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Hải Phòng")
@@ -591,7 +607,9 @@ public class DataInitializer implements CommandLineRunner {
                               .build()
                 );
 
-                cinemaRepository.save(
+                insertRooms(haiPhongCinema, layout1, layout2, layout3);
+
+                Cinema buonMaThuotCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Buôn Ma Thuột")
@@ -611,7 +629,43 @@ public class DataInitializer implements CommandLineRunner {
                               .build()
                 );
 
-                cinemaRepository.save(
+                Room room1BuonMaThuotCinema = roomRepository.save(
+                        Room.builder()
+                            .name("Rạp 1")
+                            .cinema(buonMaThuotCinema)
+                            .build()
+                );
+
+                insertLayout(layout1, room1BuonMaThuotCinema, 77);
+
+                Room room2BuonMaThuotCinema = roomRepository.save(
+                        Room.builder()
+                            .name("Rạp 2")
+                            .cinema(buonMaThuotCinema)
+                            .build()
+                );
+
+                insertLayout(layout2, room2BuonMaThuotCinema, 21);
+
+                Room room3BuonMaThuotCinema = roomRepository.save(
+                        Room.builder()
+                            .name("Rạp 3")
+                            .cinema(buonMaThuotCinema)
+                            .build()
+                );
+
+                insertLayout(layout3, room3BuonMaThuotCinema, 112);
+
+                Room room4BuonMaThuotCinema = roomRepository.save(
+                        Room.builder()
+                            .name("Rạp 4")
+                            .cinema(buonMaThuotCinema)
+                            .build()
+                );
+
+                insertLayout(layout1, room4BuonMaThuotCinema, 77);
+
+                Cinema longXuyenCinema = cinemaRepository.save(
                         Cinema.builder()
                               .code(cinemaService.generateCinemaCode())
                               .name("Galaxy Long Xuyên")
@@ -630,6 +684,8 @@ public class DataInitializer implements CommandLineRunner {
                               .slug("galaxy-long-xuyen")
                               .build()
                 );
+
+                insertRooms(longXuyenCinema, layout1, layout2, layout3);
 
                 if (genreRepository.count() == 0 && actorRepository.count() == 0 && producerRepository.count() == 0 && directorRepository.count() == 0) {
                     /* Insert genres */
@@ -2080,6 +2136,44 @@ public class DataInitializer implements CommandLineRunner {
                             .build()
         );
 
+    }
+
+    private void insertRooms(Cinema cinema, int[][][] layout1, int[][][] layout2, int[][][] layout3) {
+        Room room1 = roomRepository.save(
+                Room.builder()
+                    .name("Rạp 1")
+                    .cinema(cinema)
+                    .build()
+        );
+
+        insertLayout(layout1, room1, 77);
+
+        Room room2 = roomRepository.save(
+                Room.builder()
+                    .name("Rạp 2")
+                    .cinema(cinema)
+                    .build()
+        );
+
+        insertLayout(layout2, room2, 21);
+
+        Room room3 = roomRepository.save(
+                Room.builder()
+                    .name("Rạp 3")
+                    .cinema(cinema)
+                    .build()
+        );
+
+        insertLayout(layout3, room3, 112);
+
+        Room room4 = roomRepository.save(
+                Room.builder()
+                    .name("Rạp 4")
+                    .cinema(cinema)
+                    .build()
+        );
+
+        insertLayout(layout1, room4, 77);
     }
 
     private String generateOrderCode() {
