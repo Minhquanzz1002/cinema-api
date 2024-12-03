@@ -42,6 +42,12 @@ public class RouterConstant {
             public static final String GET_ROOMS = "/{id}/rooms";
         }
 
+        public static class Dashboard {
+            public static final String BASE = ADMIN_V1 + "/dashboard";
+            public static final String GET_STATS = "/stats";
+            public static final String GET_MOVIE_REVENUE_SUMMARY = "/movie-revenue";
+        }
+
         public static class Director {
             public static final String BASE = ADMIN_V1 + "/directors";
             public static final String DETAIL = "/{code}";

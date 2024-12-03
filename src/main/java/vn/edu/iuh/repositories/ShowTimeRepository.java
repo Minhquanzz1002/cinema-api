@@ -78,4 +78,6 @@ public interface ShowTimeRepository extends JpaRepository<ShowTime, UUID>, JpaSp
             BaseStatus status,
             boolean deleted
     );
+
+    int countAllByStatusAndDeletedAndStartDate(BaseStatus status, boolean deleted, LocalDate startDate);
 }

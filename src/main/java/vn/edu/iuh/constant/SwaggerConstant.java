@@ -25,6 +25,11 @@ public class SwaggerConstant {
             public static final String ZALOPAY_SUM = "Callback cho ZaloPay";
         }
 
+        public static class Dashboard {
+            public static final String GET_STATS = "Lấy thống kê tổng quan hôm nay";
+            public static final String GET_MOVIE_REVENUE_SUM = "Lấy doanh thu phim";
+        }
+
         public static class Director {
             public static final String CREATE_SUM = "Tạo đạo diễn";
             public static final String GET_ALL_SUM = "Lấy danh sách đạo diễn";
