@@ -13,6 +13,7 @@ import vn.edu.iuh.models.User;
 import vn.edu.iuh.models.enums.OrderStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -98,6 +99,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
             LocalDate toDate,
             String search
     );
+
+    List<Order> findAllByStatusAndDeletedAndOrderDateBetween(OrderStatus status, boolean deleted, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
     Order findTopByOrderByIdDesc();
 }

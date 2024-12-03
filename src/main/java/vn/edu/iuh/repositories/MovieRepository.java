@@ -13,7 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Integer>, JpaSpecificationExecutor<Movie> {
-    <T> Page<T> findAllByStatusAndDeletedAndTitleContaining(Pageable pageable, MovieStatus status, boolean deleted, String title, Class<T> classType);
+    <T> Page<T> findAllByStatusAndDeletedAndTitleContaining(
+            Pageable pageable,
+            MovieStatus status,
+            boolean deleted,
+            String title,
+            Class<T> classType
+    );
 
     <T> Page<T> findAllByStatusAndDeleted(Pageable pageable, MovieStatus status, boolean deleted, Class<T> classType);
 
@@ -23,13 +29,17 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>, JpaSpeci
 
     Optional<Movie> findByIdAndDeleted(int id, boolean deleted);
 
+    Optional<Movie> findTopByOrderByCodeDesc();
+
     <T> List<T> findAllProjectionByDeleted(boolean deleted, Class<T> classType);
 
     <T> List<T> findAllProjectionByDeletedAndStatus(boolean deleted, MovieStatus status, Class<T> classType);
 
+    List<Movie> findAllByIdInAndDeleted(List<Integer> ids, boolean deleted);
+
+    List<Movie> findAllByStatusAndDeleted(MovieStatus status, boolean deleted);
+
     boolean existsBySlug(String slug);
 
-    Optional<Movie> findTopByOrderByCodeDesc();
-
-    List<Movie> findAllByIdInAndDeleted(List<Integer> ids, boolean deleted);
+    int countAllByStatusAndDeleted(MovieStatus status, boolean deleted);
 }
