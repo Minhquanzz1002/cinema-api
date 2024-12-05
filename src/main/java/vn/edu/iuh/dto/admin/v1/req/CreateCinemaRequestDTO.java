@@ -2,7 +2,6 @@ package vn.edu.iuh.dto.admin.v1.req;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,24 +24,25 @@ public class CreateCinemaRequestDTO {
     private String address;
 
     @NotBlank(message = "Phường/Xã không được để trống")
-    @Size(max = 100, message = "Tên phường/xã không được vượt quá 100 ký tự")
     private String ward;
 
+    @NotBlank(message = "Mã Phường/Xã không được để trống")
+    private String wardCode;
+
     @NotBlank(message = "Quận/Huyện không được để trống")
-    @Size(max = 100, message = "Tên quận/huyện không được vượt quá 100 ký tự")
     private String district;
 
-    @NotNull(message = "ID thành phố không được để trống")
-    private Integer cityId;
+    @NotBlank(message = "Mã Quận/Huyện không được để trống")
+    private String districtCode;
+
+    @NotNull(message = "Thành phố không được để trống")
+    private String city;
+
+    @NotNull(message = "Mã Thành phố không được để trống")
+    private String cityCode;
 
     @Size(max = 10, message = "Không được vượt quá 10 ảnh")
     private List<String> images;
 
     private String hotline;
-
-    // Custom validation method nếu cần
-    public boolean isValid() {
-        // Kiểm tra các điều kiện logic phức tạp hơn nếu cần
-        return true;
-    }
 }

@@ -9,26 +9,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
+import vn.edu.iuh.dto.res.CityResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
-
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
-import vn.edu.iuh.models.City;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.projections.v1.CinemaProjection;
 import vn.edu.iuh.repositories.CinemaRepository;
-import vn.edu.iuh.repositories.CityRepository;
 import vn.edu.iuh.services.CinemaService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CinemaServiceImpl implements CinemaService {
     private final CinemaRepository cinemaRepository;
-    private final CityRepository cityRepository;
     private final Slugify slugify;
 
     @Override
@@ -68,17 +66,16 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     @Transactional
     public Cinema createCinema(CreateCinemaRequestDTO request) {
-        // Validate city exists
-        City city = cityRepository.findById(request.getCityId())
-                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
-
         Cinema cinema = Cinema.builder()
                 .code(generateCinemaCode())
                 .name(request.getName())
                 .address(request.getAddress())
                 .ward(request.getWard())
+                .wardCode(request.getWardCode())
                 .district(request.getDistrict())
-                .city(city)
+                .districtCode(request.getDistrictCode())
+                .city(request.getCity())
+                .cityCode(request.getCityCode())
                 .images(request.getImages() != null ? request.getImages() : new ArrayList<>())
                 .hotline(request.getHotline())
                 .slug(slugify.slugify(request.getName()))
@@ -92,13 +89,6 @@ public class CinemaServiceImpl implements CinemaService {
     @Transactional
     public Cinema updateCinema(Integer id, UpdateCinemaRequestDTO request) {
         Cinema cinema = getCinemaById(id);
-
-        // Validate city exists if cityId is provided
-        if (request.getCityId() != null) {
-            City city = cityRepository.findById(request.getCityId())
-                    .orElseThrow(() -> new DataNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
-            cinema.setCity(city);
-        }
 
         // Update fields
         cinema.setName(request.getName());
@@ -132,5 +122,17 @@ public class CinemaServiceImpl implements CinemaService {
             nextNumber = Integer.parseInt(lastCode.substring(2)) + 1;
         }
         return String.format("CN%06d", nextNumber);
+    }
+
+    @Override
+    public List<CityResponseDTO> getCinemaCities() {
+        List<CityResponseDTO> cities = cinemaRepository.findDistinctCities(BaseStatus.ACTIVE, false);
+        return cities.stream()
+                     .peek(city -> city.setName(removeCityPrefix(city.getName())))
+                     .collect(Collectors.toList());
+    }
+
+    private String removeCityPrefix(String name) {
+        return name.replace("Thành phố ", "").replace("Tỉnh ", "");
     }
 }

@@ -28,9 +28,15 @@ public class Cinema extends BaseEntity {
     @Column(nullable = false)
     private String ward;
     @Column(nullable = false)
+    private String wardCode;
+    @Column(nullable = false)
     private String district;
-    @ManyToOne
-    private City city;
+    @Column(nullable = false)
+    private String districtCode;
+    @Column(nullable = false)
+    private String city;
+    @Column(nullable = false)
+    private String cityCode;
     @Column(columnDefinition = "TEXT[]")
     @JdbcTypeCode(SqlTypes.ARRAY)
     private List<String> images;

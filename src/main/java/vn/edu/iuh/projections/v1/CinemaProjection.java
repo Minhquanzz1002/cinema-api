@@ -8,5 +8,5 @@ public interface CinemaProjection {
     String getDistrict();
     String getWard();
     String getSlug();
-    CityProjection getCity();
+    String getCity();
 }
