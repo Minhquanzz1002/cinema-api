@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vn.edu.iuh.dto.res.CityResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
-import vn.edu.iuh.projections.v1.CityProjection;
-import vn.edu.iuh.services.CityService;
+import vn.edu.iuh.services.CinemaService;
 
 import java.util.List;
 
@@ -17,13 +17,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Location Controller", description = "Quản lý thành phố")
 public class CityController {
-    private final CityService cityService;
+    private final CinemaService cinemaService;
 
     @Operation(
             summary = "Danh sách thành phố có rạp"
     )
     @GetMapping
-    public SuccessResponse<List<CityProjection>> getCities() {
-        return cityService.getCities();
+    public SuccessResponse<List<CityResponseDTO>> getCities() {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                cinemaService.getCinemaCities()
+        );
     }
 }

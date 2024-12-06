@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.RoomDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
+import vn.edu.iuh.dto.admin.v1.res.AdminCinemaDetailResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.models.Cinema;
 import vn.edu.iuh.models.enums.BaseStatus;

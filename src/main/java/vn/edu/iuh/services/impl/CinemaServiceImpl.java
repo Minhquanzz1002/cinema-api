@@ -2,6 +2,7 @@ package vn.edu.iuh.services.impl;
 
 import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,27 +10,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
+import vn.edu.iuh.dto.res.CityResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
-
+import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
-import vn.edu.iuh.models.City;
+import vn.edu.iuh.models.Room;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.projections.v1.CinemaProjection;
 import vn.edu.iuh.repositories.CinemaRepository;
-import vn.edu.iuh.repositories.CityRepository;
 import vn.edu.iuh.services.CinemaService;
+import vn.edu.iuh.specifications.GenericSpecifications;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CinemaServiceImpl implements CinemaService {
     private final CinemaRepository cinemaRepository;
-    private final CityRepository cityRepository;
     private final Slugify slugify;
+    private final ModelMapper modelMapper;
 
     @Override
     public SuccessResponse<List<CinemaProjection>> getCinemas() {
@@ -37,53 +40,58 @@ public class CinemaServiceImpl implements CinemaService {
         return new SuccessResponse<>(200, "success", "Thành công", cinemas);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<Cinema> getAllCinemas(String search, BaseStatus status, Pageable pageable) {
-        Specification<Cinema> spec = Specification.where(null);
+        Specification<Cinema> spec = Specification.where(GenericSpecifications.withDeleted(false));
 
         // Add search condition if search parameter is provided
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and((root, query, cb) ->
-                    cb.or(
-                            cb.like(cb.lower(root.get("name")), "%" + search.toLowerCase() + "%"),
-                            cb.like(cb.lower(root.get("code")), "%" + search.toLowerCase() + "%")
-                    )
+                                    cb.or(
+                                            cb.like(cb.lower(root.get("name")), "%" + search.toLowerCase() + "%"),
+                                            cb.like(cb.lower(root.get("code")), "%" + search.toLowerCase() + "%")
+                                    )
             );
         }
 
-        // Add status condition if status parameter is provided
-        if (status != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
-        }
+        spec = spec.and(GenericSpecifications.withStatus(status));
 
-        return cinemaRepository.findAll(spec, pageable);
+        Page<Cinema> cinemas = cinemaRepository.findAll(spec, pageable);
+        cinemas.getContent().forEach(cinema -> {
+            List<Room> activeRooms = cinema.getRooms().stream()
+                                           .filter(room -> !room.isDeleted())
+                                           .collect(Collectors.toList());
+            cinema.setRooms(activeRooms);
+        });
+
+        return cinemas;
     }
 
     @Override
     public Cinema getCinemaById(Integer id) {
         return cinemaRepository.findByIdAndDeleted(id, false)
-                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp với id: " + id));
+                               .orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp với id: " + id));
     }
 
     @Override
     @Transactional
     public Cinema createCinema(CreateCinemaRequestDTO request) {
-        // Validate city exists
-        City city = cityRepository.findById(request.getCityId())
-                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
-
         Cinema cinema = Cinema.builder()
-                .code(generateCinemaCode())
-                .name(request.getName())
-                .address(request.getAddress())
-                .ward(request.getWard())
-                .district(request.getDistrict())
-                .city(city)
-                .images(request.getImages() != null ? request.getImages() : new ArrayList<>())
-                .hotline(request.getHotline())
-                .slug(slugify.slugify(request.getName()))
-                .status(BaseStatus.ACTIVE)
-                .build();
+                              .code(generateCinemaCode())
+                              .name(request.getName())
+                              .address(request.getAddress())
+                              .ward(request.getWard())
+                              .wardCode(request.getWardCode())
+                              .district(request.getDistrict())
+                              .districtCode(request.getDistrictCode())
+                              .city(request.getCity())
+                              .cityCode(request.getCityCode())
+                              .images(request.getImages() != null ? request.getImages() : new ArrayList<>())
+                              .hotline(request.getHotline())
+                              .slug(slugify.slugify(request.getName()))
+                              .status(request.getStatus())
+                              .build();
 
         return cinemaRepository.save(cinema);
     }
@@ -92,13 +100,6 @@ public class CinemaServiceImpl implements CinemaService {
     @Transactional
     public Cinema updateCinema(Integer id, UpdateCinemaRequestDTO request) {
         Cinema cinema = getCinemaById(id);
-
-        // Validate city exists if cityId is provided
-        if (request.getCityId() != null) {
-            City city = cityRepository.findById(request.getCityId())
-                    .orElseThrow(() -> new DataNotFoundException("Không tìm thấy thành phố với id: " + request.getCityId()));
-            cinema.setCity(city);
-        }
 
         // Update fields
         cinema.setName(request.getName());
@@ -120,6 +121,9 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     public void deleteCinema(Integer id) {
         Cinema cinema = getCinemaById(id);
+        if (cinema.getStatus() == BaseStatus.ACTIVE) {
+            throw new BadRequestException("Không thể xóa rạp đang hoạt động");
+        }
         cinema.setDeleted(true);
         cinemaRepository.save(cinema);
     }
@@ -132,5 +136,17 @@ public class CinemaServiceImpl implements CinemaService {
             nextNumber = Integer.parseInt(lastCode.substring(2)) + 1;
         }
         return String.format("CN%06d", nextNumber);
+    }
+
+    @Override
+    public List<CityResponseDTO> getCinemaCities() {
+        List<CityResponseDTO> cities = cinemaRepository.findDistinctCities(BaseStatus.ACTIVE, false);
+        return cities.stream()
+                     .peek(city -> city.setName(removeCityPrefix(city.getName())))
+                     .collect(Collectors.toList());
+    }
+
+    private String removeCityPrefix(String name) {
+        return name.replace("Thành phố ", "").replace("Tỉnh ", "");
     }
 }
