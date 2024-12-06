@@ -43,7 +43,7 @@ public class Cinema extends BaseEntity {
     private String hotline;
     @Column(nullable = false, unique = true)
     private String slug;
-    @OneToMany
+    @OneToMany(mappedBy = "cinema")
     private List<Room> rooms;
     @Builder.Default
     @Column(nullable = false)

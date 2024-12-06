@@ -2,6 +2,7 @@ package vn.edu.iuh.services.impl;
 
 import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,12 +12,15 @@ import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
 import vn.edu.iuh.dto.res.CityResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
+import vn.edu.iuh.models.Room;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.projections.v1.CinemaProjection;
 import vn.edu.iuh.repositories.CinemaRepository;
 import vn.edu.iuh.services.CinemaService;
+import vn.edu.iuh.specifications.GenericSpecifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 public class CinemaServiceImpl implements CinemaService {
     private final CinemaRepository cinemaRepository;
     private final Slugify slugify;
+    private final ModelMapper modelMapper;
 
     @Override
     public SuccessResponse<List<CinemaProjection>> getCinemas() {
@@ -35,52 +40,58 @@ public class CinemaServiceImpl implements CinemaService {
         return new SuccessResponse<>(200, "success", "Thành công", cinemas);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<Cinema> getAllCinemas(String search, BaseStatus status, Pageable pageable) {
-        Specification<Cinema> spec = Specification.where(null);
+        Specification<Cinema> spec = Specification.where(GenericSpecifications.withDeleted(false));
 
         // Add search condition if search parameter is provided
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and((root, query, cb) ->
-                    cb.or(
-                            cb.like(cb.lower(root.get("name")), "%" + search.toLowerCase() + "%"),
-                            cb.like(cb.lower(root.get("code")), "%" + search.toLowerCase() + "%")
-                    )
+                                    cb.or(
+                                            cb.like(cb.lower(root.get("name")), "%" + search.toLowerCase() + "%"),
+                                            cb.like(cb.lower(root.get("code")), "%" + search.toLowerCase() + "%")
+                                    )
             );
         }
 
-        // Add status condition if status parameter is provided
-        if (status != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
-        }
+        spec = spec.and(GenericSpecifications.withStatus(status));
 
-        return cinemaRepository.findAll(spec, pageable);
+        Page<Cinema> cinemas = cinemaRepository.findAll(spec, pageable);
+        cinemas.getContent().forEach(cinema -> {
+            List<Room> activeRooms = cinema.getRooms().stream()
+                                           .filter(room -> !room.isDeleted())
+                                           .collect(Collectors.toList());
+            cinema.setRooms(activeRooms);
+        });
+
+        return cinemas;
     }
 
     @Override
     public Cinema getCinemaById(Integer id) {
         return cinemaRepository.findByIdAndDeleted(id, false)
-                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp với id: " + id));
+                               .orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp với id: " + id));
     }
 
     @Override
     @Transactional
     public Cinema createCinema(CreateCinemaRequestDTO request) {
         Cinema cinema = Cinema.builder()
-                .code(generateCinemaCode())
-                .name(request.getName())
-                .address(request.getAddress())
-                .ward(request.getWard())
-                .wardCode(request.getWardCode())
-                .district(request.getDistrict())
-                .districtCode(request.getDistrictCode())
-                .city(request.getCity())
-                .cityCode(request.getCityCode())
-                .images(request.getImages() != null ? request.getImages() : new ArrayList<>())
-                .hotline(request.getHotline())
-                .slug(slugify.slugify(request.getName()))
-                .status(BaseStatus.ACTIVE)
-                .build();
+                              .code(generateCinemaCode())
+                              .name(request.getName())
+                              .address(request.getAddress())
+                              .ward(request.getWard())
+                              .wardCode(request.getWardCode())
+                              .district(request.getDistrict())
+                              .districtCode(request.getDistrictCode())
+                              .city(request.getCity())
+                              .cityCode(request.getCityCode())
+                              .images(request.getImages() != null ? request.getImages() : new ArrayList<>())
+                              .hotline(request.getHotline())
+                              .slug(slugify.slugify(request.getName()))
+                              .status(request.getStatus())
+                              .build();
 
         return cinemaRepository.save(cinema);
     }
@@ -110,6 +121,9 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     public void deleteCinema(Integer id) {
         Cinema cinema = getCinemaById(id);
+        if (cinema.getStatus() == BaseStatus.ACTIVE) {
+            throw new BadRequestException("Không thể xóa rạp đang hoạt động");
+        }
         cinema.setDeleted(true);
         cinemaRepository.save(cinema);
     }

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.iuh.models.enums.BaseStatus;
 
 import java.util.List;
 
@@ -45,4 +46,7 @@ public class CreateCinemaRequestDTO {
     private List<String> images;
 
     private String hotline;
+
+    @NotNull(message = "Trạng thái không được để trống")
+    private BaseStatus status;
 }
