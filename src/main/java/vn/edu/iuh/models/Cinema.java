@@ -28,16 +28,22 @@ public class Cinema extends BaseEntity {
     @Column(nullable = false)
     private String ward;
     @Column(nullable = false)
+    private String wardCode;
+    @Column(nullable = false)
     private String district;
-    @ManyToOne
-    private City city;
+    @Column(nullable = false)
+    private String districtCode;
+    @Column(nullable = false)
+    private String city;
+    @Column(nullable = false)
+    private String cityCode;
     @Column(columnDefinition = "TEXT[]")
     @JdbcTypeCode(SqlTypes.ARRAY)
     private List<String> images;
     private String hotline;
     @Column(nullable = false, unique = true)
     private String slug;
-    @OneToMany
+    @OneToMany(mappedBy = "cinema")
     private List<Room> rooms;
     @Builder.Default
     @Column(nullable = false)

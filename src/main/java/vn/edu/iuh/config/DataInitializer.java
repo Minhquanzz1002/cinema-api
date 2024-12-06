@@ -32,7 +32,6 @@ public class DataInitializer implements CommandLineRunner {
     private final DirectorRepository directorRepository;
     private final ProducerRepository producerRepository;
     private final CinemaRepository cinemaRepository;
-    private final CityRepository cityRepository;
     private final ShowTimeRepository showTimeRepository;
     private final RoomRepository roomRepository;
     private final RoomLayoutRepository roomLayoutRepository;
@@ -61,1461 +60,1442 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        if (cinemaRepository.count() == 0) {
+            int[][][] layout3 = {
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+            };
 
-        if (cityRepository.count() == 0) {
-            City hcmCity = cityRepository.save(
-                    City.builder()
-                        .name("Hồ Chí Minh")
+            int[][][] layout2 = {
+                    {{8}, {7}, {0}, {6, 5}, {5, 6}, {0}, {4}, {3}, {0}, {2, 1}, {1, 2}},
+                    {},
+                    {{7, 6}, {6, 7}, {0}, {5}, {0}, {0}, {4, 3}, {3, 4}, {0}, {2}, {1}},
+                    {},
+                    {{7}, {0}, {6, 5}, {5, 6}, {0}, {0}, {4}, {3}, {0}, {2, 1}, {1, 2}},
+                    {},
+                    {{7, 6}, {6, 7}, {0}, {5}, {0}, {0}, {4, 3}, {3, 4}, {0}, {2}, {1}}
+            };
+
+            int[][][] layout1 = {
+                    {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+                    {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
+            };
+
+            int[][][] layout4 = {
+                    {{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+                    {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
+            };
+
+            Cinema nguyenDuCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Nguyễn Du")
+                          .address("116 Nguyễn Du")
+                          .ward("Phường Bến Thành")
+                          .wardCode("26743")
+                          .district("Quận 1")
+                          .districtCode("760")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-nguyen-du")
+                          .build()
+            );
+
+            Room room1NguyenDuCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 1")
+                        .cinema(nguyenDuCinema)
                         .build()
             );
 
-            City haNoiCity = cityRepository.save(
-                    City.builder()
-                        .name("Hà Nội")
+            insertLayout(layout4, room1NguyenDuCinema, 59);
+
+            Room room2NguyenDuCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 2")
+                        .cinema(nguyenDuCinema)
                         .build()
             );
 
-            City benTreCity = cityRepository.save(
-                    City.builder()
-                        .name("Bến Tre")
+            insertLayout(layout3, room2NguyenDuCinema, 112);
+
+            Room room3NguyenDuCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 3")
+                        .cinema(nguyenDuCinema)
                         .build()
             );
 
-            City anGiangCity = cityRepository.save(
-                    City.builder()
-                        .name("An Giang")
+            insertLayout(layout2, room3NguyenDuCinema, 21);
+
+            Room room4NguyenDuCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 2")
+                        .cinema(nguyenDuCinema)
                         .build()
             );
 
-            City daklakCity = cityRepository.save(
-                    City.builder()
-                        .name("Đắk Lắk")
+            insertLayout(layout1, room4NguyenDuCinema, 77);
+
+            cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Sala")
+                          .address("Tầng 3, Thiso Mall Sala")
+                          .ward("Phường Thủ Thiêm")
+                          .wardCode("27118")
+                          .district("Quận 2")
+                          .districtCode("769")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-sala")
+                          .build()
+            );
+
+            cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Tân Bình")
+                          .address("246 Đ. Nguyễn Hồng Đào")
+                          .ward("Phường 14")
+                          .wardCode("27004")
+                          .district("Quận Tân Bình")
+                          .districtCode("766")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-tan-binh")
+                          .build()
+            );
+
+            cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Kinh Dương Vương")
+                          .address("718bis Đ. Kinh Dương Vương")
+                          .ward("Phường 13")
+                          .wardCode("27349")
+                          .district("Quận 6")
+                          .districtCode("775")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-kinh-duong-vuong")
+                          .build()
+            );
+
+            Cinema quangTrungCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Quang Trung")
+                          .address("Lầu 3, TTTM CoopMart Foodcosa số 304A, Quang Trung")
+                          .ward("Phường 11")
+                          .wardCode("26899")
+                          .district("Quận Gò Vấp")
+                          .districtCode("764")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-quang-trung")
+                          .build()
+            );
+
+            Room room1QuangTrungCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 1")
+                        .cinema(quangTrungCinema)
                         .build()
             );
 
-            City haiPhongCity = cityRepository.save(
-                    City.builder()
-                        .name("Hải Phòng")
+            insertLayout(layout1, room1QuangTrungCinema, 77);
+
+            Room room2QuangTrungCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 2")
+                        .cinema(quangTrungCinema)
                         .build()
             );
 
-            City ngheAnCity = cityRepository.save(
-                    City.builder()
-                        .name("Nghệ An")
-                        .build()
-            );
-            City caMauCity = cityRepository.save(
-                    City.builder()
-                        .name("Cà Mau")
-                        .build()
-            );
-            City daNangCity = cityRepository.save(
-                    City.builder()
-                        .name("Đà Nẵng")
+            insertLayout(layout2, room2QuangTrungCinema, 21);
+
+            Room room3QuangTrungCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 3")
+                        .cinema(quangTrungCinema)
                         .build()
             );
 
-            if (cinemaRepository.count() == 0) {
-                int[][][] layout3 = {
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{14}, {13}, {12}, {11}, {10}, {9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                };
+            insertLayout(layout3, room3QuangTrungCinema, 112);
 
-                int[][][] layout2 = {
-                        {{8}, {7}, {0}, {6, 5}, {5, 6}, {0}, {4}, {3}, {0}, {2, 1}, {1, 2}},
-                        {},
-                        {{7, 6}, {6, 7}, {0}, {5}, {0}, {0}, {4, 3}, {3, 4}, {0}, {2}, {1}},
-                        {},
-                        {{7}, {0}, {6, 5}, {5, 6}, {0}, {0}, {4}, {3}, {0}, {2, 1}, {1, 2}},
-                        {},
-                        {{7, 6}, {6, 7}, {0}, {5}, {0}, {0}, {4, 3}, {3, 4}, {0}, {2}, {1}}
-                };
+            Room room4QuangTrungCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 4")
+                        .cinema(quangTrungCinema)
+                        .build()
+            );
 
-                int[][][] layout1 = {
-                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{0}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                        {{9}, {8}, {7}, {6}, {5}, {4}, {3}, {2}, {1}},
-                };
+            insertLayout(layout1, room4QuangTrungCinema, 77);
 
-                int[][][] layout4 = {
-                        {{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-                        {{1}, {2}, {0}, {0}, {0}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {0}, {0}},
-                };
+            Cinema huynhTanPhatCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Huỳnh Tấn Phát")
+                          .address("1362 Huỳnh Tấn Phát")
+                          .ward("Phường Phú Mỹ")
+                          .wardCode("27493")
+                          .district("Quận 7")
+                          .districtCode("778")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-huynh-tan-phat")
+                          .build()
+            );
+            insertRooms(huynhTanPhatCinema, layout1, layout2, layout3);
 
-                Cinema nguyenDuCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Nguyễn Du")
-                              .address("116 Nguyễn Du")
-                              .ward("Bến Thành")
-                              .district("Quận 1")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-nguyen-du")
-                              .build()
+            Cinema nguyenVanQuaCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Nguyễn Văn Quá")
+                          .address("119B Đ. Nguyễn Văn Quá")
+                          .ward("Phường Đông Hưng Thuận")
+                          .wardCode("26788")
+                          .district("Quận 12")
+                          .districtCode("761")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-nguyen-van-qua")
+                          .build()
+            );
+            insertRooms(nguyenVanQuaCinema, layout1, layout2, layout3);
+
+            Cinema linhTrungCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Co.opXtra Linh Trung")
+                          .address("934 QL1A")
+                          .ward("Phường Linh Trung")
+                          .wardCode("26800")
+                          .district("Quận Thủ Đức")
+                          .districtCode("762")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-linh-trung")
+                          .build()
+            );
+            insertRooms(linhTrungCinema, layout1, layout2, layout3);
+
+            Cinema truongTrinhCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Trường Chinh")
+                          .address("Co.opMart TTTM Thắng Lợi, 2 Đ. Trường Chinh")
+                          .ward("Phường Tây Thạnh")
+                          .wardCode("27013")
+                          .district("Quận Tân Phú")
+                          .districtCode("767")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-truong-trinh")
+                          .build()
+            );
+            insertRooms(truongTrinhCinema, layout1, layout2, layout3);
+
+            Cinema mallParcCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Parc Mall Q8")
+                          .address("549 Đ. Tạ Quang Bửu")
+                          .ward("Phường 04")
+                          .wardCode("27409")
+                          .district("Quận 8")
+                          .districtCode("776")
+                          .city("Thành phố Hồ Chí Minh")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-parc-mall-q8")
+                          .build()
+            );
+            insertRooms(mallParcCinema, layout1, layout2, layout3);
+
+            Cinema longBienCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy MIPEC Long Biên")
+                          .address("Chung Cư Mipec Riverside")
+                          .ward("Phường Ngọc Lâm")
+                          .wardCode("00133")
+                          .district("Quận Long Biên")
+                          .districtCode("004")
+                          .city("Thành phố Hà Nội")
+                          .cityCode("01")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-mipec-long-bien")
+                          .build()
+            );
+            insertRooms(longBienCinema, layout1, layout2, layout3);
+
+            Cinema trangThiCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Tràng Thi")
+                          .address("10b P. Tràng Thi")
+                          .ward("Phường Hàng Trống")
+                          .wardCode("00070")
+                          .district("Quận Hoàn Kiếm")
+                          .districtCode("002")
+                          .city("Thành phố Hà Nội")
+                          .cityCode("01")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-trang-thi")
+                          .build()
+            );
+            insertRooms(trangThiCinema, layout1, layout2, layout3);
+
+            Cinema benTreCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Bến Tre")
+                          .address("Lầu 1, TTTM Sense City, 26A Trần Quốc Tuấn")
+                          .ward("Phường 4")
+                          .wardCode("28765")
+                          .district("Thành phố Bến Tre")
+                          .districtCode("829")
+                          .city("Tỉnh Bến Tre")
+                          .cityCode("83")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-ben-tre")
+                          .build()
+            );
+            insertRooms(benTreCinema, layout1, layout2, layout3);
+
+
+            Cinema daNangCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Đà Nẵng")
+                          .address("Coop Mart, 478 Điện Biên Phủ")
+                          .ward("Phường Thanh Khê Đông")
+                          .wardCode("20207")
+                          .district("Quận Thanh Khê")
+                          .districtCode("491")
+                          .city("Thành phố Đà Nẵng")
+                          .cityCode("48")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-da-nang")
+                          .build()
+            );
+            insertRooms(daNangCinema, layout1, layout2, layout3);
+
+            Cinema caMauCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Cà Mau")
+                          .address("9 Đ. Trần Hưng Đạo")
+                          .ward("Phường 5")
+                          .wardCode("32008")
+                          .district("Thành phố Cà Mau")
+                          .districtCode("964")
+                          .city("Tỉnh Cà Mau")
+                          .cityCode("96")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-ca-mau")
+                          .build()
+            );
+            insertRooms(caMauCinema, layout1, layout2, layout3);
+
+            Cinema vinhCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Vinh")
+                          .address("1 Đ. Lê Hồng Phong")
+                          .ward("Phường Hưng Bình")
+                          .wardCode("16672")
+                          .district("Thành phố Vinh")
+                          .districtCode("412")
+                          .city("Tỉnh Nghệ An")
+                          .cityCode("40")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-vinh")
+                          .build()
+            );
+            insertRooms(vinhCinema, layout1, layout2, layout3);
+
+            Cinema haiPhongCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Hải Phòng")
+                          .address("104 P. Lương Khánh Thiện")
+                          .ward("Phường Lương Khánh Thiện")
+                          .wardCode("11344")
+                          .district("Quận Ngô Quyền")
+                          .districtCode("304")
+                          .city("Thành phố Hải Phòng")
+                          .cityCode("31")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-hai-phong")
+                          .build()
+            );
+
+            insertRooms(haiPhongCinema, layout1, layout2, layout3);
+
+            Cinema buonMaThuotCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Buôn Ma Thuột")
+                          .address("71 Nguyễn Tất Thành")
+                          .ward("Phường Tân An")
+                          .wardCode("24124")
+                          .district("Thành phố Buôn Ma Thuột")
+                          .districtCode("643")
+                          .city("Tỉnh Đắk Lắk")
+                          .cityCode("66")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-buon-ma-thuoc")
+                          .build()
+            );
+
+            Room room1BuonMaThuotCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 1")
+                        .cinema(buonMaThuotCinema)
+                        .build()
+            );
+
+            insertLayout(layout1, room1BuonMaThuotCinema, 77);
+
+            Room room2BuonMaThuotCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 2")
+                        .cinema(buonMaThuotCinema)
+                        .build()
+            );
+
+            insertLayout(layout2, room2BuonMaThuotCinema, 21);
+
+            Room room3BuonMaThuotCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 3")
+                        .cinema(buonMaThuotCinema)
+                        .build()
+            );
+
+            insertLayout(layout3, room3BuonMaThuotCinema, 112);
+
+            Room room4BuonMaThuotCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 4")
+                        .cinema(buonMaThuotCinema)
+                        .build()
+            );
+
+            insertLayout(layout1, room4BuonMaThuotCinema, 77);
+
+            Cinema longXuyenCinema = cinemaRepository.save(
+                    Cinema.builder()
+                          .code(cinemaService.generateCinemaCode())
+                          .name("Galaxy Long Xuyên")
+                          .address("Nguyễn Kim/01 Trần Hưng Đạo")
+                          .ward("Phường Mỹ Bình")
+                          .wardCode("30280")
+                          .district("Thành phố Long Xuyên")
+                          .districtCode("883")
+                          .city("Tỉnh An Giang")
+                          .cityCode("79")
+                          .hotline("19002224")
+                          .images(List.of(
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+                          ))
+                          .slug("galaxy-long-xuyen")
+                          .build()
+            );
+
+            insertRooms(longXuyenCinema, layout1, layout2, layout3);
+
+            if (genreRepository.count() == 0 && actorRepository.count() == 0 && producerRepository.count() == 0 && directorRepository.count() == 0) {
+                /* Insert genres */
+                Genre horror = genreRepository.save(
+                        Genre.builder()
+                             .name("Kinh dị")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
+                );
+                Genre mystery = genreRepository.save(
+                        Genre.builder()
+                             .name("Ly Kì")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
+                );
+                Genre comedy = genreRepository.save(
+                        Genre.builder()
+                             .name("Hài")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
+                );
+                Genre family = genreRepository.save(
+                        Genre.builder()
+                             .name("Gia Đình")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
+                );
+                Genre action = genreRepository.save(
+                        Genre.builder()
+                             .name("Hành Động")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
+                );
+                Genre romance = genreRepository.save(
+                        Genre.builder()
+                             .name("Tình Cảm")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
+                );
+                Genre psychological = genreRepository.save(
+                        Genre.builder()
+                             .name("Tâm Lý")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
+                );
+                Genre fantasy = genreRepository.save(
+                        Genre.builder()
+                             .name("Giả Tưởng")
+                             .status(BaseStatus.ACTIVE)
+                             .build()
                 );
 
-                Room room1NguyenDuCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 1")
-                            .cinema(nguyenDuCinema)
-                            .build()
+                /* Insert actors */
+                Actor hoaiLinhActor = actorRepository.save(
+                        Actor.builder()
+                             .code("DV000001")
+                             .name("Hoài Linh")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FHoai-Linh.jpg?alt=media")
+                             .country("Việt Nam")
+                             .build()
                 );
 
-                insertLayout(layout4, room1NguyenDuCinema, 59);
-
-                Room room2NguyenDuCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 2")
-                            .cinema(nguyenDuCinema)
-                            .build()
+                Actor tuanTranActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Tuấn Trần")
+                             .code("DV000002")
+                             .country("Việt Nam")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Ftuan-tran.webp?alt=media")
+                             .build()
                 );
 
-                insertLayout(layout3, room2NguyenDuCinema, 112);
-
-                Room room3NguyenDuCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 3")
-                            .cinema(nguyenDuCinema)
-                            .build()
+                Actor leGiangActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Lê Giang")
+                             .code("DV000003")
+                             .country("Việt Nam")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fle-giang.webp?alt=media")
+                             .build()
                 );
 
-                insertLayout(layout2, room3NguyenDuCinema, 21);
-
-                Room room4NguyenDuCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 2")
-                            .cinema(nguyenDuCinema)
-                            .build()
+                Actor diepBaoNgocActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Diệp Bảo Ngọc")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fdbn-tren-phim-truong-4-2098.jpg?alt=media")
+                             .code("DV000004")
+                             .country("Việt Nam")
+                             .build()
                 );
 
-                insertLayout(layout1, room4NguyenDuCinema, 77);
-
-                cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Sala")
-                              .address("Tầng 3, Thiso Mall Sala")
-                              .ward("10 Mai Chí Thọ")
-                              .district("Thủ Thiêm")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-sala")
-                              .build()
+                Actor ryanReynoldsActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Ryan Reynolds")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FRyan%20Reynolds.jpg?alt=media")
+                             .code("DV000005")
+                             .build()
                 );
 
-                cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Tân Bình")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-tan-binh")
-                              .build()
+                Actor hughJackmanActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Hugh Jackman")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FHugh%20Jackman.jpg?alt=media")
+                             .code("DV000006")
+                             .build()
                 );
 
-                cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Kinh Dương Vương")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-kinh-duong-vuong")
-                              .build()
+                Actor patrickStewartActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Patrick Stewart")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FPatrick%20Stewart.jpg?alt=media")
+                             .code("DV000007")
+                             .build()
                 );
 
-                Cinema quangTrungCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Quang Trung")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-quang-trung")
-                              .build()
+                Actor trucAnhActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Trúc Anh")
+                             .code("DV000008")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FTrucAnh.webp?alt=media")
+                             .country("Việt Nam")
+                             .build()
                 );
 
-                Room room1QuangTrungCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 1")
-                            .cinema(quangTrungCinema)
-                            .build()
+                Actor tranNghiaActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Trần Nghĩa")
+                             .code("DV000009")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Ftrannghia.jpg?alt=media")
+                             .country("Việt Nam")
+                             .build()
                 );
 
-                insertLayout(layout1, room1QuangTrungCinema, 77);
-
-                Room room2QuangTrungCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 2")
-                            .cinema(quangTrungCinema)
-                            .build()
+                Actor thaiHoaActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Thái Hòa")
+                             .code("DV000010")
+                             .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fdien-vien-thai-hoa.jpg?alt=media")
+                             .country("Việt Nam")
+                             .build()
                 );
 
-                insertLayout(layout2, room2QuangTrungCinema, 21);
-
-                Room room3QuangTrungCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 3")
-                            .cinema(quangTrungCinema)
-                            .build()
+                Actor thuTrangActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Thu Trang")
+                             .code("DV000011")
+                             .country("Việt Nam")
+                             .build()
                 );
 
-                insertLayout(layout3, room3QuangTrungCinema, 112);
-
-                Room room4QuangTrungCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 4")
-                            .cinema(quangTrungCinema)
-                            .build()
+                Actor tienLuatActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Tiến Luật")
+                             .code("DV000012")
+                             .country("Việt Nam")
+                             .build()
                 );
 
-                insertLayout(layout1, room4QuangTrungCinema, 77);
-
-                Cinema trungChanhCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Trung Chánh")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-trung-chanh")
-                              .build()
-                );
-                insertRooms(trungChanhCinema, layout1, layout2, layout3);
-
-                Cinema huynhTanPhatCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Huỳnh Tấn Phát")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-huynh-tan-phat")
-                              .build()
-                );
-                insertRooms(huynhTanPhatCinema, layout1, layout2, layout3);
-
-                Cinema nguyenVanQuaCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Nguyễn Văn Quá")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-nguyen-van-qua")
-                              .build()
-                );
-                insertRooms(nguyenVanQuaCinema, layout1, layout2, layout3);
-
-                Cinema linhTrungCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Co.opXtra Linh Trung")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-linh-trung")
-                              .build()
-                );
-                insertRooms(linhTrungCinema, layout1, layout2, layout3);
-
-                Cinema truongTrinhCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Trường Chinh")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-truong-trinh")
-                              .build()
-                );
-                insertRooms(truongTrinhCinema, layout1, layout2, layout3);
-
-                Cinema mallParcCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Parc Mall Q8")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(hcmCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-parc-mall-q8")
-                              .build()
-                );
-                insertRooms(mallParcCinema, layout1, layout2, layout3);
-
-                Cinema longBienCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy MIPEC Long Biên")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(haNoiCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-mipec-long-bien")
-                              .build()
-                );
-                insertRooms(longBienCinema, layout1, layout2, layout3);
-
-                Cinema trangThiCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Tràng Thi")
-                              .address("Nguyễn Kim Tràng Thi, 10B Tràng Thi")
-                              .ward("Hàng Trống")
-                              .district("Hoàn Kiếm")
-                              .city(haNoiCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-trang-thi")
-                              .build()
-                );
-                insertRooms(trangThiCinema, layout1, layout2, layout3);
-
-                 Cinema benTreCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Bến Tre")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(benTreCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-ben-tre")
-                              .build()
-                );
-                insertRooms(benTreCinema, layout1, layout2, layout3);
-
-
-                 Cinema daNangCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Đà Nẵng")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(daNangCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-da-nang")
-                              .build()
-                );
-                insertRooms(daNangCinema, layout1, layout2, layout3);
-
-                Cinema caMauCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Cà Mau")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(caMauCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-ca-mau")
-                              .build()
-                );
-                insertRooms(caMauCinema, layout1, layout2, layout3);
-
-                Cinema vinhCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Vinh")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(ngheAnCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-vinh")
-                              .build()
-                );
-                insertRooms(vinhCinema, layout1, layout2, layout3);
-
-                Cinema haiPhongCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Hải Phòng")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(haiPhongCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-hai-phong")
-                              .build()
+                Actor teeradetchMetawarayutActor = actorRepository.save(
+                        Actor.builder()
+                             .code("DV000013")
+                             .name("Teeradetch Metawarayut")
+                             .build()
                 );
 
-                insertRooms(haiPhongCinema, layout1, layout2, layout3);
-
-                Cinema buonMaThuotCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Buôn Ma Thuột")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(daklakCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-buon-ma-thuoc")
-                              .build()
+                Actor chutavuthPattarakampolActor = actorRepository.save(
+                        Actor.builder()
+                             .code("DV000014")
+                             .name("Chutavuth Pattarakampol")
+                             .build()
                 );
 
-                Room room1BuonMaThuotCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 1")
-                            .cinema(buonMaThuotCinema)
-                            .build()
+                Actor johnnyFrenchActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Johnny French")
+                             .code("DV000015")
+                             .build()
                 );
 
-                insertLayout(layout1, room1BuonMaThuotCinema, 77);
-
-                Room room2BuonMaThuotCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 2")
-                            .cinema(buonMaThuotCinema)
-                            .build()
+                Actor ranchraweeUakoolwarawatActor = actorRepository.save(
+                        Actor.builder()
+                             .code("DV000016")
+                             .name("Ranchrawee Uakoolwarawat")
+                             .build()
                 );
 
-                insertLayout(layout2, room2BuonMaThuotCinema, 21);
-
-                Room room3BuonMaThuotCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 3")
-                            .cinema(buonMaThuotCinema)
-                            .build()
+                Actor carolynBrackenActor = actorRepository.save(
+                        Actor.builder()
+                             .code("DV000017")
+                             .name("Carolyn Bracken")
+                             .build()
                 );
 
-                insertLayout(layout3, room3BuonMaThuotCinema, 112);
-
-                Room room4BuonMaThuotCinema = roomRepository.save(
-                        Room.builder()
-                            .name("Rạp 4")
-                            .cinema(buonMaThuotCinema)
-                            .build()
+                Actor nicoleGarciaActor = actorRepository.save(
+                        Actor.builder()
+                             .code("DV000018")
+                             .name("Nicole Garcia")
+                             .build()
                 );
 
-                insertLayout(layout1, room4BuonMaThuotCinema, 77);
-
-                Cinema longXuyenCinema = cinemaRepository.save(
-                        Cinema.builder()
-                              .code(cinemaService.generateCinemaCode())
-                              .name("Galaxy Long Xuyên")
-                              .address("Tầng 3 - Co.opMart TTTM Thắng Lợi - Số 2 Trường Chinh")
-                              .ward("Tây Thạnh")
-                              .district("Tân Phú")
-                              .city(anGiangCity)
-                              .hotline("19002224")
-                              .images(List.of(
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                      "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                              ))
-                              .slug("galaxy-long-xuyen")
-                              .build()
+                Actor gerardDepardieuActor = actorRepository.save(
+                        Actor.builder()
+                             .code("DV000019")
+                             .name("Gérard Depardieu")
+                             .build()
                 );
 
-                insertRooms(longXuyenCinema, layout1, layout2, layout3);
+                Actor vietHuongActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Việt Hương")
+                             .code("DV000020")
+                             .country("Việt Nam")
+                             .build()
+                );
 
-                if (genreRepository.count() == 0 && actorRepository.count() == 0 && producerRepository.count() == 0 && directorRepository.count() == 0) {
-                    /* Insert genres */
-                    Genre horror = genreRepository.save(
-                            Genre.builder()
-                                 .name("Kinh dị")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
-                    Genre mystery = genreRepository.save(
-                            Genre.builder()
-                                 .name("Ly Kì")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
-                    Genre comedy = genreRepository.save(
-                            Genre.builder()
-                                 .name("Hài")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
-                    Genre family = genreRepository.save(
-                            Genre.builder()
-                                 .name("Gia Đình")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
-                    Genre action = genreRepository.save(
-                            Genre.builder()
-                                 .name("Hành Động")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
-                    Genre romance = genreRepository.save(
-                            Genre.builder()
-                                 .name("Tình Cảm")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
-                    Genre psychological = genreRepository.save(
-                            Genre.builder()
-                                 .name("Tâm Lý")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
-                    Genre fantasy = genreRepository.save(
-                            Genre.builder()
-                                 .name("Giả Tưởng")
-                                 .status(BaseStatus.ACTIVE)
-                                 .build()
-                    );
+                Actor trungDanActor = actorRepository.save(
+                        Actor.builder()
+                             .name("Trung Dân")
+                             .code("DV000021")
+                             .country("Việt Nam")
+                             .build()
+                );
 
-                    /* Insert actors */
-                    Actor hoaiLinhActor = actorRepository.save(
-                            Actor.builder()
-                                 .code("DV000001")
-                                 .name("Hoài Linh")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FHoai-Linh.jpg?alt=media")
+                Actor nsutThanhLocActor = actorRepository.save(
+                        Actor.builder()
+                             .name("NSUT Thành Lộc")
+                             .code("DV000022")
+                             .country("Việt Nam")
+                             .build()
+                );
+
+                /* Insert directors */
+                Director shawnLevyDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000001")
+                                .name("Shawn Levy")
+                                .birthday(LocalDate.of(1968, 7, 23))
+                                .bio("Shawn Adam Levy, thường được biết đến với tên gọi Shawn Levy, là một nam nhà làm phim kiêm diễn viên người Canada gốc Do Thái.")
+                                .country("Canada")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FShawn%20Levy.jpg?alt=media")
+                                .build()
+                );
+
+                Director trungLunDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000002")
+                                .name("Trung Lùn")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Ftrung-lun-1726469956247139623202.webp?alt=media")
+                                .build()
+                );
+
+                Director victorVuDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000003")
+                                .name("Victor Vũ")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fvictorvu1-1637755775-7758-1637757291.jpg?alt=media")
+                                .build()
+                );
+
+                Director jaturongMokjokDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000004")
+                                .name("Jaturong Mokjok")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FJaturong%20Mokjok.jpg?alt=media")
+                                .build()
+                );
+
+                Director vuNgocDangDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000005")
+                                .name("Vũ Ngọc Đãng")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fvungocdang.jpg?alt=media")
+                                .build()
+                );
+
+                Director damianMcCarthyDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000006")
+                                .name("Damian Mc Carthy")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FDamian%20Mc%20Carthy.jpg?alt=media")
+                                .build()
+                );
+
+                Director alainResnaisDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000007")
+                                .name("Alain Resnais")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FAlain%20Resnais.jpg?alt=media")
+                                .build()
+                );
+
+                Director nguyenHuuHoangDirector = directorRepository.save(
+                        Director.builder()
+                                .code("DD000008")
+                                .name("Nguyễn Hữu Hoàng")
+                                .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fthumb_660_94420a8b-7168-4e1f-b0f4-3ce93e890c1b.jpg?alt=media")
+                                .build()
+                );
+
+                /* Insert producers */
+                Producer centuryStudiosProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("20th Century Studios")
+                                .build()
+                );
+
+                Producer marvelStudiosProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("Marvel Studios")
+                                .build()
+                );
+
+                Producer bluebellsStudiosProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("Bluebells Studios")
+                                .build()
+                );
+
+                Producer novemberFilmProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("November Film")
+                                .build()
+                );
+
+                Producer galaxyMEProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("Galaxy M&E")
+                                .build()
+                );
+
+                Producer thuTrangEntertainmentProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("Thu Trang Entertainment")
+                                .build()
+                );
+
+                Producer galaxyPlayProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("Galaxy Play")
+                                .build()
+                );
+
+                Producer galaxyStudioProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("Galaxy Studio")
+                                .build()
+                );
+
+                Producer velaEntertainmentProducer = producerRepository.save(
+                        Producer.builder()
+                                .name("Vela Entertainment")
+                                .build()
+                );
+
+                if (movieRepository.count() == 0) {
+                    Movie lamGiauVoiMaMovie = movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000001")
+                                 .title("Làm Giàu Với Ma")
+                                 .duration(112)
+                                 .summary(
+                                         "Phim mới Làm Giàu Với Ma kể về Lanh (Tuấn Trần) - con trai của ông Đạo làm nghề mai táng (Hoài Linh), lâm vào đường cùng vì cờ bạc. Trong cơn túng quẫn, “duyên tình” đẩy đưa anh gặp một ma nữ (Diệp Bảo Ngọc) và cùng nhau thực hiện những “kèo thơm\" để phục vụ mục đích của cả hai.")
                                  .country("Việt Nam")
+                                 .rating(0)
+                                 .imageLandscape(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Flam-giau-voi-ma-3_1724686107530.jpg?alt=media")
+                                 .slug("lam-giau-voi-ma")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Flam-giau-voi-ma-2_1724686102964.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=2DmOv-pM1bM&t=2s")
+                                 .releaseDate(LocalDate.of(2024, 8, 29))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(comedy, family))
+                                 .actors(List.of(hoaiLinhActor, tuanTranActor, leGiangActor, diepBaoNgocActor))
+                                 .directors(List.of(trungLunDirector))
+                                 .producers(List.of(bluebellsStudiosProducer))
                                  .build()
                     );
-
-                    Actor tuanTranActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Tuấn Trần")
-                                 .code("DV000002")
+                    Movie deadpoolMovie = movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000002")
+                                 .title("Deadpool & Wolverine")
+                                 .duration(127)
+                                 .summary(
+                                         "Deadpool 3 sẽ mang đến rất nhiều biến thể khác nhau của Wade Wilson, và không loại trừ khả năng một trong số họ đến từ dòng thời gian chính của MCU. Có không ít tin đồn liên quan đến việc Lady Deadpool cũng sẽ xuất hiện trong bom tấn này và do bà xã của Ryan Reynolds, Blake Lively thủ vai.")
+                                 .ageRating(AgeRating.T18)
+                                 .country("Mỹ")
+                                 .rating(0)
+                                 .imageLandscape("")
+                                 .slug("deadpool--wolverine")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fdeadpool--wolverine-500_1721640472363.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=2DmOv-pM1bM&t=2s")
+                                 .releaseDate(LocalDate.of(2024, 7, 27))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(action, comedy, fantasy))
+                                 .actors(List.of(ryanReynoldsActor, hughJackmanActor, patrickStewartActor))
+                                 .directors(List.of(shawnLevyDirector))
+                                 .producers(List.of(centuryStudiosProducer, marvelStudiosProducer))
+                                 .build()
+                    );
+                    movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000003")
+                                 .title("Mắt Biếc")
+                                 .duration(117)
+                                 .summary(
+                                         "Đạo diễn Victor Vũ trở lại với một tác phẩm chuyển thể từ truyện ngắn cùng tên nổi tiếng của nhà văn Nguyễn Nhật Ánh: Mắt Biếc. Phim kể về chuyện tình đơn phương của chàng thanh niên Ngạn dành cho cô bạn từ thuở nhỏ Hà Lan... Ngạn và Hà Lan vốn là hai người bạn từ thuở nhỏ, cùng ở làng Đo Đo an bình. Họ cùng nhau đi học, cùng trải qua quãng đời áo trắng ngây thơ vụng dại với những cảm xúc bồi hồi của tuổi thiếu niên. \"Ngày cô ấy đi theo chốn phồn hoa, chàng trai bơ vơ từ xa...\", Hà Lan lên thành phố học và sớm bị thành thị xa hoa làm cho quên lãng Đo Đo. Cô quên mất cậu bạn thân mà chạy theo gã lãng tử hào hoa Dũng. Để rồi...")
                                  .country("Việt Nam")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Ftuan-tran.webp?alt=media")
+                                 .rating(0)
+                                 .imageLandscape("")
+                                 .slug("mat-biec")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2F300x450-mat-biec_1575021183171.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=KSFS0OfIK2c")
+                                 .releaseDate(LocalDate.of(2024, 9, 7))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(romance))
+                                 .actors(List.of(trucAnhActor, tranNghiaActor))
+                                 .directors(List.of(victorVuDirector))
+                                 .producers(List.of(galaxyMEProducer, novemberFilmProducer))
                                  .build()
                     );
-
-                    Actor leGiangActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Lê Giang")
-                                 .code("DV000003")
+                    movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000004")
+                                 .title("Ông Chú Người Mỹ Của Tôi")
+                                 .duration(125)
+                                 .summary(
+                                         "My American Uncle/ Ông Chú Người Mỹ Của Tôi là phim hài tình cảm thập niên 80. Jean Le Gall xuất thân từ giai cấp tư sản. Anh tham vọng theo đuổi sự nghiệp chính trị và văn học. Jean bỏ rơi vợ con mình chạy theo nữ diễn viên Janine Garnier. Janine rời xa gia đình để sống cuộc đời riêng. Theo yêu cầu của vợ Jean, Janine rời bỏ anh, sau đó trở thành cố vấn cho một tập đoàn dệt may. Tại đây, cô phải giải quyết vụ án hóc búa của René Ragueneau – từ  con trai nông dântrở thành giám đốc nhà máy. Giáo sư Henri Laborit quan sát câu chuyện của họ, thông qua đó, giải thích về hành vi của con người.")
+                                 .country("Pháp")
+                                 .rating(0)
+                                 .imageLandscape("")
+                                 .slug("my-american-uncle")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fmy-american-uncle-1980-2_1725421699141.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=bMYsSqV2npc")
+                                 .releaseDate(LocalDate.of(2024, 9, 7))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(comedy, romance))
+                                 .actors(List.of(nicoleGarciaActor, gerardDepardieuActor))
+                                 .directors(List.of(alainResnaisDirector))
+                                 .build()
+                    );
+                    movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000005")
+                                 .title("Xuyên Không Cải Mệnh Gia Tộc")
+                                 .duration(103)
+                                 .summary(
+                                         "Xuyên Không Cải Mệnh Gia Tộc xoay quanh Kie (Mint Ranchrawee), một sinh viên ngành khảo cổ học, sinh ra trong một gia đình gốc Hoa tại khu phố Tàu. Ngay từ nhỏ, Kie đã chứng kiến gia đình liên tục dính xui xẻo, ngồi không cũng gặp chuyện. Trong một lần cầu nguyện giải xui tại ngôi đền trong xóm, cô được thầy cúng tại đây cho biết, vận xui gia đình cô là nghiệp chướng do Kung (Alek Teeradetch) - ông tổ nhà cô gây ra. Dù không tin lắm vào trò mê tín, Kie nhờ thầy cúng giúp mình thực hiện nghi lễ thanh tẩy nghiệp chướng, cô vô tình bị đẩy về quá khứ và nhập xác vào người anh em thân thiết nhất của ông cố mình - Tai do March Chutavuth thủ vai. Từ đây, hàng loạt tình huống giở khóc giở cười liên tục ập đến, đồng thời những bí mật đen tối từ quá khứ đã dần được hé lộ.")
+                                 .ageRating(AgeRating.T16)
+                                 .country("Thái Lan")
+                                 .rating(0)
+                                 .imageLandscape("")
+                                 .slug("chinatown-cha-cha")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fchinatown-cha-cha-500_1724657094609.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=-oZaO57RAAc")
+                                 .releaseDate(LocalDate.of(2024, 9, 6))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(comedy, action))
+                                 .actors(List.of(
+                                         teeradetchMetawarayutActor,
+                                         chutavuthPattarakampolActor,
+                                         ranchraweeUakoolwarawatActor
+                                 ))
+                                 .directors(List.of(jaturongMokjokDirector))
+                                 .producers(List.of(velaEntertainmentProducer))
+                                 .build()
+                    );
+                    movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000006")
+                                 .title("Con Nhót Mót Chồng")
+                                 .ageRating(AgeRating.T16)
+                                 .duration(112)
+                                 .summary(
+                                         "Lấy cảm hứng từ web drama Chuyện Xóm Tui, phiên bản điện ảnh sẽ mang một màu sắc hoàn toàn khác: hài hước hơn, gần gũi và nhiều cảm xúc hơn. Bộ phim là câu chuyện của Nhót - người phụ nữ “chưa kịp già” đã sắp bị mãn kinh, vội vàng đi tìm chồng. Nhưng sâu thẳm trong cô là khao khát muốn có một đứa con, và luôn muốn hàn gắn với người cha suốt ngày say xỉn của mình.")
                                  .country("Việt Nam")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fle-giang.webp?alt=media")
+                                 .rating(0)
+                                 .imageLandscape("")
+                                 .slug("con-nhot-mot-chong")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fcnmc-500_1704869791399.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=e7KHOQ-alqY")
+                                 .releaseDate(LocalDate.of(2024, 9, 4))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(comedy, psychological))
+                                 .actors(List.of(thaiHoaActor, thuTrangActor, tienLuatActor))
+                                 .directors(List.of(vuNgocDangDirector))
+                                 .producers(List.of(
+                                         galaxyPlayProducer,
+                                         galaxyStudioProducer,
+                                         thuTrangEntertainmentProducer
+                                 ))
                                  .build()
                     );
 
-                    Actor diepBaoNgocActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Diệp Bảo Ngọc")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fdbn-tren-phim-truong-4-2098.jpg?alt=media")
-                                 .code("DV000004")
+                    movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000007")
+                                 .title("Quỷ Án")
+                                 .duration(98)
+                                 .summary(
+                                         "Oddity/ Quỷ Án kể về vụ án người phụ nữ Dani bị sát hại dã man tại ngôi nhà mà vợ chồng cô đang sửa sang ở vùng nông thôn hẻo lánh. Chồng cô - Ted đang làm bác sĩ tại bệnh viện tâm thần. Mọi nghi ngờ đổ dồn vào một bệnh nhân tại đây. Không may, nghi phạm đã chết. Một năm sau, em gái mù của Dani ghé tới. Darcy là nhà ngoại cảm tự xưng, mang theo nhiều món đồ kì quái. Cô đến nhà Ted để tìm chân tướng về cái chết của chị gái.")
+                                 .ageRating(AgeRating.T16)
+                                 .country("Ireland")
+                                 .rating(0)
+                                 .imageLandscape("")
+                                 .slug("oddity")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Foddity-1_1725523860091.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=2DmOv-pM1bM&t=2s")
+                                 .releaseDate(LocalDate.of(2024, 9, 13))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(horror, mystery))
+                                 .actors(List.of(johnnyFrenchActor, carolynBrackenActor))
+                                 .directors(List.of(damianMcCarthyDirector))
+                                 .build()
+                    );
+
+                    movieRepository.save(
+                            Movie.builder()
+                                 .code("MV000008")
+                                 .title("Ma Da")
+                                 .duration(94)
+                                 .summary(
+                                         "Phim kể về hành trình của bà Lệ, người làm nghề vớt xác người chết trên sông để đưa về với gia đình. Trong quá trình làm nghề, bà Lệ đắc tội với Ma Da, một oan hồn sống dưới sông nước thường xuyên kéo chân người để thế mạng cho mình đi đầu thai. Ân oán của cả hai khiến cho Ma Da bắt mất bé Nhung, con gái của bà Lệ. Bà Lệ phải nhờ đến sự giúp đỡ của những người bên cạnh để cùng nhau lên đường tìm cách cứu bé Nhung và mở ra những bí mật đằng sau oan hồn Ma Da kia.")
                                  .country("Việt Nam")
+                                 .rating(0)
+                                 .imageLandscape("")
+                                 .slug("ma-da")
+                                 .imagePortrait(
+                                         "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fma-da-500_1723799717930.jpg?alt=media")
+                                 .trailer("https://www.youtube.com/watch?v=l0E3vhaG9i4&t=1s")
+                                 .releaseDate(LocalDate.of(2024, 8, 15))
+                                 .status(MovieStatus.ACTIVE)
+                                 .genres(List.of(horror))
+                                 .actors(List.of(vietHuongActor, trungDanActor, nsutThanhLocActor))
+                                 .directors(List.of(nguyenHuuHoangDirector))
                                  .build()
                     );
 
-                    Actor ryanReynoldsActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Ryan Reynolds")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FRyan%20Reynolds.jpg?alt=media")
-                                 .code("DV000005")
-                                 .build()
-                    );
 
-                    Actor hughJackmanActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Hugh Jackman")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FHugh%20Jackman.jpg?alt=media")
-                                 .code("DV000006")
-                                 .build()
-                    );
-
-                    Actor patrickStewartActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Patrick Stewart")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FPatrick%20Stewart.jpg?alt=media")
-                                 .code("DV000007")
-                                 .build()
-                    );
-
-                    Actor trucAnhActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Trúc Anh")
-                                 .code("DV000008")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2FTrucAnh.webp?alt=media")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    Actor tranNghiaActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Trần Nghĩa")
-                                 .code("DV000009")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Ftrannghia.jpg?alt=media")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    Actor thaiHoaActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Thái Hòa")
-                                 .code("DV000010")
-                                 .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/actors%2Fdien-vien-thai-hoa.jpg?alt=media")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    Actor thuTrangActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Thu Trang")
-                                 .code("DV000011")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    Actor tienLuatActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Tiến Luật")
-                                 .code("DV000012")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    Actor teeradetchMetawarayutActor = actorRepository.save(
-                            Actor.builder()
-                                 .code("DV000013")
-                                 .name("Teeradetch Metawarayut")
-                                 .build()
-                    );
-
-                    Actor chutavuthPattarakampolActor = actorRepository.save(
-                            Actor.builder()
-                                 .code("DV000014")
-                                 .name("Chutavuth Pattarakampol")
-                                 .build()
-                    );
-
-                    Actor johnnyFrenchActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Johnny French")
-                                 .code("DV000015")
-                                 .build()
-                    );
-
-                    Actor ranchraweeUakoolwarawatActor = actorRepository.save(
-                            Actor.builder()
-                                 .code("DV000016")
-                                 .name("Ranchrawee Uakoolwarawat")
-                                 .build()
-                    );
-
-                    Actor carolynBrackenActor = actorRepository.save(
-                            Actor.builder()
-                                 .code("DV000017")
-                                 .name("Carolyn Bracken")
-                                 .build()
-                    );
-
-                    Actor nicoleGarciaActor = actorRepository.save(
-                            Actor.builder()
-                                 .code("DV000018")
-                                 .name("Nicole Garcia")
-                                 .build()
-                    );
-
-                    Actor gerardDepardieuActor = actorRepository.save(
-                            Actor.builder()
-                                 .code("DV000019")
-                                 .name("Gérard Depardieu")
-                                 .build()
-                    );
-
-                    Actor vietHuongActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Việt Hương")
-                                 .code("DV000020")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    Actor trungDanActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("Trung Dân")
-                                 .code("DV000021")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    Actor nsutThanhLocActor = actorRepository.save(
-                            Actor.builder()
-                                 .name("NSUT Thành Lộc")
-                                 .code("DV000022")
-                                 .country("Việt Nam")
-                                 .build()
-                    );
-
-                    /* Insert directors */
-                    Director shawnLevyDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000001")
-                                    .name("Shawn Levy")
-                                    .birthday(LocalDate.of(1968, 7, 23))
-                                    .bio("Shawn Adam Levy, thường được biết đến với tên gọi Shawn Levy, là một nam nhà làm phim kiêm diễn viên người Canada gốc Do Thái.")
-                                    .country("Canada")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FShawn%20Levy.jpg?alt=media")
-                                    .build()
-                    );
-
-                    Director trungLunDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000002")
-                                    .name("Trung Lùn")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Ftrung-lun-1726469956247139623202.webp?alt=media")
-                                    .build()
-                    );
-
-                    Director victorVuDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000003")
-                                    .name("Victor Vũ")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fvictorvu1-1637755775-7758-1637757291.jpg?alt=media")
-                                    .build()
-                    );
-
-                    Director jaturongMokjokDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000004")
-                                    .name("Jaturong Mokjok")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FJaturong%20Mokjok.jpg?alt=media")
-                                    .build()
-                    );
-
-                    Director vuNgocDangDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000005")
-                                    .name("Vũ Ngọc Đãng")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fvungocdang.jpg?alt=media")
-                                    .build()
-                    );
-
-                    Director damianMcCarthyDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000006")
-                                    .name("Damian Mc Carthy")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FDamian%20Mc%20Carthy.jpg?alt=media")
-                                    .build()
-                    );
-
-                    Director alainResnaisDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000007")
-                                    .name("Alain Resnais")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2FAlain%20Resnais.jpg?alt=media")
-                                    .build()
-                    );
-
-                    Director nguyenHuuHoangDirector = directorRepository.save(
-                            Director.builder()
-                                    .code("DD000008")
-                                    .name("Nguyễn Hữu Hoàng")
-                                    .image("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/directors%2Fthumb_660_94420a8b-7168-4e1f-b0f4-3ce93e890c1b.jpg?alt=media")
-                                    .build()
-                    );
-
-                    /* Insert producers */
-                    Producer centuryStudiosProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("20th Century Studios")
-                                    .build()
-                    );
-
-                    Producer marvelStudiosProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("Marvel Studios")
-                                    .build()
-                    );
-
-                    Producer bluebellsStudiosProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("Bluebells Studios")
-                                    .build()
-                    );
-
-                    Producer novemberFilmProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("November Film")
-                                    .build()
-                    );
-
-                    Producer galaxyMEProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("Galaxy M&E")
-                                    .build()
-                    );
-
-                    Producer thuTrangEntertainmentProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("Thu Trang Entertainment")
-                                    .build()
-                    );
-
-                    Producer galaxyPlayProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("Galaxy Play")
-                                    .build()
-                    );
-
-                    Producer galaxyStudioProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("Galaxy Studio")
-                                    .build()
-                    );
-
-                    Producer velaEntertainmentProducer = producerRepository.save(
-                            Producer.builder()
-                                    .name("Vela Entertainment")
-                                    .build()
-                    );
-
-                    if (movieRepository.count() == 0) {
-                        Movie lamGiauVoiMaMovie = movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000001")
-                                     .title("Làm Giàu Với Ma")
-                                     .duration(112)
-                                     .summary(
-                                             "Phim mới Làm Giàu Với Ma kể về Lanh (Tuấn Trần) - con trai của ông Đạo làm nghề mai táng (Hoài Linh), lâm vào đường cùng vì cờ bạc. Trong cơn túng quẫn, “duyên tình” đẩy đưa anh gặp một ma nữ (Diệp Bảo Ngọc) và cùng nhau thực hiện những “kèo thơm\" để phục vụ mục đích của cả hai.")
-                                     .country("Việt Nam")
-                                     .rating(0)
-                                     .imageLandscape(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Flam-giau-voi-ma-3_1724686107530.jpg?alt=media")
-                                     .slug("lam-giau-voi-ma")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Flam-giau-voi-ma-2_1724686102964.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=2DmOv-pM1bM&t=2s")
-                                     .releaseDate(LocalDate.of(2024, 8, 29))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(comedy, family))
-                                     .actors(List.of(hoaiLinhActor, tuanTranActor, leGiangActor, diepBaoNgocActor))
-                                     .directors(List.of(trungLunDirector))
-                                     .producers(List.of(bluebellsStudiosProducer))
-                                     .build()
-                        );
-                        Movie deadpoolMovie = movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000002")
-                                     .title("Deadpool & Wolverine")
-                                     .duration(127)
-                                     .summary(
-                                             "Deadpool 3 sẽ mang đến rất nhiều biến thể khác nhau của Wade Wilson, và không loại trừ khả năng một trong số họ đến từ dòng thời gian chính của MCU. Có không ít tin đồn liên quan đến việc Lady Deadpool cũng sẽ xuất hiện trong bom tấn này và do bà xã của Ryan Reynolds, Blake Lively thủ vai.")
-                                     .ageRating(AgeRating.T18)
-                                     .country("Mỹ")
-                                     .rating(0)
-                                     .imageLandscape("")
-                                     .slug("deadpool--wolverine")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fdeadpool--wolverine-500_1721640472363.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=2DmOv-pM1bM&t=2s")
-                                     .releaseDate(LocalDate.of(2024, 7, 27))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(action, comedy, fantasy))
-                                     .actors(List.of(ryanReynoldsActor, hughJackmanActor, patrickStewartActor))
-                                     .directors(List.of(shawnLevyDirector))
-                                     .producers(List.of(centuryStudiosProducer, marvelStudiosProducer))
-                                     .build()
-                        );
-                        movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000003")
-                                     .title("Mắt Biếc")
-                                     .duration(117)
-                                     .summary(
-                                             "Đạo diễn Victor Vũ trở lại với một tác phẩm chuyển thể từ truyện ngắn cùng tên nổi tiếng của nhà văn Nguyễn Nhật Ánh: Mắt Biếc. Phim kể về chuyện tình đơn phương của chàng thanh niên Ngạn dành cho cô bạn từ thuở nhỏ Hà Lan... Ngạn và Hà Lan vốn là hai người bạn từ thuở nhỏ, cùng ở làng Đo Đo an bình. Họ cùng nhau đi học, cùng trải qua quãng đời áo trắng ngây thơ vụng dại với những cảm xúc bồi hồi của tuổi thiếu niên. \"Ngày cô ấy đi theo chốn phồn hoa, chàng trai bơ vơ từ xa...\", Hà Lan lên thành phố học và sớm bị thành thị xa hoa làm cho quên lãng Đo Đo. Cô quên mất cậu bạn thân mà chạy theo gã lãng tử hào hoa Dũng. Để rồi...")
-                                     .country("Việt Nam")
-                                     .rating(0)
-                                     .imageLandscape("")
-                                     .slug("mat-biec")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2F300x450-mat-biec_1575021183171.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=KSFS0OfIK2c")
-                                     .releaseDate(LocalDate.of(2024, 9, 7))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(romance))
-                                     .actors(List.of(trucAnhActor, tranNghiaActor))
-                                     .directors(List.of(victorVuDirector))
-                                     .producers(List.of(galaxyMEProducer, novemberFilmProducer))
-                                     .build()
-                        );
-                        movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000004")
-                                     .title("Ông Chú Người Mỹ Của Tôi")
-                                     .duration(125)
-                                     .summary(
-                                             "My American Uncle/ Ông Chú Người Mỹ Của Tôi là phim hài tình cảm thập niên 80. Jean Le Gall xuất thân từ giai cấp tư sản. Anh tham vọng theo đuổi sự nghiệp chính trị và văn học. Jean bỏ rơi vợ con mình chạy theo nữ diễn viên Janine Garnier. Janine rời xa gia đình để sống cuộc đời riêng. Theo yêu cầu của vợ Jean, Janine rời bỏ anh, sau đó trở thành cố vấn cho một tập đoàn dệt may. Tại đây, cô phải giải quyết vụ án hóc búa của René Ragueneau – từ  con trai nông dântrở thành giám đốc nhà máy. Giáo sư Henri Laborit quan sát câu chuyện của họ, thông qua đó, giải thích về hành vi của con người.")
-                                     .country("Pháp")
-                                     .rating(0)
-                                     .imageLandscape("")
-                                     .slug("my-american-uncle")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fmy-american-uncle-1980-2_1725421699141.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=bMYsSqV2npc")
-                                     .releaseDate(LocalDate.of(2024, 9, 7))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(comedy, romance))
-                                     .actors(List.of(nicoleGarciaActor, gerardDepardieuActor))
-                                     .directors(List.of(alainResnaisDirector))
-                                     .build()
-                        );
-                        movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000005")
-                                     .title("Xuyên Không Cải Mệnh Gia Tộc")
-                                     .duration(103)
-                                     .summary(
-                                             "Xuyên Không Cải Mệnh Gia Tộc xoay quanh Kie (Mint Ranchrawee), một sinh viên ngành khảo cổ học, sinh ra trong một gia đình gốc Hoa tại khu phố Tàu. Ngay từ nhỏ, Kie đã chứng kiến gia đình liên tục dính xui xẻo, ngồi không cũng gặp chuyện. Trong một lần cầu nguyện giải xui tại ngôi đền trong xóm, cô được thầy cúng tại đây cho biết, vận xui gia đình cô là nghiệp chướng do Kung (Alek Teeradetch) - ông tổ nhà cô gây ra. Dù không tin lắm vào trò mê tín, Kie nhờ thầy cúng giúp mình thực hiện nghi lễ thanh tẩy nghiệp chướng, cô vô tình bị đẩy về quá khứ và nhập xác vào người anh em thân thiết nhất của ông cố mình - Tai do March Chutavuth thủ vai. Từ đây, hàng loạt tình huống giở khóc giở cười liên tục ập đến, đồng thời những bí mật đen tối từ quá khứ đã dần được hé lộ.")
-                                     .ageRating(AgeRating.T16)
-                                     .country("Thái Lan")
-                                     .rating(0)
-                                     .imageLandscape("")
-                                     .slug("chinatown-cha-cha")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fchinatown-cha-cha-500_1724657094609.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=-oZaO57RAAc")
-                                     .releaseDate(LocalDate.of(2024, 9, 6))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(comedy, action))
-                                     .actors(List.of(
-                                             teeradetchMetawarayutActor,
-                                             chutavuthPattarakampolActor,
-                                             ranchraweeUakoolwarawatActor
-                                     ))
-                                     .directors(List.of(jaturongMokjokDirector))
-                                     .producers(List.of(velaEntertainmentProducer))
-                                     .build()
-                        );
-                        movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000006")
-                                     .title("Con Nhót Mót Chồng")
-                                     .ageRating(AgeRating.T16)
-                                     .duration(112)
-                                     .summary(
-                                             "Lấy cảm hứng từ web drama Chuyện Xóm Tui, phiên bản điện ảnh sẽ mang một màu sắc hoàn toàn khác: hài hước hơn, gần gũi và nhiều cảm xúc hơn. Bộ phim là câu chuyện của Nhót - người phụ nữ “chưa kịp già” đã sắp bị mãn kinh, vội vàng đi tìm chồng. Nhưng sâu thẳm trong cô là khao khát muốn có một đứa con, và luôn muốn hàn gắn với người cha suốt ngày say xỉn của mình.")
-                                     .country("Việt Nam")
-                                     .rating(0)
-                                     .imageLandscape("")
-                                     .slug("con-nhot-mot-chong")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fcnmc-500_1704869791399.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=e7KHOQ-alqY")
-                                     .releaseDate(LocalDate.of(2024, 9, 4))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(comedy, psychological))
-                                     .actors(List.of(thaiHoaActor, thuTrangActor, tienLuatActor))
-                                     .directors(List.of(vuNgocDangDirector))
-                                     .producers(List.of(
-                                             galaxyPlayProducer,
-                                             galaxyStudioProducer,
-                                             thuTrangEntertainmentProducer
-                                     ))
-                                     .build()
-                        );
-
-                        movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000007")
-                                     .title("Quỷ Án")
-                                     .duration(98)
-                                     .summary(
-                                             "Oddity/ Quỷ Án kể về vụ án người phụ nữ Dani bị sát hại dã man tại ngôi nhà mà vợ chồng cô đang sửa sang ở vùng nông thôn hẻo lánh. Chồng cô - Ted đang làm bác sĩ tại bệnh viện tâm thần. Mọi nghi ngờ đổ dồn vào một bệnh nhân tại đây. Không may, nghi phạm đã chết. Một năm sau, em gái mù của Dani ghé tới. Darcy là nhà ngoại cảm tự xưng, mang theo nhiều món đồ kì quái. Cô đến nhà Ted để tìm chân tướng về cái chết của chị gái.")
-                                     .ageRating(AgeRating.T16)
-                                     .country("Ireland")
-                                     .rating(0)
-                                     .imageLandscape("")
-                                     .slug("oddity")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Foddity-1_1725523860091.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=2DmOv-pM1bM&t=2s")
-                                     .releaseDate(LocalDate.of(2024, 9, 13))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(horror, mystery))
-                                     .actors(List.of(johnnyFrenchActor, carolynBrackenActor))
-                                     .directors(List.of(damianMcCarthyDirector))
-                                     .build()
-                        );
-
-                        movieRepository.save(
-                                Movie.builder()
-                                     .code("MV000008")
-                                     .title("Ma Da")
-                                     .duration(94)
-                                     .summary(
-                                             "Phim kể về hành trình của bà Lệ, người làm nghề vớt xác người chết trên sông để đưa về với gia đình. Trong quá trình làm nghề, bà Lệ đắc tội với Ma Da, một oan hồn sống dưới sông nước thường xuyên kéo chân người để thế mạng cho mình đi đầu thai. Ân oán của cả hai khiến cho Ma Da bắt mất bé Nhung, con gái của bà Lệ. Bà Lệ phải nhờ đến sự giúp đỡ của những người bên cạnh để cùng nhau lên đường tìm cách cứu bé Nhung và mở ra những bí mật đằng sau oan hồn Ma Da kia.")
-                                     .country("Việt Nam")
-                                     .rating(0)
-                                     .imageLandscape("")
-                                     .slug("ma-da")
-                                     .imagePortrait(
-                                             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/movies%2Fma-da-500_1723799717930.jpg?alt=media")
-                                     .trailer("https://www.youtube.com/watch?v=l0E3vhaG9i4&t=1s")
-                                     .releaseDate(LocalDate.of(2024, 8, 15))
-                                     .status(MovieStatus.ACTIVE)
-                                     .genres(List.of(horror))
-                                     .actors(List.of(vietHuongActor, trungDanActor, nsutThanhLocActor))
-                                     .directors(List.of(nguyenHuuHoangDirector))
-                                     .build()
+                    if (showTimeRepository.count() == 0) {
+                        /* Today */
+                        // Galaxy Quang Trung
+                        showTime = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(9, 30))
+                                        .endTime(LocalTime.of(11, 30))
+                                        .build()
                         );
 
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(10, 30))
+                                        .endTime(LocalTime.of(12, 30))
+                                        .build()
+                        );
 
-                        if (showTimeRepository.count() == 0) {
-                            /* Today */
-                            // Galaxy Quang Trung
-                            showTime = showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(9, 30))
-                                            .endTime(LocalTime.of(11, 30))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room1QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(11, 45))
+                                        .endTime(LocalTime.of(13, 45))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(10, 30))
-                                            .endTime(LocalTime.of(12, 30))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room3QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(13, 0))
+                                        .endTime(LocalTime.of(15, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room1QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(11, 45))
-                                            .endTime(LocalTime.of(13, 45))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room4QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(14, 0))
+                                        .endTime(LocalTime.of(16, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room3QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(13, 0))
-                                            .endTime(LocalTime.of(15, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room1QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(16, 0))
+                                        .endTime(LocalTime.of(18, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room4QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(14, 0))
-                                            .endTime(LocalTime.of(16, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(18, 0))
+                                        .endTime(LocalTime.of(20, 0))
+                                        .status(BaseStatus.INACTIVE)
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room1QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(16, 0))
-                                            .endTime(LocalTime.of(18, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room3QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(20, 0))
+                                        .endTime(LocalTime.of(22, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(18, 0))
-                                            .endTime(LocalTime.of(20, 0))
-                                            .status(BaseStatus.INACTIVE)
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room4QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(21, 15))
+                                        .endTime(LocalTime.of(23, 15))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room3QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(20, 0))
-                                            .endTime(LocalTime.of(22, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room3QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(22, 15))
+                                        .endTime(LocalTime.of(0, 15))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room4QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(21, 15))
-                                            .endTime(LocalTime.of(23, 15))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(deadpoolMovie)
+                                        .room(room3QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(10, 30))
+                                        .endTime(LocalTime.of(12, 30))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room3QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(22, 15))
-                                            .endTime(LocalTime.of(0, 15))
-                                            .build()
-                            );
+                        // movie in Nguyen Du Cinema
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2NguyenDuCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(19, 0))
+                                        .endTime(LocalTime.of(21, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(deadpoolMovie)
-                                            .room(room3QuangTrungCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(10, 30))
-                                            .endTime(LocalTime.of(12, 30))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room1NguyenDuCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(20, 0))
+                                        .endTime(LocalTime.of(22, 0))
+                                        .build()
+                        );
 
-                            // movie in Nguyen Du Cinema
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(nguyenDuCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2NguyenDuCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(19, 0))
-                                            .endTime(LocalTime.of(21, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room3NguyenDuCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(21, 0))
+                                        .endTime(LocalTime.of(23, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(nguyenDuCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room1NguyenDuCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(20, 0))
-                                            .endTime(LocalTime.of(22, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room4NguyenDuCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(22, 15))
+                                        .endTime(LocalTime.of(0, 15))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(nguyenDuCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room3NguyenDuCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(21, 0))
-                                            .endTime(LocalTime.of(23, 0))
-                                            .build()
-                            );
+                        /* Tomorrow */
+                        // Quang Trung Cinema
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2QuangTrungCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(10, 0))
+                                        .endTime(LocalTime.of(12, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(nguyenDuCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room4NguyenDuCinema)
-                                            .startDate(currentDate)
-                                            .startTime(LocalTime.of(22, 15))
-                                            .endTime(LocalTime.of(0, 15))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2QuangTrungCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(12, 15))
+                                        .endTime(LocalTime.of(14, 15))
+                                        .build()
+                        );
 
-                            /* Tomorrow */
-                            // Quang Trung Cinema
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2QuangTrungCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(10, 0))
-                                            .endTime(LocalTime.of(12, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room3QuangTrungCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(14, 30))
+                                        .endTime(LocalTime.of(16, 30))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2QuangTrungCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(12, 15))
-                                            .endTime(LocalTime.of(14, 15))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room3QuangTrungCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(16, 45))
+                                        .endTime(LocalTime.of(18, 45))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room3QuangTrungCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(14, 30))
-                                            .endTime(LocalTime.of(16, 30))
-                                            .build()
-                            );
+                        // Nguyen Du Cinema
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room1NguyenDuCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(11, 45))
+                                        .endTime(LocalTime.of(13, 45))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room3QuangTrungCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(16, 45))
-                                            .endTime(LocalTime.of(18, 45))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2NguyenDuCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(15, 0))
+                                        .endTime(LocalTime.of(17, 0))
+                                        .build()
+                        );
 
-                            // Nguyen Du Cinema
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(nguyenDuCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room1NguyenDuCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(11, 45))
-                                            .endTime(LocalTime.of(13, 45))
-                                            .build()
-                            );
+                        /* Today plus 2 */
+                        // Quang Trung Cinema
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2QuangTrungCinema)
+                                        .startDate(todayPlus2Days)
+                                        .startTime(LocalTime.of(10, 0))
+                                        .endTime(LocalTime.of(12, 0))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(nguyenDuCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2NguyenDuCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(15, 0))
-                                            .endTime(LocalTime.of(17, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room2QuangTrungCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(12, 15))
+                                        .endTime(LocalTime.of(14, 15))
+                                        .build()
+                        );
 
-                            /* Today plus 2 */
-                            // Quang Trung Cinema
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2QuangTrungCinema)
-                                            .startDate(todayPlus2Days)
-                                            .startTime(LocalTime.of(10, 0))
-                                            .endTime(LocalTime.of(12, 0))
-                                            .build()
-                            );
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room3QuangTrungCinema)
+                                        .startDate(tomorrowDate)
+                                        .startTime(LocalTime.of(14, 30))
+                                        .endTime(LocalTime.of(16, 30))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room2QuangTrungCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(12, 15))
-                                            .endTime(LocalTime.of(14, 15))
-                                            .build()
-                            );
+                        // Nguyen Du Cinema
+                        showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(lamGiauVoiMaMovie)
+                                        .room(room1NguyenDuCinema)
+                                        .startDate(todayPlus2Days)
+                                        .startTime(LocalTime.of(11, 30))
+                                        .endTime(LocalTime.of(13, 30))
+                                        .build()
+                        );
 
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(quangTrungCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room3QuangTrungCinema)
-                                            .startDate(tomorrowDate)
-                                            .startTime(LocalTime.of(14, 30))
-                                            .endTime(LocalTime.of(16, 30))
-                                            .build()
-                            );
-
-                            // Nguyen Du Cinema
-                            showTimeRepository.save(
-                                    ShowTime.builder()
-                                            .cinema(nguyenDuCinema)
-                                            .movie(lamGiauVoiMaMovie)
-                                            .room(room1NguyenDuCinema)
-                                            .startDate(todayPlus2Days)
-                                            .startTime(LocalTime.of(11, 30))
-                                            .endTime(LocalTime.of(13, 30))
-                                            .build()
-                            );
-
-                        }
                     }
                 }
             }

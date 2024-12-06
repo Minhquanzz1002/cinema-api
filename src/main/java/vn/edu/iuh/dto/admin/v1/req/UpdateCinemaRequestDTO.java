@@ -21,10 +21,20 @@ public class UpdateCinemaRequestDTO {
     @NotBlank(message = "Phường/Xã không được để trống")
     private String ward;
 
+    @NotBlank(message = "Mã Phường/Xã không được để trống")
+    private String wardCode;
+
     @NotBlank(message = "Quận/Huyện không được để trống")
     private String district;
 
-    private Integer cityId;
+    @NotBlank(message = "Mã Quận/Huyện không được để trống")
+    private String districtCode;
+
+    @NotBlank(message = "Thành phố không được để trống")
+    private String city;
+
+    @NotBlank(message = "Mã Phường/Xã không được để trống")
+    private String cityCode;
 
     private List<String> images;
 
