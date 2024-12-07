@@ -55,8 +55,28 @@ public class DataInitializer implements CommandLineRunner {
     private final LocalDate currentDate = LocalDate.now();
     private final LocalDate tomorrowDate = LocalDate.now().plusDays(1);
     private final LocalDate todayPlus2Days = LocalDate.now().plusDays(2);
-    private ShowTime showTime;
+    private ShowTime lamGiauVoiMaShowTime;
+    private ShowTime deadpoolShowTime;
+
+    private ShowTime maDaShowTime;
+
+    private ShowTime quyAnShowTime;
+
+    private ShowTime matBiecShowTime;
+
+    private ShowTime ongChuNguoiMyCuaToiShowTime;
+
+    private ShowTime xuyenKhongCaiManhGiaTocShowTime;
+
     private Product product;
+    
+    private static final List<String> DEFAULT_CINEMA_IMAGES = List.of(
+            "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
+    );
 
     @Override
     public void run(String... args) {
@@ -119,13 +139,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-nguyen-du")
                           .build()
             );
@@ -166,7 +180,7 @@ public class DataInitializer implements CommandLineRunner {
 
             insertLayout(layout1, room4NguyenDuCinema, 77);
 
-            cinemaRepository.save(
+            Cinema galaCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
                           .name("Galaxy Sala")
@@ -178,18 +192,14 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-sala")
                           .build()
             );
 
-            cinemaRepository.save(
+            insertRooms(galaCinema, layout1, layout2, layout3);
+
+            Cinema tanBinhCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
                           .name("Galaxy Tân Bình")
@@ -201,18 +211,14 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-tan-binh")
                           .build()
             );
 
-            cinemaRepository.save(
+            insertRooms(tanBinhCinema, layout1, layout2, layout3);
+
+            Cinema kinhDuongVuongCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
                           .name("Galaxy Kinh Dương Vương")
@@ -224,16 +230,12 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-kinh-duong-vuong")
                           .build()
             );
+
+            insertRooms(kinhDuongVuongCinema, layout1, layout2, layout3);
 
             Cinema quangTrungCinema = cinemaRepository.save(
                     Cinema.builder()
@@ -247,13 +249,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-quang-trung")
                           .build()
             );
@@ -306,13 +302,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-huynh-tan-phat")
                           .build()
             );
@@ -330,13 +320,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-nguyen-van-qua")
                           .build()
             );
@@ -354,13 +338,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-linh-trung")
                           .build()
             );
@@ -378,13 +356,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-truong-trinh")
                           .build()
             );
@@ -402,13 +374,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hồ Chí Minh")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-parc-mall-q8")
                           .build()
             );
@@ -426,13 +392,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hà Nội")
                           .cityCode("01")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-mipec-long-bien")
                           .build()
             );
@@ -450,13 +410,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hà Nội")
                           .cityCode("01")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-trang-thi")
                           .build()
             );
@@ -474,13 +428,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Tỉnh Bến Tre")
                           .cityCode("83")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-ben-tre")
                           .build()
             );
@@ -499,13 +447,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Đà Nẵng")
                           .cityCode("48")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-da-nang")
                           .build()
             );
@@ -523,13 +465,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Tỉnh Cà Mau")
                           .cityCode("96")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-ca-mau")
                           .build()
             );
@@ -547,13 +483,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Tỉnh Nghệ An")
                           .cityCode("40")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-vinh")
                           .build()
             );
@@ -571,13 +501,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Thành phố Hải Phòng")
                           .cityCode("31")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-hai-phong")
                           .build()
             );
@@ -596,13 +520,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Tỉnh Đắk Lắk")
                           .cityCode("66")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-buon-ma-thuoc")
                           .build()
             );
@@ -655,13 +573,7 @@ public class DataInitializer implements CommandLineRunner {
                           .city("Tỉnh An Giang")
                           .cityCode("79")
                           .hotline("19002224")
-                          .images(List.of(
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F1_1703500551418.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F2_1703500555704.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F3_1703500560520.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
-                                  "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
-                          ))
+                          .images(DEFAULT_CINEMA_IMAGES)
                           .slug("galaxy-long-xuyen")
                           .build()
             );
@@ -1066,7 +978,7 @@ public class DataInitializer implements CommandLineRunner {
                                  .producers(List.of(centuryStudiosProducer, marvelStudiosProducer))
                                  .build()
                     );
-                    movieRepository.save(
+                    Movie matBiecMovie = movieRepository.save(
                             Movie.builder()
                                  .code("MV000003")
                                  .title("Mắt Biếc")
@@ -1088,7 +1000,8 @@ public class DataInitializer implements CommandLineRunner {
                                  .producers(List.of(galaxyMEProducer, novemberFilmProducer))
                                  .build()
                     );
-                    movieRepository.save(
+
+                    Movie ongChuNguoiMyCuaToiMovie = movieRepository.save(
                             Movie.builder()
                                  .code("MV000004")
                                  .title("Ông Chú Người Mỹ Của Tôi")
@@ -1109,7 +1022,7 @@ public class DataInitializer implements CommandLineRunner {
                                  .directors(List.of(alainResnaisDirector))
                                  .build()
                     );
-                    movieRepository.save(
+                    Movie xuyenKhongCaiMenhGiaTocMovie = movieRepository.save(
                             Movie.builder()
                                  .code("MV000005")
                                  .title("Xuyên Không Cải Mệnh Gia Tộc")
@@ -1164,7 +1077,7 @@ public class DataInitializer implements CommandLineRunner {
                                  .build()
                     );
 
-                    movieRepository.save(
+                    Movie quyAnMovie = movieRepository.save(
                             Movie.builder()
                                  .code("MV000007")
                                  .title("Quỷ Án")
@@ -1187,7 +1100,7 @@ public class DataInitializer implements CommandLineRunner {
                                  .build()
                     );
 
-                    movieRepository.save(
+                    Movie maDaMovie = movieRepository.save(
                             Movie.builder()
                                  .code("MV000008")
                                  .title("Ma Da")
@@ -1213,7 +1126,8 @@ public class DataInitializer implements CommandLineRunner {
                     if (showTimeRepository.count() == 0) {
                         /* Today */
                         // Galaxy Quang Trung
-                        showTime = showTimeRepository.save(
+
+                        lamGiauVoiMaShowTime = showTimeRepository.save(
                                 ShowTime.builder()
                                         .cinema(quangTrungCinema)
                                         .movie(lamGiauVoiMaMovie)
@@ -1223,6 +1137,62 @@ public class DataInitializer implements CommandLineRunner {
                                         .endTime(LocalTime.of(11, 30))
                                         .build()
                         );
+
+                        maDaShowTime = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(maDaMovie)
+                                        .room(room1QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(8, 0))
+                                        .endTime(LocalTime.of(9, 50))
+                                        .build()
+                        );
+
+                        quyAnShowTime = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(quyAnMovie)
+                                        .room(room4QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(8, 0))
+                                        .endTime(LocalTime.of(9, 55))
+                                        .build()
+                        );
+
+                        matBiecShowTime = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(matBiecMovie)
+                                        .room(room4QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(10, 0))
+                                        .endTime(LocalTime.of(12, 0))
+                                        .build()
+                        );
+
+                        xuyenKhongCaiManhGiaTocShowTime = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(xuyenKhongCaiMenhGiaTocMovie)
+                                        .room(room4QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(12, 5))
+                                        .endTime(LocalTime.of(13, 50))
+                                        .build()
+                        );
+
+                        ongChuNguoiMyCuaToiShowTime = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(quangTrungCinema)
+                                        .movie(ongChuNguoiMyCuaToiMovie)
+                                        .room(room4QuangTrungCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(16, 5))
+                                        .endTime(LocalTime.of(18, 10))
+                                        .build()
+                        );
+
 
                         showTimeRepository.save(
                                 ShowTime.builder()
@@ -1324,7 +1294,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .build()
                         );
 
-                        showTimeRepository.save(
+                        deadpoolShowTime = showTimeRepository.save(
                                 ShowTime.builder()
                                         .cinema(quangTrungCinema)
                                         .movie(deadpoolMovie)
@@ -1509,7 +1479,7 @@ public class DataInitializer implements CommandLineRunner {
             Role roleEmployeeSale = roleRepository.save(new Role("ROLE_EMPLOYEE_SALE", "Nhân viên bán hàng"));
 
             if (userRepository.count() == 0) {
-                User user1 = userRepository.save(User.builder()
+                User client1 = userRepository.save(User.builder()
                                                      .code("USER00000001")
                                                      .name("Lê Hữu Bằng")
                                                      .phone("0837699806")
@@ -1535,7 +1505,7 @@ public class DataInitializer implements CommandLineRunner {
                                                        .status(UserStatus.ACTIVE)
                                                        .build());
 
-                User user2 = userRepository.save(User.builder()
+                User admin1 = userRepository.save(User.builder()
                                                      .code("NV00000001")
                                                      .name("Nguyễn Minh Quân")
                                                      .phone("0354927402")
@@ -1561,9 +1531,33 @@ public class DataInitializer implements CommandLineRunner {
                                                      .status(UserStatus.ACTIVE)
                                                      .build());
 
-                insertOrders(user1, 404, 405, 309000, OrderStatus.COMPLETED, nvbh1);
-                insertOrders(user1, 406, null, 209000, OrderStatus.COMPLETED, user2);
-                Order order = insertOrders(user1, 408, null, 209000, OrderStatus.CANCELLED, user2);
+                User nvbh2 = userRepository.save(User.builder()
+                                                     .code("NVBH00000002")
+                                                     .name("Nguyễn Văn B")
+                                                     .phone("0354927404")
+                                                     .avatar("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/avatar%2F3.png?alt=media")
+                                                     .birthday(LocalDate.of(2002, 10, 10))
+                                                     .email("quannguyenminh1004@gmail.com")
+                                                     .password(passwordEncoder.encode("Cinema123123@"))
+                                                     .gender(true)
+                                                     .role(roleEmployeeSale)
+                                                     .status(UserStatus.ACTIVE)
+                                                     .build());
+
+                insertOrders(client1, 404, 405, 309000, OrderStatus.COMPLETED, nvbh1, lamGiauVoiMaShowTime);
+                insertOrders(client1, 406, null, 209000, OrderStatus.COMPLETED, admin1, lamGiauVoiMaShowTime);
+                insertOrders(client1, 1318, null, 209000, OrderStatus.COMPLETED, nvbh2, deadpoolShowTime);
+                insertOrders(client2, 1320, null, 209000, OrderStatus.COMPLETED, client2, deadpoolShowTime);
+                insertOrders(client2, 1280, null, 209000, OrderStatus.COMPLETED, client2, maDaShowTime);
+                insertOrders(client2, 1501, null, 209000, OrderStatus.COMPLETED, client2, quyAnShowTime);
+                insertOrders(client2, 1502, null, 209000, OrderStatus.COMPLETED, client2, quyAnShowTime);
+                insertOrders(client2, 1503, null, 209000, OrderStatus.COMPLETED, nvbh2, quyAnShowTime);
+                insertOrders(client1, 1501, 1502, 309000, OrderStatus.COMPLETED, client1, matBiecShowTime);
+                insertOrders(client1, 1503, null, 209000, OrderStatus.COMPLETED, nvbh1, matBiecShowTime);
+                insertOrders(client1, 1504, null, 209000, OrderStatus.COMPLETED, client1, matBiecShowTime);
+                insertOrders(client1, 1504, null, 209000, OrderStatus.COMPLETED, client1, xuyenKhongCaiManhGiaTocShowTime);
+                insertOrders(client1, 1501, 1502, 309000, OrderStatus.COMPLETED, nvbh1, ongChuNguoiMyCuaToiShowTime);
+                Order order = insertOrders(client1, 408, null, 209000, OrderStatus.CANCELLED, admin1, lamGiauVoiMaShowTime);
 
                 Refund refund = Refund.builder()
                                       .order(order)
@@ -1725,7 +1719,8 @@ public class DataInitializer implements CommandLineRunner {
             Integer seatId2,
             float totalPrice,
             OrderStatus status,
-            User createdBy
+            User createdBy,
+            ShowTime show
     ) {
         Order order = orderRepository.save(
                 Order.builder()
@@ -1735,7 +1730,7 @@ public class DataInitializer implements CommandLineRunner {
                      .paymentStatus(PaymentStatus.PAID)
                      .totalPrice(100000)
                      .finalAmount(100000)
-                     .showTime(showTime)
+                     .showTime(show)
                      .totalPrice(totalPrice)
                      .finalAmount(totalPrice)
                      .user(user)
@@ -1776,11 +1771,11 @@ public class DataInitializer implements CommandLineRunner {
                                .build()
             );
 
-            showTime.setBookedSeat(showTime.getBookedSeat() + 2);
-            showTimeRepository.save(showTime);
+            lamGiauVoiMaShowTime.setBookedSeat(lamGiauVoiMaShowTime.getBookedSeat() + 2);
+            showTimeRepository.save(lamGiauVoiMaShowTime);
         } else {
-            showTime.setBookedSeat(showTime.getBookedSeat() + 1);
-            showTimeRepository.save(showTime);
+            lamGiauVoiMaShowTime.setBookedSeat(lamGiauVoiMaShowTime.getBookedSeat() + 1);
+            showTimeRepository.save(lamGiauVoiMaShowTime);
         }
         return order;
     }
@@ -2154,6 +2149,10 @@ public class DataInitializer implements CommandLineRunner {
         );
 
         insertLayout(layout1, room4, 77);
+    }
+
+    private void initializeCinemas() {
+
     }
 
     private String generateOrderCode() {
