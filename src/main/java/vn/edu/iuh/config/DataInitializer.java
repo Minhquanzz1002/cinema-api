@@ -20,7 +20,7 @@ import java.util.List;
 import static vn.edu.iuh.constant.SecurityConstant.ROLE_CLIENT;
 
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
