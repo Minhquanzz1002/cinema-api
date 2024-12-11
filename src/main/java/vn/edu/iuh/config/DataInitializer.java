@@ -57,7 +57,7 @@ public class DataInitializer implements CommandLineRunner {
     private final LocalDate todayPlus2Days = LocalDate.now().plusDays(2);
     private ShowTime lamGiauVoiMaShowTime;
     private ShowTime deadpoolShowTime;
-
+    private ShowTime deadpoolShowTime_NguyenDuCinema;
     private ShowTime maDaShowTime;
 
     private ShowTime quyAnShowTime;
@@ -67,6 +67,8 @@ public class DataInitializer implements CommandLineRunner {
     private ShowTime ongChuNguoiMyCuaToiShowTime;
 
     private ShowTime xuyenKhongCaiManhGiaTocShowTime;
+
+    private ShowTime conNhotMotChongShowTime_SalaCinema;
 
     private Product product;
     
@@ -180,7 +182,7 @@ public class DataInitializer implements CommandLineRunner {
 
             insertLayout(layout1, room4NguyenDuCinema, 77);
 
-            Cinema galaCinema = cinemaRepository.save(
+            Cinema salaCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
                           .name("Galaxy Sala")
@@ -197,7 +199,41 @@ public class DataInitializer implements CommandLineRunner {
                           .build()
             );
 
-            insertRooms(galaCinema, layout1, layout2, layout3);
+            Room room1SalaCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 1")
+                        .cinema(salaCinema)
+                        .build()
+            );
+
+            insertLayout(layout4, room1SalaCinema, 59);
+
+            Room room2SalaCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 2")
+                        .cinema(salaCinema)
+                        .build()
+            );
+
+            insertLayout(layout3, room2SalaCinema, 112);
+
+            Room room3SalaCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 3")
+                        .cinema(salaCinema)
+                        .build()
+            );
+
+            insertLayout(layout2, room3SalaCinema, 21);
+
+            Room room4SalaCinema = roomRepository.save(
+                    Room.builder()
+                        .name("Rạp 2")
+                        .cinema(salaCinema)
+                        .build()
+            );
+
+            insertLayout(layout1, room4SalaCinema, 77);
 
             Cinema tanBinhCinema = cinemaRepository.save(
                     Cinema.builder()
@@ -1049,7 +1085,7 @@ public class DataInitializer implements CommandLineRunner {
                                  .producers(List.of(velaEntertainmentProducer))
                                  .build()
                     );
-                    movieRepository.save(
+                    Movie conNhotMotChongMovie = movieRepository.save(
                             Movie.builder()
                                  .code("MV000006")
                                  .title("Con Nhót Mót Chồng")
@@ -1306,6 +1342,17 @@ public class DataInitializer implements CommandLineRunner {
                         );
 
                         // movie in Nguyen Du Cinema
+                        deadpoolShowTime_NguyenDuCinema = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(nguyenDuCinema)
+                                        .movie(deadpoolMovie)
+                                        .room(room1NguyenDuCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(8, 0))
+                                        .endTime(LocalTime.of(10, 10))
+                                        .build()
+                        );
+
                         showTimeRepository.save(
                                 ShowTime.builder()
                                         .cinema(nguyenDuCinema)
@@ -1347,6 +1394,18 @@ public class DataInitializer implements CommandLineRunner {
                                         .startDate(currentDate)
                                         .startTime(LocalTime.of(22, 15))
                                         .endTime(LocalTime.of(0, 15))
+                                        .build()
+                        );
+
+                        // Sala Cinema
+                        conNhotMotChongShowTime_SalaCinema = showTimeRepository.save(
+                                ShowTime.builder()
+                                        .cinema(salaCinema)
+                                        .movie(conNhotMotChongMovie)
+                                        .room(room1SalaCinema)
+                                        .startDate(currentDate)
+                                        .startTime(LocalTime.of(8, 0))
+                                        .endTime(LocalTime.of(9, 55))
                                         .build()
                         );
 
@@ -1465,7 +1524,6 @@ public class DataInitializer implements CommandLineRunner {
                                         .endTime(LocalTime.of(13, 30))
                                         .build()
                         );
-
                     }
                 }
             }
@@ -1557,6 +1615,9 @@ public class DataInitializer implements CommandLineRunner {
                 insertOrders(client1, 1504, null, 209000, OrderStatus.COMPLETED, client1, matBiecShowTime);
                 insertOrders(client1, 1504, null, 209000, OrderStatus.COMPLETED, client1, xuyenKhongCaiManhGiaTocShowTime);
                 insertOrders(client1, 1501, 1502, 309000, OrderStatus.COMPLETED, nvbh1, ongChuNguoiMyCuaToiShowTime);
+                insertOrders(client1, 107, 108, 309000, OrderStatus.COMPLETED, nvbh1, deadpoolShowTime_NguyenDuCinema);
+                insertOrders(client2, 87, 88, 309000, OrderStatus.COMPLETED, nvbh2, deadpoolShowTime_NguyenDuCinema);
+                insertOrders(client2, 402, 403, 309000, OrderStatus.COMPLETED, nvbh2, conNhotMotChongShowTime_SalaCinema);
                 Order order = insertOrders(client1, 408, null, 209000, OrderStatus.CANCELLED, admin1, lamGiauVoiMaShowTime);
 
                 Refund refund = Refund.builder()
