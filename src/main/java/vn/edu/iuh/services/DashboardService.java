@@ -1,5 +1,6 @@
 package vn.edu.iuh.services;
 
+import vn.edu.iuh.dto.admin.v1.res.AdminCinemaRevenueSummaryResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminDashboardStatsResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminMovieRevenueSummaryResponseDTO;
 
@@ -16,6 +17,11 @@ public interface DashboardService {
     AdminDashboardStatsResponseDTO getStats();
 
     List<AdminMovieRevenueSummaryResponseDTO> getMovieRevenueSummary(
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    List<AdminCinemaRevenueSummaryResponseDTO> getCinemaRevenueSummary(
             LocalDate startDate,
             LocalDate endDate
     );

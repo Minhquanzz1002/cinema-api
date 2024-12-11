@@ -13,4 +13,7 @@ public class AdminDashboardStatsResponseDTO {
     private float totalRevenue;
     private int moviesCount;
     private int showTimesToday;
+    private int totalCustomers;
+    private int totalEmployees;
+    private int totalCinemas;
 }

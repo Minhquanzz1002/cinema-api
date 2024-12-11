@@ -28,6 +28,7 @@ public class SwaggerConstant {
         public static class Dashboard {
             public static final String GET_STATS = "Lấy thống kê tổng quan hôm nay";
             public static final String GET_MOVIE_REVENUE_SUM = "Lấy doanh thu phim";
+            public static final String GET_CINEMA_REVENUE_SUM = "Lấy doanh thu rạp";
         }
 
         public static class Director {

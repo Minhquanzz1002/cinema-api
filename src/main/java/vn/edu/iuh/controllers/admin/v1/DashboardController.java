@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.constant.RouterConstant.AdminPaths;
 import vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 import vn.edu.iuh.dto.admin.v1.res.AdminDashboardStatsResponseDTO;
+import vn.edu.iuh.dto.admin.v1.res.AdminMovieRevenueSummaryResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.services.DashboardService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class DashboardController {
 
     @Operation(summary = AdminSwagger.Dashboard.GET_MOVIE_REVENUE_SUM)
     @GetMapping(AdminPaths.Dashboard.GET_MOVIE_REVENUE_SUMMARY)
-    public SuccessResponse<?> getMovieRevenueSummary(
+    public SuccessResponse<List<AdminMovieRevenueSummaryResponseDTO>> getMovieRevenueSummary(
             @RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate startDate,
             @RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate endDate
     ) {
@@ -50,6 +52,21 @@ public class DashboardController {
                 "success",
                 "Thành công",
                 dashboardService.getMovieRevenueSummary(startDate, endDate)
+        );
+    }
+
+    @Operation(summary = AdminSwagger.Dashboard.GET_CINEMA_REVENUE_SUM)
+    @GetMapping(AdminPaths.Dashboard.GET_CINEMA_REVENUE_SUMMARY)
+    public SuccessResponse<?> getCinemaRevenueSummary(
+            @RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate startDate,
+            @RequestParam(required = false, defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate endDate
+    ) {
+
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                dashboardService.getCinemaRevenueSummary(startDate, endDate)
         );
     }
 }
