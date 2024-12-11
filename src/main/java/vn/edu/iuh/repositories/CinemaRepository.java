@@ -29,4 +29,8 @@ public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
             "AND c.deleted = :deleted " +
             "ORDER BY c.city")
     List<CityResponseDTO> findDistinctCities(@Param("status") BaseStatus status, @Param("deleted") boolean deleted);
+
+    int countAllByStatusAndDeleted(BaseStatus status, boolean deleted);
+
+    List<Cinema> findAllByStatusAndDeleted(BaseStatus status, boolean deleted);
 }

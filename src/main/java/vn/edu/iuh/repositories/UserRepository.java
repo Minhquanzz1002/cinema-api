@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.models.User;
+import vn.edu.iuh.models.enums.UserStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,4 +35,6 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     Optional<User> findTopByCodeStartingWithOrderByCodeDesc(String prefix);
 
     Optional<User> findByIdAndDeleted(UUID id, boolean deleted);
+
+    int countAllByCodeStartingWithAndStatusAndDeleted(String code, UserStatus status, boolean deleted);
 }
