@@ -20,7 +20,7 @@ import java.util.List;
 import static vn.edu.iuh.constant.SecurityConstant.ROLE_CLIENT;
 
 @Slf4j
-//@Component
+@Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
@@ -79,6 +79,8 @@ public class DataInitializer implements CommandLineRunner {
             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F4_1703500565605.jpg?alt=media",
             "https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/cinemas%2F5_1703500570351.jpg?alt=media"
     );
+
+    private static final String DEFAULT_PASSWORD = "Cinema123123@";
 
     @Override
     public void run(String... args) {
@@ -1557,7 +1559,7 @@ public class DataInitializer implements CommandLineRunner {
                                                        .avatar("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/avatar%2F1.jpg?alt=media")
                                                        .birthday(LocalDate.of(2002, 10, 10))
                                                        .email("huubangle20001@gmail.com")
-                                                       .password(passwordEncoder.encode("Cinema123123@"))
+                                                       .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                                                        .gender(false)
                                                        .role(roleClient)
                                                        .status(UserStatus.ACTIVE)
@@ -1570,7 +1572,7 @@ public class DataInitializer implements CommandLineRunner {
                                                      .avatar("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/avatar%2Favt-1.png?alt=media")
                                                      .birthday(LocalDate.of(2002, 10, 10))
                                                      .email("quannguyenminh1001@gmail.com")
-                                                     .password(passwordEncoder.encode("Cinema123123@"))
+                                                     .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                                                      .gender(true)
                                                      .role(roleAdmin)
                                                      .status(UserStatus.ACTIVE)
@@ -1583,7 +1585,7 @@ public class DataInitializer implements CommandLineRunner {
                                                      .avatar("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/avatar%2F3.png?alt=media")
                                                      .birthday(LocalDate.of(2002, 10, 10))
                                                      .email("quannguyenminh1002@gmail.com")
-                                                     .password(passwordEncoder.encode("Cinema123123@"))
+                                                     .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                                                      .gender(true)
                                                      .role(roleEmployeeSale)
                                                      .status(UserStatus.ACTIVE)
@@ -1596,7 +1598,7 @@ public class DataInitializer implements CommandLineRunner {
                                                      .avatar("https://firebasestorage.googleapis.com/v0/b/cinema-782ef.appspot.com/o/avatar%2F3.png?alt=media")
                                                      .birthday(LocalDate.of(2002, 10, 10))
                                                      .email("quannguyenminh1004@gmail.com")
-                                                     .password(passwordEncoder.encode("Cinema123123@"))
+                                                     .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                                                      .gender(true)
                                                      .role(roleEmployeeSale)
                                                      .status(UserStatus.ACTIVE)
@@ -1719,31 +1721,6 @@ public class DataInitializer implements CommandLineRunner {
                                .minOrderValue(100000)
                                .usageLimit(50)
                                .currentUsageCount(0)
-                               .status(BaseStatus.ACTIVE)
-                               .build()
-        );
-
-        PromotionLine promotionLine2 = promotionLineRepository.save(
-                PromotionLine.builder()
-                             .promotion(promotion)
-                             .name("Tri ân khách hàng")
-                             .code("1VETANG1VE")
-                             .startDate(currentDate)
-                             .endDate(YearMonth.now().atEndOfMonth())
-                             .type(PromotionLineType.BUY_TICKETS_GET_TICKETS)
-                             .status(BaseStatus.ACTIVE)
-                             .build()
-        );
-
-        promotionDetailRepository.save(
-                PromotionDetail.builder()
-                               .promotionLine(promotionLine2)
-                               .usageLimit(50)
-                               .currentUsageCount(0)
-                               .requiredSeatType(SeatType.NORMAL)
-                               .requiredSeatQuantity(1)
-                               .giftSeatType(SeatType.NORMAL)
-                               .giftSeatQuantity(1)
                                .status(BaseStatus.ACTIVE)
                                .build()
         );

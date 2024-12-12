@@ -170,6 +170,10 @@ public class SwaggerConstant {
         public static class Genre {
             public static final String CREATE_SUM = "Tạo thể loại";
         }
+
+        public static class File {
+            public static final String GET_PRESIGNED_URL_SUM = "Lấy URL tải lên file";
+        }
     }
 
     public static class ClientSwagger {

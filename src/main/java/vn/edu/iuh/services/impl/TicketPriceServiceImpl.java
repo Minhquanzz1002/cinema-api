@@ -116,6 +116,7 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         return saved;
     }
 
+    @Transactional
     @Override
     public TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequestDTO updateTicketPriceRequestDTO) {
         TicketPrice ticketPrice = findById(id);
