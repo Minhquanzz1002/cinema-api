@@ -111,9 +111,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Optional<Product> findByIdAndDeleted(int id, boolean deleted);
 
-    <T> List<T> findTop10ByDeletedAndCodeContainingIgnoreCaseOrNameContainingIgnoreCase(
+    <T> List<T> findTop10ByDeletedAndCodeContainingIgnoreCaseOrDeletedAndNameContainingIgnoreCase(
             boolean deleted,
             String code,
+            boolean deleted2,
             String name,
             Class<T> classType
     );

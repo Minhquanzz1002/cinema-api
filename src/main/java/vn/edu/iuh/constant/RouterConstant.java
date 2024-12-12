@@ -164,6 +164,10 @@ public class RouterConstant {
         public static class Genre {
             public static final String BASE = ADMIN_V1 + "/genres";
         }
+
+        public static class File {
+            public static final String BASE = ADMIN_V1 + "/files";
+        }
     }
 
     public static class ClientPaths {

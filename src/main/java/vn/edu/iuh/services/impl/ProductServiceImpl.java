@@ -46,16 +46,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(Pageable pageable, String search, ProductStatus status) {
+    public Page<BaseProductWithPriceProjection> getAllProductsWithCurrentPrice(
+            Pageable pageable,
+            String search,
+            ProductStatus status
+    ) {
         if (status == null) {
-            return productRepository.findAllWithPriceByCodeContainingOrNameContainingAndDeleted(search, search, false, pageable);
+            return productRepository.findAllWithPriceByCodeContainingOrNameContainingAndDeleted(
+                    search,
+                    search,
+                    false,
+                    pageable
+            );
         }
-        return productRepository.findAllWithPriceByCodeContainingOrNameContainingAndStatusAndDeleted(search, search, status, false, pageable);
+        return productRepository.findAllWithPriceByCodeContainingOrNameContainingAndStatusAndDeleted(
+                search,
+                search,
+                status,
+                false,
+                pageable
+        );
     }
 
     @Override
     public BaseProductWithPriceProjection getProductWithCurrentPriceByCode(String code) {
-        return productRepository.findWithPriceByCodeAndDeleted(code, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
+        return productRepository.findWithPriceByCodeAndDeleted(code, false)
+                                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
     }
 
     @Override
@@ -103,12 +119,14 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setStatus(updateProductRequestDTO.getStatus());
         }
         productRepository.save(existingProduct);
-        return productRepository.findByCodeAndDeleted(code, false, BaseProductProjection.class).orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
+        return productRepository.findByCodeAndDeleted(code, false, BaseProductProjection.class)
+                                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
     }
 
     @Override
     public Product getProductByCode(String code) {
-        return productRepository.findByCodeAndDeleted(code, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
+        return productRepository.findByCodeAndDeleted(code, false)
+                                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
     }
 
     @Override
@@ -120,11 +138,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<BaseProductProjection> getListProducts(String search) {
-        return productRepository.findTop10ByDeletedAndCodeContainingIgnoreCaseOrNameContainingIgnoreCase(false, search, search, BaseProductProjection.class);
+        return productRepository.findTop10ByDeletedAndCodeContainingIgnoreCaseOrDeletedAndNameContainingIgnoreCase(
+                false,
+                search,
+                false,
+                search,
+                BaseProductProjection.class
+        );
     }
 
     /**
      * Generate next product code
+     *
      * @return next product code: CBxxxxxx
      */
     private String generateNextProductCode() {
