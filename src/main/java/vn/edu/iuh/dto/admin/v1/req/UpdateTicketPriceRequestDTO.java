@@ -17,7 +17,6 @@ public class UpdateTicketPriceRequestDTO {
     @NotBlank(message = "Tên không được để trống")
     private String name;
     @NotNull(message = "Ngày bắt đầu không được để trống")
-    @FutureOrPresent(message = "Ngày bắt đầu phải là một ngày trong tương lai hoặc hiện tại")
     private LocalDate startDate;
     @NotNull(message = "Ngày kết thúc không được để trống")
     @FutureOrPresent(message = "Ngày kết thú phải là một ngày trong tương lai")

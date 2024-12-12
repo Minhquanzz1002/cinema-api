@@ -30,7 +30,7 @@ public class TicketPrice extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BaseStatus status = BaseStatus.ACTIVE;
-    @OneToMany(mappedBy = "ticketPrice")
+    @OneToMany(mappedBy = "ticketPrice", cascade = CascadeType.ALL)
     @OrderBy("startTime ASC")
     List<TicketPriceLine> ticketPriceLines;
 }
