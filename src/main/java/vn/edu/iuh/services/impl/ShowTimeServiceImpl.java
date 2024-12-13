@@ -165,7 +165,9 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public void generateShowTime(GenerateShowTimeRequestDTO body) {
+    public String generateShowTime(GenerateShowTimeRequestDTO body) {
+        int totalShowTimesCreated = 0;
+
         LocalDate startDate = body.getStartDate();
         LocalDate endDate = body.getEndDate();
 
@@ -173,6 +175,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
             throw new BadRequestException("Thời gian kết thúc phải lớn hơn thời gian bắt đầu");
         }
 
+        // Cinema and room validation
         Cinema cinema = cinemaRepository.findByIdAndDeleted(body.getCinemaId(), false)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp"));
 
@@ -188,6 +191,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                 endDate
         );
 
+        // Movie validation and constants setup
         List<Movie> movies = movieRepository.findAllByIdInAndDeleted(
                 body.getMovies().stream().map(GenerateShowTimeRequestDTO.MovieDTO::getId).toList(),
                 false
@@ -200,6 +204,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         LocalTime endDayTime = LocalTime.of(23, 59);
         int CLEANING_TIME = 15;
 
+        // Movie rotation configuration
         Map<Movie, Integer> remainingShowTimes = body.getMovies().stream()
                 .collect(Collectors.toMap(
                         movieDTO -> movies.stream().filter(movie -> movie.getId() == movieDTO.getId()).findFirst().get(),
@@ -265,7 +270,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                     }
 
                     LocalTime endTime = currentTime.plusMinutes(selectedMovie.getDuration() + CLEANING_TIME);
-                    endTime = roundToNearestInterval(endTime, 5);
+                    endTime = roundToNearestInterval(endTime);
                     LocalTime nextStartTime = endTime.plusMinutes(5);
 
                     ShowTime showTime = ShowTime.builder()
@@ -283,6 +288,8 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                     showTimeRepository.save(showTime);
                     existingShowTimes.add(showTime);
 
+                    totalShowTimesCreated++;
+
                     int remaining = remainingShowTimes.get(selectedMovie) - 1;
                     if (remaining == 0) {
                         remainingShowTimes.remove(selectedMovie);
@@ -297,7 +304,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
             currentDate = currentDate.plusDays(1);
         }
 
-
+        return String.format("Đã tạo thành công %d lịch chiếu", totalShowTimesCreated);
     }
 
     @Override
@@ -335,7 +342,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
             triedMovies.add(movie);
 
             LocalTime endTime = currentTime.plusMinutes(movie.getDuration() + cleaningTime);
-            endTime = roundToNearestInterval(endTime, 5);
+            endTime = roundToNearestInterval(endTime);
             LocalTime nextStartTime = endTime.plusMinutes(5);
 
             if (endTime.getHour() == 23 && endTime.getMinute() > 59) {
@@ -381,9 +388,16 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         }
     }
 
-    private LocalTime roundToNearestInterval(LocalTime time, int minuteInterval) {
+    /**
+     * Round a given time to the nearest interval specified in minutes.
+     * For example: 10:13 with 5-minute interval -> 10:15
+     * @param time The time to rounded
+     * @return The rounded time. If result exceeds 24h, returns 23:59
+     */
+    private LocalTime roundToNearestInterval(LocalTime time) {
         int minutes = time.getHour() * 60 + time.getMinute();
-        int roundedMinutes = (int) (Math.ceil((double) minutes / minuteInterval) * minuteInterval);
+        int MINUTE_INTERVAL = 5;
+        int roundedMinutes = (int) (Math.ceil((double) minutes / MINUTE_INTERVAL) * MINUTE_INTERVAL);
 
         if (roundedMinutes >= 24 * 60) {
             return LocalTime.of(23, 59);
