@@ -38,11 +38,10 @@ public class ShowTimeController {
     public SuccessResponse<?> generateShowTime(
             @RequestBody @Valid GenerateShowTimeRequestDTO body
     ) {
-        showTimeService.generateShowTime(body);
         return new SuccessResponse<>(
                 201,
                 "success",
-                "Tạo lịch chiếu thành công",
+                showTimeService.generateShowTime(body),
                 null
         );
     }

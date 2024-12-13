@@ -20,6 +20,7 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.projections.v1.CinemaProjection;
 import vn.edu.iuh.repositories.CinemaRepository;
 import vn.edu.iuh.services.CinemaService;
+import vn.edu.iuh.services.SlugifyService;
 import vn.edu.iuh.specifications.GenericSpecifications;
 
 import java.util.ArrayList;
@@ -31,8 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CinemaServiceImpl implements CinemaService {
     private final CinemaRepository cinemaRepository;
-    private final Slugify slugify;
-    private final ModelMapper modelMapper;
+    private final SlugifyService slugifyService;
 
     @Override
     public SuccessResponse<List<CinemaProjection>> getCinemas() {
@@ -77,6 +77,11 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     @Transactional
     public Cinema createCinema(CreateCinemaRequestDTO request) {
+        String slug = slugifyService.generateSlug(request.getName());
+        while (cinemaRepository.existsBySlug(slug)) {
+            slug = slugifyService.generateUniqueSlug(request.getName());
+        }
+
         Cinema cinema = Cinema.builder()
                               .code(generateCinemaCode())
                               .name(request.getName())
@@ -89,7 +94,7 @@ public class CinemaServiceImpl implements CinemaService {
                               .cityCode(request.getCityCode())
                               .images(request.getImages() != null ? request.getImages() : new ArrayList<>())
                               .hotline(request.getHotline())
-                              .slug(slugify.slugify(request.getName()))
+                              .slug(slug)
                               .status(request.getStatus())
                               .build();
 
@@ -101,6 +106,11 @@ public class CinemaServiceImpl implements CinemaService {
     public Cinema updateCinema(Integer id, UpdateCinemaRequestDTO request) {
         Cinema cinema = getCinemaById(id);
 
+        String slug = slugifyService.generateSlug(request.getName());
+        while (cinemaRepository.existsBySlug(slug)) {
+            slug = slugifyService.generateUniqueSlug(request.getName());
+        }
+
         // Update fields
         cinema.setName(request.getName());
         cinema.setAddress(request.getAddress());
@@ -110,7 +120,7 @@ public class CinemaServiceImpl implements CinemaService {
             cinema.setImages(request.getImages());
         }
         cinema.setHotline(request.getHotline());
-        cinema.setSlug(slugify.slugify(request.getName()));
+        cinema.setSlug(slug);
         if (request.getStatus() != null) {
             cinema.setStatus(request.getStatus());
         }

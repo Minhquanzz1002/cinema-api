@@ -30,7 +30,16 @@ public interface ShowTimeService {
 
     List<AdminShowTimeForSaleResponseDTO> getShowTimesForSales(Integer cinemaId, Integer movieId, LocalDate date);
 
-    void generateShowTime(GenerateShowTimeRequestDTO body);
+    /**
+     * Automatically generate showtimes for the cinema within the specified time period.
+     * This method will distribute and arrange showtimes based on the requested number of shows for each movie.
+     * Scheduling rules:
+     * - Operating hours: 8:00AM - 11:59PM
+     * - Cleaning time between shows: 15 minutes
+     *
+     * @param body GenerateShowTimeRequestDTO
+     */
+    String generateShowTime(GenerateShowTimeRequestDTO body);
 
     String activateMultipleShowTime(ActivateMultipleShowTimeRequestDTO body);
 }

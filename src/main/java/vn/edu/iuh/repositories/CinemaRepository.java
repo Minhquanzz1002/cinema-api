@@ -33,4 +33,6 @@ public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
     int countAllByStatusAndDeleted(BaseStatus status, boolean deleted);
 
     List<Cinema> findAllByStatusAndDeleted(BaseStatus status, boolean deleted);
+
+    boolean existsBySlug(String slug);
 }
