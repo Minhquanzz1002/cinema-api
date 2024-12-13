@@ -14,6 +14,8 @@ public class MovieRotation {
     private final Map<Movie, Double> weights;
     private double currentRotation = 0.0;
 
+    private Movie lastSelectedMovie;
+
     public MovieRotation(Map<Movie, Integer> totalShowTimes, Map<Movie, Integer> remainingShowTimes) {
         this.totalShowTimes = totalShowTimes;
         this.remainingShowTimes = remainingShowTimes;
@@ -29,27 +31,44 @@ public class MovieRotation {
     }
 
     public Movie getNextMovie() {
+        // Get available movies excluding the last selected movie
         List<Movie> availableMovies = remainingShowTimes.entrySet().stream()
-                .filter(e -> e.getValue() > 0)
-                .map(Map.Entry::getKey)
-                .toList();
+                                                        .filter(e -> e.getValue() > 0)
+                                                        .map(Map.Entry::getKey)
+                                                        .filter(movie -> !movie.equals(lastSelectedMovie))
+                                                        .collect(Collectors.toList());
+
+        // If no other movies available, reset the list
+        if (availableMovies.isEmpty()) {
+            availableMovies = remainingShowTimes.entrySet().stream()
+                                                .filter(e -> e.getValue() > 0)
+                                                .map(Map.Entry::getKey)
+                                                .toList();
+        }
 
         if (availableMovies.isEmpty()) {
             return null;
         }
 
-        Movie selectedMovie = availableMovies.stream()
-                .min((m1, m2) -> {
-                    double angle1 = weights.get(m1) * (totalShowTimes.get(m1) - remainingShowTimes.get(m1));
-                    double angle2 = weights.get(m2) * (totalShowTimes.get(m2) - remainingShowTimes.get(m2));
-                    return Double.compare(
-                            Math.abs(angle1 - currentRotation),
-                            Math.abs(angle2 - currentRotation)
-                    );
-                })
-                .orElse(availableMovies.get(0));
+        // Calculate total weight based on remaining shows
+        double totalWeight = availableMovies.stream()
+                                            .mapToDouble(remainingShowTimes::get)
+                                            .sum();
 
-        currentRotation += weights.get(selectedMovie);
-        return selectedMovie;
+        // Weighted random selection algorithm
+        double randomValue = Math.random() * totalWeight;
+        double currentSum = 0;
+
+        for (Movie movie : availableMovies) {
+            currentSum += remainingShowTimes.get(movie);
+            if (randomValue <= currentSum) {
+                lastSelectedMovie = movie;
+                return movie;
+            }
+        }
+
+        // Fallback selection if no movie is selected
+        lastSelectedMovie = availableMovies.get(availableMovies.size() - 1);
+        return lastSelectedMovie;
     }
 }
