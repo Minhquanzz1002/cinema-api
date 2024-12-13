@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.res.RoomLayoutResponseDTO;
 import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Seat;
 import vn.edu.iuh.models.ShowTime;
@@ -50,6 +51,11 @@ public class RoomLayoutServiceImpl implements RoomLayoutService {
 
         List<TicketPriceLineProjection> prices = ticketPriceLineRepository.findByDayTypeAndDateAndTimeAndDeleted(dayType.name(), showTime.getStartDate(), showTime.getStartTime(), false);
         log.info("prices: {}", prices);
+
+        if (prices.isEmpty()) {
+            throw new BadRequestException("Chưa có giá vé cho ngày này");
+        }
+
         Map<SeatType, Float> priceMap = prices.stream().collect(Collectors.toMap(
                 TicketPriceLineProjection::getSeatType,
                 TicketPriceLineProjection::getPrice
