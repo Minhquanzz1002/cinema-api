@@ -134,7 +134,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema nguyenDuCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Nguyễn Du")
+                          .name("B&Q Nguyễn Du")
                           .address("116 Nguyễn Du")
                           .ward("Phường Bến Thành")
                           .wardCode("26743")
@@ -150,7 +150,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room1NguyenDuCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 1")
+                        .name("Phòng 1")
                         .cinema(nguyenDuCinema)
                         .build()
             );
@@ -159,7 +159,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room2NguyenDuCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 2")
+                        .name("Phòng 2")
                         .cinema(nguyenDuCinema)
                         .build()
             );
@@ -168,7 +168,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room3NguyenDuCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 3")
+                        .name("Phòng 3")
                         .cinema(nguyenDuCinema)
                         .build()
             );
@@ -177,7 +177,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room4NguyenDuCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 2")
+                        .name("Phòng 2")
                         .cinema(nguyenDuCinema)
                         .build()
             );
@@ -187,7 +187,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema salaCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Sala")
+                          .name("B&Q Sala")
                           .address("Tầng 3, Thiso Mall Sala")
                           .ward("Phường Thủ Thiêm")
                           .wardCode("27118")
@@ -203,7 +203,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room1SalaCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 1")
+                        .name("Phòng 1")
                         .cinema(salaCinema)
                         .build()
             );
@@ -212,7 +212,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room2SalaCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 2")
+                        .name("Phòng 2")
                         .cinema(salaCinema)
                         .build()
             );
@@ -221,7 +221,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room3SalaCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 3")
+                        .name("Phòng 3")
                         .cinema(salaCinema)
                         .build()
             );
@@ -230,7 +230,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room4SalaCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 2")
+                        .name("Phòng 2")
                         .cinema(salaCinema)
                         .build()
             );
@@ -240,7 +240,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema tanBinhCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Tân Bình")
+                          .name("B&Q Tân Bình")
                           .address("246 Đ. Nguyễn Hồng Đào")
                           .ward("Phường 14")
                           .wardCode("27004")
@@ -259,7 +259,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema kinhDuongVuongCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Kinh Dương Vương")
+                          .name("B&Q Kinh Dương Vương")
                           .address("718bis Đ. Kinh Dương Vương")
                           .ward("Phường 13")
                           .wardCode("27349")
@@ -278,7 +278,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema quangTrungCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Quang Trung")
+                          .name("B&Q Quang Trung")
                           .address("Lầu 3, TTTM CoopMart Foodcosa số 304A, Quang Trung")
                           .ward("Phường 11")
                           .wardCode("26899")
@@ -294,7 +294,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room1QuangTrungCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 1")
+                        .name("Phòng 1")
                         .cinema(quangTrungCinema)
                         .build()
             );
@@ -303,7 +303,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room2QuangTrungCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 2")
+                        .name("Phòng 2")
                         .cinema(quangTrungCinema)
                         .build()
             );
@@ -312,7 +312,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room3QuangTrungCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 3")
+                        .name("Phòng 3")
                         .cinema(quangTrungCinema)
                         .build()
             );
@@ -321,7 +321,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room4QuangTrungCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 4")
+                        .name("Phòng 4")
                         .cinema(quangTrungCinema)
                         .build()
             );
@@ -331,7 +331,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema huynhTanPhatCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Huỳnh Tấn Phát")
+                          .name("B&Q Huỳnh Tấn Phát")
                           .address("1362 Huỳnh Tấn Phát")
                           .ward("Phường Phú Mỹ")
                           .wardCode("27493")
@@ -349,7 +349,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema nguyenVanQuaCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Nguyễn Văn Quá")
+                          .name("B&Q Nguyễn Văn Quá")
                           .address("119B Đ. Nguyễn Văn Quá")
                           .ward("Phường Đông Hưng Thuận")
                           .wardCode("26788")
@@ -367,7 +367,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema linhTrungCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Co.opXtra Linh Trung")
+                          .name("B&Q Co.opXtra Linh Trung")
                           .address("934 QL1A")
                           .ward("Phường Linh Trung")
                           .wardCode("26800")
@@ -385,7 +385,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema truongTrinhCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Trường Chinh")
+                          .name("B&Q Trường Chinh")
                           .address("Co.opMart TTTM Thắng Lợi, 2 Đ. Trường Chinh")
                           .ward("Phường Tây Thạnh")
                           .wardCode("27013")
@@ -403,7 +403,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema mallParcCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Parc Mall Q8")
+                          .name("B&Q Parc Mall Q8")
                           .address("549 Đ. Tạ Quang Bửu")
                           .ward("Phường 04")
                           .wardCode("27409")
@@ -421,7 +421,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema longBienCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy MIPEC Long Biên")
+                          .name("B&Q MIPEC Long Biên")
                           .address("Chung Cư Mipec Riverside")
                           .ward("Phường Ngọc Lâm")
                           .wardCode("00133")
@@ -439,7 +439,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema trangThiCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Tràng Thi")
+                          .name("B&Q Tràng Thi")
                           .address("10b P. Tràng Thi")
                           .ward("Phường Hàng Trống")
                           .wardCode("00070")
@@ -457,7 +457,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema benTreCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Bến Tre")
+                          .name("B&Q Bến Tre")
                           .address("Lầu 1, TTTM Sense City, 26A Trần Quốc Tuấn")
                           .ward("Phường 4")
                           .wardCode("28765")
@@ -476,7 +476,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema daNangCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Đà Nẵng")
+                          .name("B&Q Đà Nẵng")
                           .address("Coop Mart, 478 Điện Biên Phủ")
                           .ward("Phường Thanh Khê Đông")
                           .wardCode("20207")
@@ -494,7 +494,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema caMauCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Cà Mau")
+                          .name("B&Q Cà Mau")
                           .address("9 Đ. Trần Hưng Đạo")
                           .ward("Phường 5")
                           .wardCode("32008")
@@ -512,7 +512,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema vinhCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Vinh")
+                          .name("B&Q Vinh")
                           .address("1 Đ. Lê Hồng Phong")
                           .ward("Phường Hưng Bình")
                           .wardCode("16672")
@@ -530,7 +530,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema haiPhongCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Hải Phòng")
+                          .name("B&Q Hải Phòng")
                           .address("104 P. Lương Khánh Thiện")
                           .ward("Phường Lương Khánh Thiện")
                           .wardCode("11344")
@@ -549,7 +549,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema buonMaThuotCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Buôn Ma Thuột")
+                          .name("B&Q Buôn Ma Thuột")
                           .address("71 Nguyễn Tất Thành")
                           .ward("Phường Tân An")
                           .wardCode("24124")
@@ -565,7 +565,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room1BuonMaThuotCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 1")
+                        .name("Phòng 1")
                         .cinema(buonMaThuotCinema)
                         .build()
             );
@@ -574,7 +574,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room2BuonMaThuotCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 2")
+                        .name("Phòng 2")
                         .cinema(buonMaThuotCinema)
                         .build()
             );
@@ -583,7 +583,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room3BuonMaThuotCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 3")
+                        .name("Phòng 3")
                         .cinema(buonMaThuotCinema)
                         .build()
             );
@@ -592,7 +592,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Room room4BuonMaThuotCinema = roomRepository.save(
                     Room.builder()
-                        .name("Rạp 4")
+                        .name("Phòng 4")
                         .cinema(buonMaThuotCinema)
                         .build()
             );
@@ -602,7 +602,7 @@ public class DataInitializer implements CommandLineRunner {
             Cinema longXuyenCinema = cinemaRepository.save(
                     Cinema.builder()
                           .code(cinemaService.generateCinemaCode())
-                          .name("Galaxy Long Xuyên")
+                          .name("B&Q Long Xuyên")
                           .address("Nguyễn Kim/01 Trần Hưng Đạo")
                           .ward("Phường Mỹ Bình")
                           .wardCode("30280")
@@ -1163,7 +1163,7 @@ public class DataInitializer implements CommandLineRunner {
 
                     if (showTimeRepository.count() == 0) {
                         /* Today */
-                        // Galaxy Quang Trung
+                        // B&Q Quang Trung
 
                         lamGiauVoiMaShowTime = showTimeRepository.save(
                                 ShowTime.builder()
@@ -2154,7 +2154,7 @@ public class DataInitializer implements CommandLineRunner {
     private void insertRooms(Cinema cinema, int[][][] layout1, int[][][] layout2, int[][][] layout3) {
         Room room1 = roomRepository.save(
                 Room.builder()
-                    .name("Rạp 1")
+                    .name("Phòng 1")
                     .cinema(cinema)
                     .build()
         );
@@ -2163,7 +2163,7 @@ public class DataInitializer implements CommandLineRunner {
 
         Room room2 = roomRepository.save(
                 Room.builder()
-                    .name("Rạp 2")
+                    .name("Phòng 2")
                     .cinema(cinema)
                     .build()
         );
@@ -2172,7 +2172,7 @@ public class DataInitializer implements CommandLineRunner {
 
         Room room3 = roomRepository.save(
                 Room.builder()
-                    .name("Rạp 3")
+                    .name("Phòng 3")
                     .cinema(cinema)
                     .build()
         );
@@ -2181,7 +2181,7 @@ public class DataInitializer implements CommandLineRunner {
 
         Room room4 = roomRepository.save(
                 Room.builder()
-                    .name("Rạp 4")
+                    .name("Phòng 4")
                     .cinema(cinema)
                     .build()
         );
