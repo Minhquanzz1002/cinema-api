@@ -41,6 +41,8 @@ public interface AdminOrderOverviewProjection {
 
         @Value("#{target.cinema.name}")
         String getCinemaName();
+        @Value("#{target.cinema.address + ', ' + target.cinema.ward + ', ' + target.cinema.district + ', ' + target.cinema.city}")
+        String getAddress();
         @Value("#{target.room.name}")
         String getRoomName();
         Movie getMovie();
