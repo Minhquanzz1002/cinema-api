@@ -46,6 +46,10 @@ public interface AdminOrderProjection {
     interface CinemaDTO {
         Integer getId();
         String getName();
+        String getAddress();
+        String getCity();
+        String getWard();
+        String getDistrict();
     }
 
     interface MovieDTO {
