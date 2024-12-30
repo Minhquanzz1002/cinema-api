@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionDetailRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionLineRequestDTO;
+import vn.edu.iuh.dto.admin.v1.promotion.detail.req.CreatePromotionDetailRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.line.req.UpdatePromotionLineRequest;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.PromotionDetail;
@@ -41,20 +41,20 @@ public class PromotionLineServiceImpl implements PromotionLineService {
     }
 
     @Override
-    public void createPromotionDetail(int promotionLineId, CreatePromotionDetailRequestDTO createPromotionDetailRequestDTO) {
+    public void createPromotionDetail(int promotionLineId, CreatePromotionDetailRequest request) {
         PromotionLine promotionLine = promotionLineRepository.findByIdAndDeleted(promotionLineId, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy mã khuyến mãi"));
-        PromotionDetail promotionDetail = modelMapper.map(createPromotionDetailRequestDTO, PromotionDetail.class);
+        PromotionDetail promotionDetail = modelMapper.map(request, PromotionDetail.class);
 
         promotionLine.addPromotionDetail(promotionDetail);
         promotionLineRepository.save(promotionLine);
     }
 
     @Override
-    public PromotionLine updatePromotionLine(int id, UpdatePromotionLineRequestDTO updatePromotionLineRequestDTO) {
+    public PromotionLine updatePromotionLine(int id, UpdatePromotionLineRequest request) {
         PromotionLine promotionLine = promotionLineRepository.findByIdAndDeleted(id, false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy mã khuyến mãi"));
 
-        LocalDate newStartDate = updatePromotionLineRequestDTO.getStartDate();
-        LocalDate newEndDate = updatePromotionLineRequestDTO.getEndDate();
+        LocalDate newStartDate = request.getStartDate();
+        LocalDate newEndDate = request.getEndDate();
 
         // Check if start date is after end date
         if (newStartDate != null && newStartDate.isAfter(newEndDate)) {
@@ -72,9 +72,9 @@ public class PromotionLineServiceImpl implements PromotionLineService {
         }
 
         if (promotionLine.getStatus() == BaseStatus.ACTIVE) {
-            promotionLine.setEndDate(updatePromotionLineRequestDTO.getEndDate());
+            promotionLine.setEndDate(request.getEndDate());
         } else {
-            modelMapper.map(updatePromotionLineRequestDTO, promotionLine);
+            modelMapper.map(request, promotionLine);
         }
         return promotionLineRepository.save(promotionLine);
     }

@@ -2,11 +2,11 @@ package vn.edu.iuh.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import vn.edu.iuh.dto.admin.v1.req.CreateMovieRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateMovieRequestDTO;
+import vn.edu.iuh.dto.admin.v1.movie.req.CreateMovieRequest;
+import vn.edu.iuh.dto.admin.v1.movie.req.UpdateMovieRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminMovieResponseDTO;
-import vn.edu.iuh.dto.admin.v1.res.MovieFiltersResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.movie.res.AdminMovieFilterResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.MovieStatus;
@@ -23,7 +23,7 @@ public interface MovieService {
 
     SuccessResponse<Movie> getMovie(String slug);
 
-    MovieFiltersResponseDTO getMovieFilters();
+    AdminMovieFilterResponse getMovieFilters();
 
     Page<AdminMovieResponseDTO> getAllMovies(
             String search,
@@ -39,11 +39,11 @@ public interface MovieService {
 
     void deleteMovie(int id);
 
-    Movie createMovie(CreateMovieRequestDTO createMovieRequestDTO);
+    Movie createMovie(CreateMovieRequest request);
 
     Movie updateMovie(
             int id,
-            UpdateMovieRequestDTO updateMovieRequestDTO
+            UpdateMovieRequest request
     );
 
     List<AdminMovieResponseDTO> getMoviesForSales();

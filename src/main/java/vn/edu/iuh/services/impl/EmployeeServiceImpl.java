@@ -11,9 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import vn.edu.iuh.dto.admin.v1.req.CreateEmployeeDTO;
+import vn.edu.iuh.dto.admin.v1.employee.req.CreateEmployeeRequest;
 import vn.edu.iuh.dto.admin.v1.req.EmployeeResponseDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateEmployeeDTO;
+import vn.edu.iuh.dto.admin.v1.employee.req.UpdateEmployeeRequest;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Role;
@@ -63,15 +63,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeResponseDTO createEmployee(CreateEmployeeDTO dto) {
-        if (userRepository.existsByEmailAndDeleted(dto.getEmail(), false)) {
+    public EmployeeResponseDTO createEmployee(CreateEmployeeRequest request) {
+        if (userRepository.existsByEmailAndDeleted(request.getEmail(), false)) {
             throw new BadRequestException("Email đã tồn tại");
         }
-        if (userRepository.existsByPhoneAndDeleted(dto.getPhone(), false)) {
+        if (userRepository.existsByPhoneAndDeleted(request.getPhone(), false)) {
             throw new BadRequestException("Số điện thoại đã tồn tại");
         }
 
-        Role role = roleRepository.findByIdAndDeleted(dto.getRoleId(), false)
+        Role role = roleRepository.findByIdAndDeleted(request.getRoleId(), false)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy vai trò"));
 
         String prefix = "NV";
@@ -81,13 +81,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         User employee = User.builder()
                 .code(generateEmployeeCode(prefix))
-                .name(dto.getName())
-                .gender(dto.isGender())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .birthday(dto.getBirthday())
-                .status(dto.getStatus())
+                .name(request.getName())
+                .gender(request.isGender())
+                .email(request.getEmail())
+                .phone(request.getPhone())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .birthday(request.getBirthday())
+                .status(request.getStatus())
                 .role(role)
                 .invalidateBefore(LocalDateTime.now())
                 .build();
@@ -97,7 +97,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeResponseDTO updateEmployee(UUID id, UpdateEmployeeDTO dto) {
+    public EmployeeResponseDTO updateEmployee(UUID id, UpdateEmployeeRequest dto) {
         User employee = userRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy nhân viên"));
 

@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.constant.RouterConstant.AdminPaths;
 import vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
-import vn.edu.iuh.dto.admin.v1.req.CreateProducerRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.producer.req.CreateProducerRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Producer;
 import vn.edu.iuh.services.ProducerService;
 
@@ -26,7 +26,7 @@ public class ProducerController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<Producer> createProducer(
-            @RequestBody @Valid CreateProducerRequestDTO request
+            @RequestBody @Valid CreateProducerRequest request
             ) {
         return new SuccessResponse<>(
                 201,

@@ -10,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionLineRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionRequestDTO;
+import vn.edu.iuh.dto.admin.v1.promotion.line.req.CreatePromotionLineRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.req.CreatePromotionRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.req.UpdatePromotionRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminPromotionResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Promotion;
 import vn.edu.iuh.models.PromotionLine;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -67,13 +67,13 @@ public class PromotionController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<Promotion> createPromotion(
-            @RequestBody @Valid CreatePromotionRequestDTO createPromotionRequestDTO
+            @RequestBody @Valid CreatePromotionRequest request
     ) {
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Thêm chiến dịch khuyến mãi thành công",
-                promotionService.createPromotion(createPromotionRequestDTO)
+                promotionService.createPromotion(request)
         );
     }
 
@@ -93,13 +93,13 @@ public class PromotionController {
     @PutMapping(AdminPaths.Promotion.UPDATE)
     public SuccessResponse<Promotion> updatePromotion(
             @PathVariable int id,
-            @RequestBody @Valid UpdatePromotionRequestDTO updatePromotionRequestDTO
+            @RequestBody @Valid UpdatePromotionRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Cập nhật khuyến mãi thành công",
-                promotionService.updatePromotion(id, updatePromotionRequestDTO)
+                promotionService.updatePromotion(id, request)
         );
     }
 
@@ -121,13 +121,13 @@ public class PromotionController {
     @PostMapping(AdminPaths.Promotion.CREATE_LINES)
     public SuccessResponse<PromotionLine> createPromotionLine(
             @PathVariable int id,
-            @RequestBody @Valid CreatePromotionLineRequestDTO createPromotionLineRequestDTO
+            @RequestBody @Valid CreatePromotionLineRequest request
     ) {
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Thêm chương trình khuyến mãi thành công",
-                promotionService.createPromotionLine(id, createPromotionLineRequestDTO)
+                promotionService.createPromotionLine(id, request)
         );
     }
 }

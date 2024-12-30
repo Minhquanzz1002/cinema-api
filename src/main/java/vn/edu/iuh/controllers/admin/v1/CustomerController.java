@@ -13,9 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.constant.RouterConstant.AdminPaths;
 import vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
-import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerRequestDTO;
-import vn.edu.iuh.dto.admin.v1.res.AdminCustomerResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.customer.req.UpdateCustomerRequestDTO;
+import vn.edu.iuh.dto.admin.v1.customer.res.AdminCustomerResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.projections.admin.v1.AdminCustomerWithNameAndPhoneProjection;
 import vn.edu.iuh.services.CustomerService;
@@ -44,7 +44,7 @@ public class CustomerController {
 
     @Operation(summary = AdminSwagger.Customer.GET_ALL_SUM)
     @GetMapping
-    public SuccessResponse<Page<AdminCustomerResponseDTO>> getAllCustomers(
+    public SuccessResponse<Page<AdminCustomerResponse>> getAllCustomers(
             @PageableDefault Pageable pageable,
             @Parameter(description = "Tên hoặc ID khách hàng")
             @RequestParam(required = false, defaultValue = "") String search,
@@ -62,7 +62,7 @@ public class CustomerController {
 
     @Operation(summary = AdminSwagger.Customer.UPDATE_SUM)
     @PutMapping(AdminPaths.Customer.UPDATE)
-    public SuccessResponse<AdminCustomerResponseDTO> updateCustomer(
+    public SuccessResponse<AdminCustomerResponse> updateCustomer(
             @Parameter(description = "ID khách hàng")
             @PathVariable UUID id,
             @RequestBody @Valid UpdateCustomerRequestDTO request

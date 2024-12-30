@@ -7,7 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.*;
+import vn.edu.iuh.dto.admin.v1.ticketprice.line.req.CreateTicketPriceLineRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.line.req.UpdateTicketPriceLineRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.CopyTicketPriceRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.CreateTicketPriceRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.UpdateTicketPriceRequest;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.TicketPrice;
@@ -74,13 +78,13 @@ public class TicketPriceServiceImpl implements TicketPriceService {
     }
 
     @Override
-    public TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO) {
-        TicketPrice ticketPrice = modelMapper.map(createTicketPriceRequestDTO, TicketPrice.class);
+    public TicketPrice createTicketPrice(CreateTicketPriceRequest request) {
+        TicketPrice ticketPrice = modelMapper.map(request, TicketPrice.class);
         return ticketPriceRepository.save(ticketPrice);
     }
 
     @Override
-    public TicketPrice copyTicketPrice(int id, CopyTicketPriceRequestDTO request) {
+    public TicketPrice copyTicketPrice(int id, CopyTicketPriceRequest request) {
         TicketPrice original = findById(id);
 
         TicketPrice copy = new TicketPrice();
@@ -118,26 +122,26 @@ public class TicketPriceServiceImpl implements TicketPriceService {
 
     @Transactional
     @Override
-    public TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequestDTO updateTicketPriceRequestDTO) {
+    public TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequest request) {
         TicketPrice ticketPrice = findById(id);
         LocalDate currentDate = LocalDate.now();
 
         // Handle status transition from INACTIVE to ACTIVE
-        if (ticketPrice.getStatus() == BaseStatus.INACTIVE && updateTicketPriceRequestDTO.getStatus() == BaseStatus.ACTIVE) {
+        if (ticketPrice.getStatus() == BaseStatus.INACTIVE && request.getStatus() == BaseStatus.ACTIVE) {
             validateAndActiveTicketPriceLines(ticketPrice);
         }
 
         // Handle updates for ACTIVE ticket prices
         if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
-            if (updateTicketPriceRequestDTO.getEndDate().isBefore(currentDate)) {
+            if (request.getEndDate().isBefore(currentDate)) {
                 throw new BadRequestException(
                         "Chỉ được phép sửa ngày kết thúc thành ngày hiện tại cho giá vé đang hoạt động");
             }
 
-            if (updateTicketPriceRequestDTO.getEndDate().isAfter(ticketPrice.getEndDate())) {
+            if (request.getEndDate().isAfter(ticketPrice.getEndDate())) {
                 List<TicketPrice> overlappingTicketPrices = ticketPriceRepository.findOverlappingTicketPrices(
                         ticketPrice.getEndDate().plusDays(1),
-                        updateTicketPriceRequestDTO.getEndDate()
+                        request.getEndDate()
                 );
 
 
@@ -147,18 +151,18 @@ public class TicketPriceServiceImpl implements TicketPriceService {
                 }
             }
 
-            ticketPrice.setEndDate(updateTicketPriceRequestDTO.getEndDate());
+            ticketPrice.setEndDate(request.getEndDate());
         } else {
-            if (updateTicketPriceRequestDTO.getStatus() == BaseStatus.INACTIVE) {
-                modelMapper.map(updateTicketPriceRequestDTO, ticketPrice);
+            if (request.getStatus() == BaseStatus.INACTIVE) {
+                modelMapper.map(request, ticketPrice);
             } else {
                 validateOverlappingTicketsWithTimeDetails(
-                        updateTicketPriceRequestDTO.getStartDate(),
-                        updateTicketPriceRequestDTO.getEndDate(),
+                        request.getStartDate(),
+                        request.getEndDate(),
                         ticketPrice
                 );
 
-                modelMapper.map(updateTicketPriceRequestDTO, ticketPrice);
+                modelMapper.map(request, ticketPrice);
             }
 
         }
@@ -249,46 +253,46 @@ public class TicketPriceServiceImpl implements TicketPriceService {
     @Override
     public TicketPriceLine createTicketPriceLine(
             int ticketPriceId,
-            CreateTicketPriceLineRequestDTO createTicketPriceLineRequestDTO
+            CreateTicketPriceLineRequest request
     ) {
         TicketPrice ticketPrice = getTicketPriceById(ticketPriceId);
         if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
             throw new BadRequestException("Không thể thêm vào giá vé đang hoạt động");
         }
 
-        String[] applyForDays = createTicketPriceLineRequestDTO.getApplyForDays()
-                                                               .stream()
-                                                               .map(Enum::name)
-                                                               .toArray(String[]::new);
+        String[] applyForDays = request.getApplyForDays()
+                                       .stream()
+                                       .map(Enum::name)
+                                       .toArray(String[]::new);
 
         boolean hasOverlap = ticketPriceLineRepository.hasOverlappingTicketPriceLine(
                 ticketPrice.getId(),
                 applyForDays,
-                createTicketPriceLineRequestDTO.getStartTime(),
-                createTicketPriceLineRequestDTO.getEndTime()
+                request.getStartTime(),
+                request.getEndTime()
         );
 
         if (hasOverlap) {
             throw new BadRequestException("Đã tồn tại giá vé trong khoảng thời gian này");
         }
 
-        TicketPriceLine ticketPriceLine = modelMapper.map(createTicketPriceLineRequestDTO, TicketPriceLine.class);
+        TicketPriceLine ticketPriceLine = modelMapper.map(request, TicketPriceLine.class);
         ticketPriceLine.setTicketPrice(ticketPrice);
 
         ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
-                                                              .price(createTicketPriceLineRequestDTO.getNormalPrice())
+                                                              .price(request.getNormalPrice())
                                                               .seatType(SeatType.NORMAL)
                                                               .status(BaseStatus.INACTIVE)
                                                               .build());
 
         ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
-                                                              .price(createTicketPriceLineRequestDTO.getVipPrice())
+                                                              .price(request.getVipPrice())
                                                               .seatType(SeatType.VIP)
                                                               .status(BaseStatus.INACTIVE)
                                                               .build());
 
         ticketPriceLine.addTicketPriceDetail(TicketPriceDetail.builder()
-                                                              .price(createTicketPriceLineRequestDTO.getCouplePrice())
+                                                              .price(request.getCouplePrice())
                                                               .seatType(SeatType.COUPLE)
                                                               .status(BaseStatus.INACTIVE)
                                                               .build());
@@ -300,7 +304,7 @@ public class TicketPriceServiceImpl implements TicketPriceService {
     public TicketPriceLine updateTicketPriceLine(
             int ticketPriceId,
             int lineId,
-            UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO
+            UpdateTicketPriceLineRequest request
     ) {
         TicketPrice ticketPrice = getTicketPriceById(ticketPriceId);
         if (ticketPrice.getStatus() == BaseStatus.ACTIVE) {
@@ -308,15 +312,15 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         }
 
         // Check if there is an overlapping ticket price line
-        String[] applyForDays = updateTicketPriceLineRequestDTO.getApplyForDays()
-                                                               .stream()
-                                                               .map(Enum::name)
-                                                               .toArray(String[]::new);
+        String[] applyForDays = request.getApplyForDays()
+                                       .stream()
+                                       .map(Enum::name)
+                                       .toArray(String[]::new);
         boolean hasOverlap = ticketPriceLineRepository.hasOverlappingTicketPriceLine(
                 ticketPrice.getId(),
                 applyForDays,
-                updateTicketPriceLineRequestDTO.getStartTime(),
-                updateTicketPriceLineRequestDTO.getEndTime(),
+                request.getStartTime(),
+                request.getEndTime(),
                 lineId
         );
         if (hasOverlap) {
@@ -326,20 +330,20 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         TicketPriceLine ticketPriceLine = ticketPriceLineRepository.findByIdAndDeleted(lineId, false)
                                                                    .orElseThrow(() -> new DataNotFoundException(
                                                                            "Không tìm thấy dòng giá vé"));
-        ticketPriceLine.setApplyForDays(updateTicketPriceLineRequestDTO.getApplyForDays());
-        ticketPriceLine.setStartTime(updateTicketPriceLineRequestDTO.getStartTime());
-        ticketPriceLine.setEndTime(updateTicketPriceLineRequestDTO.getEndTime());
-        ticketPriceLine.setStatus(updateTicketPriceLineRequestDTO.getStatus());
+        ticketPriceLine.setApplyForDays(request.getApplyForDays());
+        ticketPriceLine.setStartTime(request.getStartTime());
+        ticketPriceLine.setEndTime(request.getEndTime());
+        ticketPriceLine.setStatus(request.getStatus());
         ticketPriceLine.getTicketPriceDetails().forEach(ticketPriceDetail -> {
             switch (ticketPriceDetail.getSeatType()) {
                 case NORMAL:
-                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getNormalPrice());
+                    ticketPriceDetail.setPrice(request.getNormalPrice());
                     break;
                 case VIP:
-                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getVipPrice());
+                    ticketPriceDetail.setPrice(request.getVipPrice());
                     break;
                 case COUPLE:
-                    ticketPriceDetail.setPrice(updateTicketPriceLineRequestDTO.getCouplePrice());
+                    ticketPriceDetail.setPrice(request.getCouplePrice());
                     break;
             }
         });

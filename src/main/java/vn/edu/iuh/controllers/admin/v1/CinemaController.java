@@ -12,11 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
+import vn.edu.iuh.dto.admin.v1.cinema.req.CreateCinemaRequest;
 import vn.edu.iuh.dto.admin.v1.req.RoomDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
-import vn.edu.iuh.dto.admin.v1.res.AdminCinemaDetailResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.cinema.req.UpdateCinemaRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Cinema;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.CinemaService;
@@ -74,7 +73,7 @@ public class CinemaController {
     @Operation(summary = AdminSwagger.Cinema.CREATE_SUM)
     @ApiResponse(responseCode = "201", description = "Created successfully")
     public SuccessResponse<Cinema> createCinema(
-            @RequestBody @Valid CreateCinemaRequestDTO body) {
+            @RequestBody @Valid CreateCinemaRequest body) {
         Cinema cinema = cinemaService.createCinema(body);
         return new SuccessResponse<>(
                 HttpStatus.CREATED.value(),
@@ -90,7 +89,7 @@ public class CinemaController {
     public SuccessResponse<Cinema> updateCinema(
             @Parameter(description = "Rạp ID")
             @PathVariable Integer id,
-            @RequestBody @Valid UpdateCinemaRequestDTO body) {
+            @RequestBody @Valid UpdateCinemaRequest body) {
         Cinema cinema = cinemaService.updateCinema(id, body);
         return new SuccessResponse<>(
                 HttpStatus.OK.value(),

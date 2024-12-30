@@ -12,7 +12,7 @@ import vn.edu.iuh.constant.RouterConstant.AdminPaths;
 import vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
 import vn.edu.iuh.dto.admin.v1.res.AdminDashboardStatsResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminMovieRevenueSummaryResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.services.DashboardService;
 

@@ -1,6 +1,6 @@
 package vn.edu.iuh.services;
 
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Genre;
 
 import java.util.List;
@@ -14,5 +14,5 @@ public interface GenreService {
      */
     Genre createGenre(String name);
 
-    SuccessResponse<List<?>> getGenres();
+    List<Genre> getGenres();
 }

@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.ActivateMultipleShowTimeRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.GenerateShowTimeRequestDTO;
+import vn.edu.iuh.dto.admin.v1.showtime.req.BatchActivateShowTimeRequest;
+import vn.edu.iuh.dto.admin.v1.showtime.req.CreateShowTimeRequest;
+import vn.edu.iuh.dto.admin.v1.showtime.req.GenerateShowTimeRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
-import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.showtime.res.AdminShowTimeFilterResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
@@ -97,27 +97,27 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public ShowTimeFiltersResponseDTO getShowTimeFilters() {
+    public AdminShowTimeFilterResponse getShowTimeFilters() {
         List<AdminCinemaFilterProjection> cinemas = cinemaRepository.findAllProjectionByDeleted(false, AdminCinemaFilterProjection.class);
         List<AdminMovieFilterProjection> movies = movieRepository.findAllProjectionByDeleted(false, AdminMovieFilterProjection.class);
-        return ShowTimeFiltersResponseDTO.builder()
-                .cinemas(cinemas)
-                .movies(movies)
-                .build();
+        return AdminShowTimeFilterResponse.builder()
+                                          .cinemas(cinemas)
+                                          .movies(movies)
+                                          .build();
     }
 
     @Override
-    public void createShowTime(CreateShowTimeRequestDTO createShowTimeRequestDTO) {
-        Movie movie = movieRepository.findByIdAndDeleted(createShowTimeRequestDTO.getMovieId(), false)
+    public void createShowTime(CreateShowTimeRequest request) {
+        Movie movie = movieRepository.findByIdAndDeleted(request.getMovieId(), false)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy phim"));
-        Cinema cinema = cinemaRepository.findByIdAndDeleted(createShowTimeRequestDTO.getCinemaId(), false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp"));
-        Room room = roomRepository.findByIdAndDeleted(createShowTimeRequestDTO.getRoomId(), false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy phòng chiếu"));
+        Cinema cinema = cinemaRepository.findByIdAndDeleted(request.getCinemaId(), false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy rạp"));
+        Room room = roomRepository.findByIdAndDeleted(request.getRoomId(), false).orElseThrow(() -> new DataNotFoundException("Không tìm thấy phòng chiếu"));
 
         boolean hasConflict = showTimeRepository.existsByRoomAndStartDateAndStartTimeBetweenOrEndTimeBetween(
                 room,
-                createShowTimeRequestDTO.getStartDate(),
-                createShowTimeRequestDTO.getStartTime(),
-                createShowTimeRequestDTO.getEndTime()
+                request.getStartDate(),
+                request.getStartTime(),
+                request.getEndTime()
         );
 
         if (hasConflict) {
@@ -128,10 +128,10 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                 .movie(movie)
                 .cinema(cinema)
                 .room(room)
-                .startDate(createShowTimeRequestDTO.getStartDate())
-                .startTime(createShowTimeRequestDTO.getStartTime())
-                .endTime(createShowTimeRequestDTO.getEndTime())
-                .status(createShowTimeRequestDTO.getStatus())
+                .startDate(request.getStartDate())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
+                .status(request.getStatus())
                 .build();
         showTimeRepository.save(showTime);
     }
@@ -165,7 +165,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public String generateShowTime(GenerateShowTimeRequestDTO body) {
+    public String generateShowTime(GenerateShowTimeRequest body) {
         int totalShowTimesCreated = 0;
 
         LocalDate startDate = body.getStartDate();
@@ -193,7 +193,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
         // Movie validation and constants setup
         List<Movie> movies = movieRepository.findAllByIdInAndDeleted(
-                body.getMovies().stream().map(GenerateShowTimeRequestDTO.MovieDTO::getId).toList(),
+                body.getMovies().stream().map(GenerateShowTimeRequest.MovieDTO::getId).toList(),
                 false
         );
         if (movies.size() != body.getMovies().size()) {
@@ -208,7 +208,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
         Map<Movie, Integer> remainingShowTimes = body.getMovies().stream()
                 .collect(Collectors.toMap(
                         movieDTO -> movies.stream().filter(movie -> movie.getId() == movieDTO.getId()).findFirst().get(),
-                        GenerateShowTimeRequestDTO.MovieDTO::getTotalShowTimes
+                        GenerateShowTimeRequest.MovieDTO::getTotalShowTimes
                 ));
 
         MovieRotation rotation = movieRotationFactory.createRotation(
@@ -308,7 +308,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public String activateMultipleShowTime(ActivateMultipleShowTimeRequestDTO body) {
+    public String activateMultipleShowTime(BatchActivateShowTimeRequest body) {
         List<ShowTime> showTimes = showTimeRepository.findAllByCinema_IdAndStartDateAndRoom_IdInAndMovie_IdInAndStatusAndDeleted(
                 body.getCinemaId(),
                 body.getStartDate(),

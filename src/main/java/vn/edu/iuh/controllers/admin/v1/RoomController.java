@@ -13,10 +13,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import vn.edu.iuh.dto.admin.v1.req.CreateRoomDTO;
+import vn.edu.iuh.dto.admin.v1.room.req.CreateRoomRequest;
 import vn.edu.iuh.dto.admin.v1.req.RoomDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateRoomDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.room.req.UpdateRoomRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.services.RoomService;
 
 import static vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
@@ -35,7 +35,7 @@ public class RoomController {
     @Operation(summary = AdminSwagger.Room.CREATE_SUM)
     @ApiResponse(responseCode = "201", description = "Created successfully")
     public SuccessResponse<RoomDTO> createRoom(
-            @Valid @RequestBody CreateRoomDTO dto
+            @Valid @RequestBody CreateRoomRequest dto
     ) {
         RoomDTO room = roomService.createRoom(dto);
         return new SuccessResponse<>(
@@ -85,7 +85,7 @@ public class RoomController {
     public SuccessResponse<RoomDTO> updateRoom(
             @Parameter(description = "Room ID")
             @PathVariable int id,
-            @Valid @RequestBody UpdateRoomDTO dto
+            @Valid @RequestBody UpdateRoomRequest dto
     ) {
         RoomDTO room = roomService.updateRoom(id, dto);
         return new SuccessResponse<>(

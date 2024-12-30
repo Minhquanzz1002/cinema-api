@@ -6,23 +6,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.constant.RouterConstant.ClientPaths;
+import vn.edu.iuh.constant.SwaggerConstant.ClientSwagger;
+import vn.edu.iuh.dto.common.SuccessResponse;
+import vn.edu.iuh.models.Genre;
 import vn.edu.iuh.services.GenreService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/genres")
+@RequestMapping(ClientPaths.Genre.BASE)
 @RequiredArgsConstructor
-@Tag(name = "Genre Controller", description = "Quản lý danh mục phim")
+@Tag(name = "V1: Genre Controller", description = "Quản lý danh mục phim")
 public class GenreController {
     private final GenreService genreService;
 
-    @Operation(
-            summary = "Danh sách danh mục phim"
-    )
+    @Operation(summary = ClientSwagger.Genre.GET_ALL_SUM)
     @GetMapping
-    public SuccessResponse<List<?>> getGenres() {
-        return genreService.getGenres();
+    public SuccessResponse<List<Genre>> getGenres() {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                genreService.getGenres()
+        );
     }
 }

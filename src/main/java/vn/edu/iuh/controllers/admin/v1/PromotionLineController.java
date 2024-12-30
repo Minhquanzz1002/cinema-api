@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionDetailRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionLineRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.promotion.detail.req.CreatePromotionDetailRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.line.req.UpdatePromotionLineRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.PromotionLine;
 import vn.edu.iuh.services.PromotionLineService;
 
@@ -30,14 +30,16 @@ public class PromotionLineController {
     }
 
     @PutMapping("/{id}")
-    public SuccessResponse<PromotionLine> updatePromotionLine(@PathVariable int id, @RequestBody @Valid UpdatePromotionLineRequestDTO updatePromotionLineRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Cập nhật khuyến mãi thành công", promotionLineService.updatePromotionLine(id, updatePromotionLineRequestDTO));
+    public SuccessResponse<PromotionLine> updatePromotionLine(@PathVariable int id, @RequestBody @Valid UpdatePromotionLineRequest request) {
+        return new SuccessResponse<>(200, "success", "Cập nhật khuyến mãi thành công", promotionLineService.updatePromotionLine(id,
+                                                                                                                                request
+        ));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{promotionLineId}/details")
-    public SuccessResponse<?> createPromotionLineDetails(@PathVariable int promotionLineId, @RequestBody @Valid CreatePromotionDetailRequestDTO createPromotionDetailRequestDTO) {
-        promotionLineService.createPromotionDetail(promotionLineId, createPromotionDetailRequestDTO);
+    public SuccessResponse<?> createPromotionLineDetails(@PathVariable int promotionLineId, @RequestBody @Valid CreatePromotionDetailRequest request) {
+        promotionLineService.createPromotionDetail(promotionLineId, request);
         return new SuccessResponse<>(200, "success", "Thêm chi tiết chương trình giảm giá thành công", null);
     }
 

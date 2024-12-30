@@ -2,8 +2,8 @@ package vn.edu.iuh.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import vn.edu.iuh.dto.admin.v1.req.CreateDirectorRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateDirectorRequestDTO;
+import vn.edu.iuh.dto.admin.v1.director.req.CreateDirectorRequest;
+import vn.edu.iuh.dto.admin.v1.director.req.UpdateDirectorRequest;
 import vn.edu.iuh.models.Director;
 import vn.edu.iuh.models.enums.BaseStatus;
 
@@ -14,7 +14,7 @@ public interface DirectorService {
      * @param request DTO contains director information
      * @return Director
      */
-    Director createDirector(CreateDirectorRequestDTO request);
+    Director createDirector(CreateDirectorRequest request);
 
     /**
      * Find a director by id
@@ -41,7 +41,7 @@ public interface DirectorService {
      * @param request DTO contains director information
      * @return Director
      */
-    Director updateDirector(int id, UpdateDirectorRequestDTO request);
+    Director updateDirector(int id, UpdateDirectorRequest request);
 
     /**
      * Delete a director

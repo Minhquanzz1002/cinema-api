@@ -2,7 +2,11 @@ package vn.edu.iuh.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import vn.edu.iuh.dto.admin.v1.req.*;
+import vn.edu.iuh.dto.admin.v1.ticketprice.line.req.CreateTicketPriceLineRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.line.req.UpdateTicketPriceLineRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.CopyTicketPriceRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.CreateTicketPriceRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.UpdateTicketPriceRequest;
 import vn.edu.iuh.models.TicketPrice;
 import vn.edu.iuh.models.TicketPriceLine;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -10,7 +14,7 @@ import vn.edu.iuh.models.enums.BaseStatus;
 import java.time.LocalDate;
 
 public interface TicketPriceService {
-    TicketPrice createTicketPrice(CreateTicketPriceRequestDTO createTicketPriceRequestDTO);
+    TicketPrice createTicketPrice(CreateTicketPriceRequest request);
 
     /**
      * Copy a ticket price with new start and end date
@@ -19,7 +23,7 @@ public interface TicketPriceService {
      * @param request DTO contains new start and end date
      * @return Copied ticket price with new start and end date
      */
-    TicketPrice copyTicketPrice(int id, CopyTicketPriceRequestDTO request);
+    TicketPrice copyTicketPrice(int id, CopyTicketPriceRequest request);
 
     /**
      * Find ticket price by ID
@@ -40,7 +44,7 @@ public interface TicketPriceService {
     );
 
 
-    TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequestDTO updateTicketPriceRequestDTO);
+    TicketPrice updateTicketPrice(int id, UpdateTicketPriceRequest request);
 
     void deleteTicketPrice(int id);
 
@@ -48,12 +52,12 @@ public interface TicketPriceService {
 
     TicketPriceLine createTicketPriceLine(
             int ticketPriceId,
-            CreateTicketPriceLineRequestDTO createTicketPriceLineRequestDTO
+            CreateTicketPriceLineRequest request
     );
 
     TicketPriceLine updateTicketPriceLine(
             int ticketPriceId,
             int lineId,
-            UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO
+            UpdateTicketPriceLineRequest request
     );
 }

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.admin.v1.res.AdminRefundOverviewResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.projections.admin.v1.AdminRefundProjection;
 import vn.edu.iuh.services.RefundService;
 

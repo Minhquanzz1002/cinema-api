@@ -179,12 +179,31 @@ public class SwaggerConstant {
     public static class ClientSwagger {
         public static class Auth {
             public static final String LOGIN_SUM = "Đăng nhập";
+            public static final String REGISTER_SUM = "Đăng ký";
+            public static final String CONFIRM_REGISTER_SUM = "Xác thực đăng ký tài khoản";
             public static final String PROFILE_SUM = "Thông tin người dùng";
             public static final String UPDATE_PROFILE_SUM = "Cập nhật thông tin người dùng";
             public static final String FORGOT_PASSWORD_SUM = "Quên mật khẩu";
             public static final String LOGOUT_SUM = "Đăng xuất";
             public static final String CHANGE_PASSWORD_SUM = "Đổi mật khẩu";
             public static final String UPDATE_PROFILE_DESC = "Quy ước: Nam là `true`, Nữ là `false`";
+        }
+
+        public static class Cinema {
+            public static final String GET_ALL_SUM = "Danh sách rạp chiếu phim";
+        }
+
+        public static class City {
+            public static final String GET_ALL_SUM = "Danh sách thành phố có rạp";
+        }
+
+        public static class Genre {
+            public static final String GET_ALL_SUM = "Danh sách danh mục phim";
+        }
+
+        public static class Movie {
+            public static final String GET_ALL_SUM = "Danh sách phim";
+            public static final String GET_BY_SLUG = "Thông tin phim theo slug";
         }
 
         public static class Order {
@@ -194,6 +213,14 @@ public class SwaggerConstant {
             public static final String UPDATE_SEATS_SUM = "Cập nhật ghế trong đơn hàng";
             public static final String CANCEL_SUM = "Hủy đơn hàng";
             public static final String APPLY_PROMOTION_SUM = "Áp mã khuyến mãi";
+        }
+
+        public static class Product {
+            public static final String GET_ALL_SUM = "Danh sách sản phẩm đang bán";
+        }
+
+        public static class ShowTime {
+            public static final String GET_ALL_SUM = "Danh sách lịch chiếu";
         }
     }
 

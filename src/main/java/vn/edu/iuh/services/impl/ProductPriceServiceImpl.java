@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
+import vn.edu.iuh.dto.admin.v1.product.price.req.CreateProductPriceRequest;
+import vn.edu.iuh.dto.admin.v1.product.price.req.UpdateProductPriceRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminProductPriceOverviewResponseDTO;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
@@ -56,25 +56,25 @@ public class ProductPriceServiceImpl implements ProductPriceService {
     }
 
     @Override
-    public ProductPrice updateProductPrice(int id, UpdateProductPriceRequestDTO updateProductPriceRequestDTO) {
+    public ProductPrice updateProductPrice(int id, UpdateProductPriceRequest request) {
         ProductPrice productPrice = productPriceRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy giá sản phẩm"));
         if (productPrice.getStatus() == BaseStatus.ACTIVE) {
-            LocalDate newEndDate = updateProductPriceRequestDTO.getEndDate();
+            LocalDate newEndDate = request.getEndDate();
             if (newEndDate.isBefore(productPrice.getStartDate())) {
                 throw new BadRequestException("Ngày kết thúc phải sau ngày bắt đầu");
             }
             productPrice.setEndDate(newEndDate);
         } else {
-            BaseStatus newStatus = updateProductPriceRequestDTO.getStatus();
+            BaseStatus newStatus = request.getStatus();
             if (newStatus == BaseStatus.ACTIVE) {
                 boolean hasOverlap = productPriceRepository.existsByProductAndDeletedAndStatusAndIdNotAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                         productPrice.getProduct(),
                         false,
                         BaseStatus.ACTIVE,
                         id,
-                        updateProductPriceRequestDTO.getEndDate(),
-                        updateProductPriceRequestDTO.getStartDate()
+                        request.getEndDate(),
+                        request.getStartDate()
                 );
 
                 if (hasOverlap) {
@@ -82,18 +82,18 @@ public class ProductPriceServiceImpl implements ProductPriceService {
                 }
 
             }
-            modelMapper.map(updateProductPriceRequestDTO, productPrice);
+            modelMapper.map(request, productPrice);
         }
         return productPriceRepository.save(productPrice);
     }
 
     @Transactional
     @Override
-    public void createProductPrice(CreateProductPriceRequestDTO createProductPriceRequestDTO) {
-        LocalDate startDate = createProductPriceRequestDTO.getStartDate();
-        LocalDate endDate = createProductPriceRequestDTO.getEndDate();
+    public void createProductPrice(CreateProductPriceRequest request) {
+        LocalDate startDate = request.getStartDate();
+        LocalDate endDate = request.getEndDate();
 
-        createProductPriceRequestDTO.getProducts().stream().map(p -> {
+        request.getProducts().stream().map(p -> {
             Product product = productRepository.findByIdAndDeleted(p.getId(), false)
                     .orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
             return ProductPrice.builder()

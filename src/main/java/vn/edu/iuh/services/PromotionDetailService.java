@@ -1,8 +1,8 @@
 package vn.edu.iuh.services;
 
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionDetailRequestDTO;
+import vn.edu.iuh.dto.admin.v1.promotion.detail.req.UpdatePromotionDetailRequest;
 
 public interface PromotionDetailService {
     void deletePromotionDetailById(int id);
-    void updatePromotionDetailById(int id, UpdatePromotionDetailRequestDTO updatePromotionDetailRequestDTO);
+    void updatePromotionDetailById(int id, UpdatePromotionDetailRequest request);
 }

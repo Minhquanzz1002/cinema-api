@@ -2,8 +2,8 @@ package vn.edu.iuh.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerRequestDTO;
-import vn.edu.iuh.dto.admin.v1.res.AdminCustomerResponseDTO;
+import vn.edu.iuh.dto.admin.v1.customer.req.UpdateCustomerRequestDTO;
+import vn.edu.iuh.dto.admin.v1.customer.res.AdminCustomerResponse;
 import vn.edu.iuh.models.User;
 import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.projections.admin.v1.AdminCustomerWithNameAndPhoneProjection;
@@ -32,7 +32,7 @@ public interface CustomerService {
      * @param pageable Pagination information (page number, size, sort)
      * @return Page of customers
      */
-    Page<AdminCustomerResponseDTO> getAllCustomers(
+    Page<AdminCustomerResponse> getAllCustomers(
             String search,
             String phone,
             String email,
@@ -47,7 +47,7 @@ public interface CustomerService {
      * @param request The updated information
      * @return The updated customer
      */
-    AdminCustomerResponseDTO updateCustomer(UUID id, UpdateCustomerRequestDTO request);
+    AdminCustomerResponse updateCustomer(UUID id, UpdateCustomerRequestDTO request);
 
     /**
      * Delete a customer
