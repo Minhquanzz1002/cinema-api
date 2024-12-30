@@ -1,17 +1,15 @@
 package vn.edu.iuh.services.impl;
 
-import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.edu.iuh.dto.admin.v1.req.CreateCinemaRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateCinemaRequestDTO;
-import vn.edu.iuh.dto.res.CityResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.cinema.req.CreateCinemaRequest;
+import vn.edu.iuh.dto.admin.v1.cinema.req.UpdateCinemaRequest;
+import vn.edu.iuh.dto.client.v1.city.res.CityResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Cinema;
@@ -76,7 +74,7 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     @Transactional
-    public Cinema createCinema(CreateCinemaRequestDTO request) {
+    public Cinema createCinema(CreateCinemaRequest request) {
         String slug = slugifyService.generateSlug(request.getName());
         while (cinemaRepository.existsBySlug(slug)) {
             slug = slugifyService.generateUniqueSlug(request.getName());
@@ -103,7 +101,7 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     @Transactional
-    public Cinema updateCinema(Integer id, UpdateCinemaRequestDTO request) {
+    public Cinema updateCinema(Integer id, UpdateCinemaRequest request) {
         Cinema cinema = getCinemaById(id);
 
         String slug = slugifyService.generateSlug(request.getName());
@@ -149,8 +147,8 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
-    public List<CityResponseDTO> getCinemaCities() {
-        List<CityResponseDTO> cities = cinemaRepository.findDistinctCities(BaseStatus.ACTIVE, false);
+    public List<CityResponse> getCinemaCities() {
+        List<CityResponse> cities = cinemaRepository.findDistinctCities(BaseStatus.ACTIVE, false);
         return cities.stream()
                      .peek(city -> city.setName(removeCityPrefix(city.getName())))
                      .collect(Collectors.toList());

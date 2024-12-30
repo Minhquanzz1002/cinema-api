@@ -7,9 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.constant.SecurityConstant;
-import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerRequestDTO;
-import vn.edu.iuh.dto.admin.v1.res.AdminCustomerResponseDTO;
+import vn.edu.iuh.dto.admin.v1.customer.req.UpdateCustomerRequestDTO;
+import vn.edu.iuh.dto.admin.v1.customer.res.AdminCustomerResponse;
 import vn.edu.iuh.models.User;
 import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.projections.admin.v1.AdminCustomerWithNameAndPhoneProjection;
@@ -47,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<AdminCustomerResponseDTO> getAllCustomers(
+    public Page<AdminCustomerResponse> getAllCustomers(
             String search,
             String phone,
             String email,
@@ -61,15 +60,15 @@ public class CustomerServiceImpl implements CustomerService {
                                                 .and(UserSpecification.hasSearch(search))
                                                 .and(GenericSpecifications.withDeleted(false));
         Page<User> users = userRepository.findAll(spec, pageable);
-        return users.map(user -> modelMapper.map(user, AdminCustomerResponseDTO.class));
+        return users.map(user -> modelMapper.map(user, AdminCustomerResponse.class));
     }
 
     @Override
-    public AdminCustomerResponseDTO updateCustomer(UUID id, UpdateCustomerRequestDTO request) {
+    public AdminCustomerResponse updateCustomer(UUID id, UpdateCustomerRequestDTO request) {
         User user = findCustomerById(id);
         modelMapper.map(request, user);
         user = userRepository.save(user);
-        return modelMapper.map(user, AdminCustomerResponseDTO.class);
+        return modelMapper.map(user, AdminCustomerResponse.class);
     }
 
     @Override

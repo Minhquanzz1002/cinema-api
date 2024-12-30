@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateActorRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateActorRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.actor.req.CreateActorRequest;
+import vn.edu.iuh.dto.admin.v1.actor.req.UpdateActorRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Actor;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.ActorService;
@@ -46,12 +46,12 @@ public class ActorController {
     @Operation(summary = AdminSwagger.Actor.CREATE_SUM)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public SuccessResponse<Actor> createActor(@RequestBody @Valid CreateActorRequestDTO createActorRequestDTO) {
+    public SuccessResponse<Actor> createActor(@RequestBody @Valid CreateActorRequest request) {
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Thành công",
-                actorService.createActor(createActorRequestDTO)
+                actorService.createActor(request)
         );
     }
 
@@ -70,13 +70,13 @@ public class ActorController {
     @PutMapping(AdminPaths.Actor.UPDATE)
     public SuccessResponse<Actor> updateActor(
             @PathVariable int id,
-            @RequestBody @Valid UpdateActorRequestDTO updateActorRequestDTO
+            @RequestBody @Valid UpdateActorRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Cập nhật diễn viên thành công",
-                actorService.updateActor(id, updateActorRequestDTO)
+                actorService.updateActor(id, request)
         );
     }
 

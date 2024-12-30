@@ -6,14 +6,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreateProductRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateProductRequestDTO;
+import vn.edu.iuh.dto.admin.v1.product.req.CreateProductRequest;
+import vn.edu.iuh.dto.admin.v1.product.req.UpdateProductRequest;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Product;
-import vn.edu.iuh.models.ProductPrice;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.models.enums.ProductStatus;
 import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
@@ -75,8 +72,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(CreateProductRequestDTO createProductRequestDTO) {
-        String code = createProductRequestDTO.getCode();
+    public Product createProduct(CreateProductRequest request) {
+        String code = request.getCode();
         if (code != null && !code.isEmpty()) {
             if (productRepository.existsByCode(code)) {
                 throw new BadRequestException("Mã " + code + " đã tồn tại");
@@ -84,15 +81,15 @@ public class ProductServiceImpl implements ProductService {
         } else {
             code = generateNextProductCode();
         }
-        Product product = modelMapper.map(createProductRequestDTO, Product.class);
+        Product product = modelMapper.map(request, Product.class);
         product.setCode(code);
         return productRepository.save(product);
     }
 
     @Override
-    public BaseProductProjection updateProduct(String code, UpdateProductRequestDTO updateProductRequestDTO) {
+    public BaseProductProjection updateProduct(String code, UpdateProductRequest request) {
         Product existingProduct = getProductByCode(code);
-        if (existingProduct.getStatus() == ProductStatus.INACTIVE && updateProductRequestDTO.getStatus() == ProductStatus.ACTIVE) {
+        if (existingProduct.getStatus() == ProductStatus.INACTIVE && request.getStatus() == ProductStatus.ACTIVE) {
             boolean hasActivePrice = productPriceRepository
                     .findFirstByProduct_CodeAndDeletedAndStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByStartDateDesc(
                             code,
@@ -108,15 +105,15 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         if (existingProduct.getStatus() != ProductStatus.ACTIVE) {
-            if (updateProductRequestDTO.getName() != null) {
-                existingProduct.setName(updateProductRequestDTO.getName());
+            if (request.getName() != null) {
+                existingProduct.setName(request.getName());
             }
-            if (updateProductRequestDTO.getDescription() != null) {
-                existingProduct.setDescription(updateProductRequestDTO.getDescription());
+            if (request.getDescription() != null) {
+                existingProduct.setDescription(request.getDescription());
             }
         }
-        if (updateProductRequestDTO.getStatus() != null) {
-            existingProduct.setStatus(updateProductRequestDTO.getStatus());
+        if (request.getStatus() != null) {
+            existingProduct.setStatus(request.getStatus());
         }
         productRepository.save(existingProduct);
         return productRepository.findByCodeAndDeleted(code, false, BaseProductProjection.class)

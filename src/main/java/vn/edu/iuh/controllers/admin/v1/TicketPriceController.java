@@ -10,8 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.*;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.ticketprice.line.req.CreateTicketPriceLineRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.line.req.UpdateTicketPriceLineRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.CopyTicketPriceRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.CreateTicketPriceRequest;
+import vn.edu.iuh.dto.admin.v1.ticketprice.req.UpdateTicketPriceRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.exceptions.ValidationException;
 import vn.edu.iuh.models.TicketPrice;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -51,16 +55,16 @@ public class TicketPriceController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<TicketPrice> createTicketPrice(
-            @RequestBody @Valid CreateTicketPriceRequestDTO createTicketPriceRequestDTO
+            @RequestBody @Valid CreateTicketPriceRequest request
     ) {
-        if (createTicketPriceRequestDTO.getStartDate().isAfter(createTicketPriceRequestDTO.getEndDate())) {
+        if (request.getStartDate().isAfter(request.getEndDate())) {
             throw new ValidationException("Ngày bắt đầu phải trước ngày kết thúc");
         }
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Thêm bảng giá vé thành công",
-                ticketPriceService.createTicketPrice(createTicketPriceRequestDTO)
+                ticketPriceService.createTicketPrice(request)
         );
     }
 
@@ -69,7 +73,7 @@ public class TicketPriceController {
     @PostMapping(AdminPaths.TicketPrice.COPY)
     public SuccessResponse<TicketPrice> copyTicketPrice(
             @PathVariable int id,
-            @RequestBody @Valid CopyTicketPriceRequestDTO request
+            @RequestBody @Valid CopyTicketPriceRequest request
     ) {
         return new SuccessResponse<>(
                 201,
@@ -83,16 +87,16 @@ public class TicketPriceController {
     @PutMapping(AdminPaths.TicketPrice.UPDATE)
     public SuccessResponse<TicketPrice> updateTicketPrice(
             @PathVariable int id,
-            @RequestBody @Valid UpdateTicketPriceRequestDTO updateTicketPriceRequestDTO
+            @RequestBody @Valid UpdateTicketPriceRequest request
     ) {
-        if (updateTicketPriceRequestDTO.getStartDate().isAfter(updateTicketPriceRequestDTO.getEndDate())) {
+        if (request.getStartDate().isAfter(request.getEndDate())) {
             throw new ValidationException("Ngày bắt đầu phải trước ngày kết thúc");
         }
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Cập nhật bảng giá thành công",
-                ticketPriceService.updateTicketPrice(id, updateTicketPriceRequestDTO)
+                ticketPriceService.updateTicketPrice(id, request)
         );
     }
 
@@ -113,13 +117,13 @@ public class TicketPriceController {
     @PostMapping(AdminPaths.TicketPrice.CREATE_LINES)
     public SuccessResponse<?> createTicketPriceLine(
             @PathVariable int id,
-            @RequestBody @Valid CreateTicketPriceLineRequestDTO createTicketPriceLineRequestDTO
+            @RequestBody @Valid CreateTicketPriceLineRequest request
     ) {
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Thêm giá vé thành công",
-                ticketPriceService.createTicketPriceLine(id, createTicketPriceLineRequestDTO)
+                ticketPriceService.createTicketPriceLine(id, request)
         );
     }
 
@@ -127,13 +131,13 @@ public class TicketPriceController {
     public SuccessResponse<?> updateTicketPriceLine(
             @PathVariable int id,
             @PathVariable int lineId,
-            @RequestBody @Valid UpdateTicketPriceLineRequestDTO updateTicketPriceLineRequestDTO
+            @RequestBody @Valid UpdateTicketPriceLineRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Cập nhật giá vé thành công",
-                ticketPriceService.updateTicketPriceLine(id, lineId, updateTicketPriceLineRequestDTO)
+                ticketPriceService.updateTicketPriceLine(id, lineId, request)
         );
     }
 }

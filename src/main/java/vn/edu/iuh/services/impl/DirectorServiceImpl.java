@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreateDirectorRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateDirectorRequestDTO;
+import vn.edu.iuh.dto.admin.v1.director.req.CreateDirectorRequest;
+import vn.edu.iuh.dto.admin.v1.director.req.UpdateDirectorRequest;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Director;
@@ -28,7 +28,7 @@ public class DirectorServiceImpl implements DirectorService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Director createDirector(CreateDirectorRequestDTO request) {
+    public Director createDirector(CreateDirectorRequest request) {
         Director director = modelMapper.map(request, Director.class);
         director.setCode(generateNextDirectorCode());
         return directorRepository.save(director);
@@ -57,7 +57,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public Director updateDirector(int id, UpdateDirectorRequestDTO request) {
+    public Director updateDirector(int id, UpdateDirectorRequest request) {
         Director director = findById(id);
         modelMapper.map(request, director);
         return directorRepository.save(director);

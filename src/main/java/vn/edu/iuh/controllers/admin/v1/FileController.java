@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.constant.RouterConstant.AdminPaths;
 import vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
-import vn.edu.iuh.dto.admin.v1.req.AdminUploadFileRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.file.req.AdminUploadFileRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.impl.S3Service;
 
@@ -28,7 +28,7 @@ public class FileController {
     @PostMapping
     @Operation(summary = AdminSwagger.File.GET_PRESIGNED_URL_SUM)
     public SuccessResponse<String> getPresignedUrl(
-            @RequestBody @Valid AdminUploadFileRequestDTO request,
+            @RequestBody @Valid AdminUploadFileRequest request,
             @AuthenticationPrincipal UserPrincipal principal
             ) {
         return new SuccessResponse<>(

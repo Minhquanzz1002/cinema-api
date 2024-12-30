@@ -9,9 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateDirectorRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateDirectorRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.director.req.CreateDirectorRequest;
+import vn.edu.iuh.dto.admin.v1.director.req.UpdateDirectorRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Director;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.DirectorService;
@@ -30,7 +30,7 @@ public class DirectorController {
     @Operation(summary = AdminSwagger.Director.CREATE_SUM)
     @PostMapping
     public SuccessResponse<Director> createDirector(
-            @RequestBody @Valid CreateDirectorRequestDTO request
+            @RequestBody @Valid CreateDirectorRequest request
     ) {
         return new SuccessResponse<>(
                 201,
@@ -73,7 +73,7 @@ public class DirectorController {
     @PutMapping(AdminPaths.Director.UPDATE)
     public SuccessResponse<Director> updateDirector(
             @PathVariable int id,
-            @RequestBody @Valid UpdateDirectorRequestDTO request
+            @RequestBody @Valid UpdateDirectorRequest request
     ) {
         return new SuccessResponse<>(
                 200,

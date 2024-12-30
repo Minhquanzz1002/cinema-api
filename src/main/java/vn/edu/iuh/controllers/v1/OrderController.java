@@ -11,11 +11,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.constant.RouterConstant.ClientPaths;
 import vn.edu.iuh.constant.SwaggerConstant.ClientSwagger;
-import vn.edu.iuh.dto.req.OrderCreateRequestDTO;
-import vn.edu.iuh.dto.req.OrderUpdateDiscountDTO;
-import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
-import vn.edu.iuh.dto.req.OrderUpdateSeatRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.client.v1.order.req.CreateOrderRequest;
+import vn.edu.iuh.dto.client.v1.order.req.UpdateOrderDiscountRequest;
+import vn.edu.iuh.dto.client.v1.order.req.UpdateOrderProductRequest;
+import vn.edu.iuh.dto.client.v1.order.req.UpdateOrderSeatRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.projections.v1.OrderProjection;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.OrderService;
@@ -37,7 +37,7 @@ public class OrderController {
     @PostMapping
     public SuccessResponse<OrderProjection> createOrder(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody @Valid OrderCreateRequestDTO request
+            @RequestBody @Valid CreateOrderRequest request
     ) {
         return new SuccessResponse<>(
                 201,
@@ -52,7 +52,7 @@ public class OrderController {
     public SuccessResponse<OrderProjection> updateSeatInOrderDetail(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable UUID orderId,
-            @RequestBody @Valid OrderUpdateSeatRequestDTO orderUpdateSeatRequestDTO
+            @RequestBody @Valid UpdateOrderSeatRequest request
     ) {
         return new SuccessResponse<>(
                 200,
@@ -61,7 +61,7 @@ public class OrderController {
                 orderService.updateOrderSeatsByCustomer(
                         userPrincipal,
                         orderId,
-                        orderUpdateSeatRequestDTO
+                        request
                 )
         );
     }
@@ -71,7 +71,7 @@ public class OrderController {
     public SuccessResponse<OrderProjection> updateProductInOrderDetail(
             @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable UUID orderId,
-            @RequestBody @Valid OrderUpdateProductRequestDTO request
+            @RequestBody @Valid UpdateOrderProductRequest request
     ) {
         return new SuccessResponse<>(
                 200,
@@ -118,7 +118,7 @@ public class OrderController {
     public SuccessResponse<OrderProjection> updatePromotionInOrder(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable UUID orderId,
-            @RequestBody @Valid OrderUpdateDiscountDTO orderUpdateDiscountDTO
+            @RequestBody @Valid UpdateOrderDiscountRequest orderUpdateDiscountDTO
     ) {
         return orderService.updateDiscountInOrder(userPrincipal, orderId, orderUpdateDiscountDTO);
     }

@@ -1,12 +1,12 @@
 package vn.edu.iuh.services;
 
-import vn.edu.iuh.dto.admin.v1.req.ActivateMultipleShowTimeRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.GenerateShowTimeRequestDTO;
+import vn.edu.iuh.dto.admin.v1.showtime.req.BatchActivateShowTimeRequest;
+import vn.edu.iuh.dto.admin.v1.showtime.req.CreateShowTimeRequest;
+import vn.edu.iuh.dto.admin.v1.showtime.req.GenerateShowTimeRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
-import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.showtime.res.AdminShowTimeFilterResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.ShowTime;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.projections.v1.ShowTimeProjection;
@@ -22,9 +22,9 @@ public interface ShowTimeService {
 
     AdminShowTimeResponseDTO getAllShowTimes(int cinemaId, LocalDate startDate, Integer movieId, BaseStatus status);
 
-    ShowTimeFiltersResponseDTO getShowTimeFilters();
+    AdminShowTimeFilterResponse getShowTimeFilters();
 
-    void createShowTime(CreateShowTimeRequestDTO createShowTimeRequestDTO);
+    void createShowTime(CreateShowTimeRequest request);
 
     void deleteShowTime(UUID id);
 
@@ -39,7 +39,7 @@ public interface ShowTimeService {
      *
      * @param body GenerateShowTimeRequestDTO
      */
-    String generateShowTime(GenerateShowTimeRequestDTO body);
+    String generateShowTime(GenerateShowTimeRequest body);
 
-    String activateMultipleShowTime(ActivateMultipleShowTimeRequestDTO body);
+    String activateMultipleShowTime(BatchActivateShowTimeRequest body);
 }

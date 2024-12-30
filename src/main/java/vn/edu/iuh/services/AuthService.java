@@ -1,29 +1,33 @@
 package vn.edu.iuh.services;
 
-import vn.edu.iuh.dto.req.*;
-import vn.edu.iuh.dto.res.UserAuthResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
-import vn.edu.iuh.dto.res.UserResponseDTO;
+import vn.edu.iuh.dto.client.v1.auth.req.RegisterRequest;
+import vn.edu.iuh.dto.client.v1.auth.req.VerifyOtpRequest;
+import vn.edu.iuh.dto.common.auth.req.ChangePasswordRequest;
+import vn.edu.iuh.dto.common.auth.req.LoginRequest;
+import vn.edu.iuh.dto.common.auth.req.UpdateProfileRequest;
+import vn.edu.iuh.dto.common.auth.res.UserAuthResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
+import vn.edu.iuh.dto.common.auth.res.UserResponse;
 import vn.edu.iuh.security.UserPrincipal;
 
 public interface AuthService {
-    SuccessResponse<?> register(RegisterRequestDTO registerRequestDTO);
+    void register(RegisterRequest request);
 
-    SuccessResponse<?> confirmRegister(RegistrationConfirmationRequestDTO registrationConfirmationRequestDTO);
+    SuccessResponse<?> confirmRegister(VerifyOtpRequest request);
 
-    UserAuthResponseDTO login(LoginRequestDTO loginRequestDTO, boolean isAdminLogin);
+    UserAuthResponse login(LoginRequest request, boolean isAdminLogin);
 
-    SuccessResponse<UserResponseDTO> getProfile(UserPrincipal userPrincipal);
+    UserResponse getProfile(UserPrincipal userPrincipal);
 
-    UserResponseDTO updateProfile(
+    UserResponse updateProfile(
             UserPrincipal principal,
-            UpdateProfileRequestDTO request
+            UpdateProfileRequest request
     );
 
     SuccessResponse<?> forgotPassword(String email);
 
-    SuccessResponse<UserAuthResponseDTO> changePassword(
+    SuccessResponse<UserAuthResponse> changePassword(
             UserPrincipal userPrincipal,
-            ChangePasswordRequestDTO changePasswordRequestDTO
+            ChangePasswordRequest request
     );
 }

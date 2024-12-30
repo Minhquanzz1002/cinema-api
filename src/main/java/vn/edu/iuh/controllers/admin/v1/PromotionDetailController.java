@@ -5,8 +5,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionDetailRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.promotion.detail.req.UpdatePromotionDetailRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.services.PromotionDetailService;
 
 @Slf4j
@@ -31,9 +31,9 @@ public class PromotionDetailController {
     @PutMapping("/{id}")
     public SuccessResponse<?> updatePromotionDetail(
             @PathVariable int id,
-            @RequestBody @Valid UpdatePromotionDetailRequestDTO updatePromotionDetailRequestDTO
+            @RequestBody @Valid UpdatePromotionDetailRequest request
     ) {
-        promotionDetailService.updatePromotionDetailById(id, updatePromotionDetailRequestDTO);
+        promotionDetailService.updatePromotionDetailById(id, request);
         return new SuccessResponse<>(
                 200,
                 "success",

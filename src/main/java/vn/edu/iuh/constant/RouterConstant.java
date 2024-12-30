@@ -176,8 +176,28 @@ public class RouterConstant {
             public static final String PROFILE = "/profile";
             public static final String UPDATE_PROFILE = "/profile";
             public static final String FORGOT_PASSWORD = "/forgot-password";
+            public static final String CHANGE_PASSWORD = "/change-password";
             public static final String LOGIN = "/login";
             public static final String LOGOUT = "/logout";
+            public static final String REGISTER = "/register";
+            public static final String CONFIRM_REGISTER = "/register/validate-otp";
+        }
+
+        public static class Cinema {
+            public static final String BASE = V1 + "/cinemas";
+        }
+
+        public static class City {
+            public static final String BASE = V1 + "/cities";
+        }
+
+        public static class Genre {
+            public static final String BASE = V1 + "/genres";
+        }
+
+        public static class Movie {
+            public static final String BASE = V1 + "/movies";
+            public static final String GET_BY_SLUG = "/{slug}";
         }
 
         public static class Order {
@@ -187,6 +207,14 @@ public class RouterConstant {
             public static final String UPDATE_SEATS = "/{orderId}/seats";
             public static final String COMPLETE = "/{orderId}/complete";
             public static final String CANCEL = "/{orderId}";
+        }
+
+        public static class Product {
+            public static final String BASE = V1 + "/products";
+        }
+
+        public static class ShowTime {
+            public static final String BASE = V1 + "/show-times";
         }
     }
 }

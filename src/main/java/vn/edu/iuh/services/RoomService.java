@@ -3,9 +3,9 @@ package vn.edu.iuh.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import vn.edu.iuh.dto.admin.v1.req.CreateRoomDTO;
+import vn.edu.iuh.dto.admin.v1.room.req.CreateRoomRequest;
 import vn.edu.iuh.dto.admin.v1.req.RoomDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateRoomDTO;
+import vn.edu.iuh.dto.admin.v1.room.req.UpdateRoomRequest;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ public interface RoomService {
 
 
     @Transactional
-    RoomDTO createRoom(CreateRoomDTO dto);
+    RoomDTO createRoom(CreateRoomRequest dto);
 
     @Transactional
-    RoomDTO updateRoom(int id, UpdateRoomDTO dto);
+    RoomDTO updateRoom(int id, UpdateRoomRequest dto);
 
     void deleteRoom(int id);
 

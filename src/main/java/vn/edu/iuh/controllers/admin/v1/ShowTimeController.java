@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.ActivateMultipleShowTimeRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreateShowTimeRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.GenerateShowTimeRequestDTO;
+import vn.edu.iuh.dto.admin.v1.showtime.req.BatchActivateShowTimeRequest;
+import vn.edu.iuh.dto.admin.v1.showtime.req.CreateShowTimeRequest;
+import vn.edu.iuh.dto.admin.v1.showtime.req.GenerateShowTimeRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeForSaleResponseDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
-import vn.edu.iuh.dto.admin.v1.res.ShowTimeFiltersResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.showtime.res.AdminShowTimeFilterResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.ShowTimeService;
 
@@ -35,8 +35,8 @@ public class ShowTimeController {
     @Operation(summary = AdminSwagger.ShowTime.GENERATE_SUM)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(AdminPaths.ShowTime.GENERATE)
-    public SuccessResponse<?> generateShowTime(
-            @RequestBody @Valid GenerateShowTimeRequestDTO body
+    public SuccessResponse<Void> generateShowTime(
+            @RequestBody @Valid GenerateShowTimeRequest body
     ) {
         return new SuccessResponse<>(
                 201,
@@ -49,8 +49,8 @@ public class ShowTimeController {
     @Operation(summary = AdminSwagger.ShowTime.CREATE_SUM)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public SuccessResponse<?> createShowTime(@RequestBody @Valid CreateShowTimeRequestDTO createShowTimeRequestDTO) {
-        showTimeService.createShowTime(createShowTimeRequestDTO);
+    public SuccessResponse<Void> createShowTime(@RequestBody @Valid CreateShowTimeRequest request) {
+        showTimeService.createShowTime(request);
         return new SuccessResponse<>(
                 201,
                 "success",
@@ -76,7 +76,7 @@ public class ShowTimeController {
 
     @Operation(summary = AdminSwagger.ShowTime.FILTER_SUM)
     @GetMapping(AdminPaths.ShowTime.FILTER)
-    public SuccessResponse<ShowTimeFiltersResponseDTO> getShowTimeFilters() {
+    public SuccessResponse<AdminShowTimeFilterResponse> getShowTimeFilters() {
         return new SuccessResponse<>(
                 200,
                 "success",
@@ -103,12 +103,12 @@ public class ShowTimeController {
 
     @Operation(summary = AdminSwagger.ShowTime.UPDATE_SUM)
     @PutMapping(AdminPaths.ShowTime.UPDATE)
-    public SuccessResponse<?> updateShowTime(
+    public SuccessResponse<Void> updateShowTime(
             @PathVariable UUID id,
-            @RequestBody @Valid CreateShowTimeRequestDTO createShowTimeRequestDTO
+            @RequestBody @Valid CreateShowTimeRequest request
     ) {
         showTimeService.deleteShowTime(id);
-        showTimeService.createShowTime(createShowTimeRequestDTO);
+        showTimeService.createShowTime(request);
         return new SuccessResponse<>(
                 200,
                 "success",
@@ -119,7 +119,7 @@ public class ShowTimeController {
 
     @Operation(summary = AdminSwagger.ShowTime.ACTIVATE_MULTIPLE_SUM)
     @PutMapping(AdminPaths.ShowTime.ACTIVATE_MULTIPLE)
-    public SuccessResponse<?> activateMultipleShowTime(@RequestBody ActivateMultipleShowTimeRequestDTO body) {
+    public SuccessResponse<Void> activateMultipleShowTime(@RequestBody BatchActivateShowTimeRequest body) {
         String resMessage = showTimeService.activateMultipleShowTime(body);
         return new SuccessResponse<>(
                 200,
@@ -131,7 +131,7 @@ public class ShowTimeController {
 
     @Operation(summary = AdminSwagger.ShowTime.DELETE_SUM)
     @DeleteMapping(AdminPaths.ShowTime.DELETE)
-    public SuccessResponse<?> deleteShowTime(@PathVariable UUID id) {
+    public SuccessResponse<Void> deleteShowTime(@PathVariable UUID id) {
         showTimeService.deleteShowTime(id);
         return new SuccessResponse<>(
                 200,

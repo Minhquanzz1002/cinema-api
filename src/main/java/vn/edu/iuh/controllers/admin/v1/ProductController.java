@@ -9,9 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateProductRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateProductRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.product.req.CreateProductRequest;
+import vn.edu.iuh.dto.admin.v1.product.req.UpdateProductRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Product;
 import vn.edu.iuh.models.enums.ProductStatus;
 import vn.edu.iuh.projections.admin.v1.BaseProductProjection;
@@ -35,13 +35,13 @@ public class ProductController {
     @Operation(summary = AdminSwagger.Product.CREATE_SUM)
     @PostMapping
     public SuccessResponse<Product> createProduct(
-            @RequestBody @Valid CreateProductRequestDTO createProductRequestDTO
+            @RequestBody @Valid CreateProductRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Thêm sản phẩm thành công",
-                productService.createProduct(createProductRequestDTO)
+                productService.createProduct(request)
         );
     }
 
@@ -99,13 +99,13 @@ public class ProductController {
     @PutMapping(AdminPaths.Product.UPDATE)
     public SuccessResponse<BaseProductProjection> updateProduct(
             @PathVariable String code,
-            @RequestBody @Valid UpdateProductRequestDTO updateProductRequestDTO
+            @RequestBody @Valid UpdateProductRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Cập nhật sản phẩm thành công",
-                productService.updateProduct(code, updateProductRequestDTO)
+                productService.updateProduct(code, request)
         );
     }
 

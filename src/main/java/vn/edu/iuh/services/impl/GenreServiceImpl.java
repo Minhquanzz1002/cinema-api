@@ -2,7 +2,7 @@ package vn.edu.iuh.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Genre;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.repositories.GenreRepository;
@@ -25,8 +25,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public SuccessResponse<List<?>> getGenres() {
-        List<Genre> genres = genreRepository.findAll();
-        return new SuccessResponse<>(200, "success", "Thành công", genres);
+    public List<Genre> getGenres() {
+        return genreRepository.findAll();
     }
 }

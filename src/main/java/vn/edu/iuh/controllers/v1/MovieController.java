@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.constant.RouterConstant.ClientPaths;
+import vn.edu.iuh.constant.SwaggerConstant.ClientSwagger;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.enums.MovieStatus;
 import vn.edu.iuh.projections.v1.MovieProjection;
@@ -17,13 +19,13 @@ import vn.edu.iuh.services.MovieService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/movies")
-@Tag(name = "Movie Controller", description = "Quản lý phim")
+@RequestMapping(ClientPaths.Movie.BASE)
+@Tag(name = "V1: Movie Controller", description = "Quản lý phim")
 public class MovieController {
     private final MovieService movieService;
 
     @Operation(
-            summary = "Danh sách phim",
+            summary = ClientSwagger.Movie.GET_ALL_SUM,
             description = """
                     Chỉ lấy 1 số trường nhất định
                     
@@ -42,11 +44,8 @@ public class MovieController {
         return movieService.getMovies(pageable, title, status);
     }
 
-    @Operation(
-            summary = "Phim theo slug",
-            description = "Lấy toàn bộ các trường"
-    )
-    @GetMapping("/{slug}")
+    @Operation(summary = ClientSwagger.Movie.GET_BY_SLUG)
+    @GetMapping(ClientPaths.Movie.GET_BY_SLUG)
     public SuccessResponse<Movie> getMovie(@PathVariable String slug) {
         return movieService.getMovie(slug);
     }

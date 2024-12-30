@@ -12,12 +12,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.dto.admin.v1.TicketOrderResult;
-import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.order.req.RefundOrderRequest;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerInOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
-import vn.edu.iuh.dto.req.*;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.client.v1.order.req.*;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.exceptions.InternalServerErrorException;
@@ -89,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderProjection createOrder(UserPrincipal principal, OrderCreateRequestDTO dto) {
+    public OrderProjection createOrder(UserPrincipal principal, CreateOrderRequest dto) {
         return createNewOrder(
                 dto.getShowTimeId(),
                 principal.getId(),
@@ -98,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public AdminOrderProjection createOrderByEmployee(CreateOrderRequestDTO dto) {
+    public AdminOrderProjection createOrderByEmployee(vn.edu.iuh.dto.admin.v1.order.req.CreateOrderRequest dto) {
         return createNewOrder(
                 dto.getShowTimeId(),
                 dto.getCustomerId(),
@@ -218,7 +217,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderProjection updateOrderProductsByCustomer(
             UserPrincipal principal,
             UUID orderId,
-            OrderUpdateProductRequestDTO request
+            UpdateOrderProductRequest request
     ) {
         Order order = findByIdAndUser(orderId, principal.getId());
         updateOrderProducts(order, request);
@@ -228,14 +227,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public AdminOrderProjection updateOrderProductsByEmployee(
             UUID orderId,
-            OrderUpdateProductRequestDTO request
+            UpdateOrderProductRequest request
     ) {
         Order order = findById(orderId);
         updateOrderProducts(order, request);
         return getOrderProjectionById(orderId, AdminOrderProjection.class);
     }
 
-    private void updateOrderProducts(Order order, OrderUpdateProductRequestDTO request) {
+    private void updateOrderProducts(Order order, UpdateOrderProductRequest request) {
         clearPromotionFromOrder(order);
 
         List<OrderDetail> updatedOrderDetails = order.getOrderDetails().stream()
@@ -251,7 +250,7 @@ public class OrderServiceImpl implements OrderService {
                                                                       Function.identity()
                                                               ));
 
-        for (OrderProductRequestDTO product : request.getProducts()) {
+        for (UpdateOrderProductRequest.Product product : request.getProducts()) {
             OrderDetail orderDetail = processProductUpdate(
                     product,
                     existingOrderDetails,
@@ -274,7 +273,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderDetail processProductUpdate(
-            OrderProductRequestDTO product,
+            UpdateOrderProductRequest.Product product,
             Map<Integer, OrderDetail> existingDetails,
             Order order
     ) {
@@ -306,7 +305,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderProjection updateOrderSeatsByCustomer(
             UserPrincipal principal,
             UUID orderId,
-            OrderUpdateSeatRequestDTO request
+            UpdateOrderSeatRequest request
     ) {
         Order order = findByIdAndUser(orderId, principal.getId());
         updateOrderSeats(order, request.getSeatIds());
@@ -316,7 +315,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public AdminOrderProjection updateOrderSeatsByEmployee(
             UUID orderId,
-            OrderUpdateSeatRequestDTO request
+            UpdateOrderSeatRequest request
     ) {
         Order order = findById(orderId);
         updateOrderSeats(order, request.getSeatIds());
@@ -365,7 +364,7 @@ public class OrderServiceImpl implements OrderService {
     public SuccessResponse<OrderProjection> updateDiscountInOrder(
             UserPrincipal principal,
             UUID orderId,
-            OrderUpdateDiscountDTO request
+            UpdateOrderDiscountRequest request
     ) {
         Order order = this.findByIdAndUser(orderId, principal.getId());
 
@@ -570,7 +569,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void refundOrder(UUID orderId, RefundOrderRequestDTO request) {
+    public void refundOrder(UUID orderId, RefundOrderRequest request) {
         Order order = orderRepository.findByIdAndDeletedAndStatus(orderId, false, OrderStatus.COMPLETED)
                                      .orElseThrow(() -> new DataNotFoundException("Không tìm thấy đơn hàng"));
 
