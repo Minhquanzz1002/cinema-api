@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.dto.common.zalopay.CreateOrderZaloPayResponseDTO;
 import vn.edu.iuh.dto.common.zalopay.req.CreateOrderZaloPayRequestDTO;
 import vn.edu.iuh.dto.common.zalopay.res.GetOrderZaloPayResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.services.ZaloPayService;
 
 import static vn.edu.iuh.constant.RouterConstant.AdminPaths;

@@ -9,10 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateProductPriceRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateProductPriceRequestDTO;
+import vn.edu.iuh.dto.admin.v1.product.price.req.CreateProductPriceRequest;
+import vn.edu.iuh.dto.admin.v1.product.price.req.UpdateProductPriceRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminProductPriceOverviewResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.ProductPrice;
 import vn.edu.iuh.models.enums.BaseStatus;
 import vn.edu.iuh.services.ProductPriceService;
@@ -33,9 +33,9 @@ public class ProductPriceController {
     @Operation(summary = AdminSwagger.ProductPrice.CREATE_SUM)
     @PostMapping
     public SuccessResponse<Void> createProductPrice(
-            @RequestBody @Valid CreateProductPriceRequestDTO createProductPriceRequestDTO
+            @RequestBody @Valid CreateProductPriceRequest request
     ) {
-        productPriceService.createProductPrice(createProductPriceRequestDTO);
+        productPriceService.createProductPrice(request);
         return new SuccessResponse<>(
                 200,
                 "success",
@@ -78,13 +78,13 @@ public class ProductPriceController {
     @PutMapping(AdminPaths.ProductPrice.UPDATE)
     public SuccessResponse<ProductPrice> updateProductPrice(
             @PathVariable int id,
-            @RequestBody @Valid UpdateProductPriceRequestDTO updateProductPriceRequestDTO
+            @RequestBody @Valid UpdateProductPriceRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Cập nhật giá bảng giá thành công",
-                productPriceService.updateProductPrice(id, updateProductPriceRequestDTO)
+                productPriceService.updateProductPrice(id, request)
         );
     }
 

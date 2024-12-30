@@ -10,9 +10,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import vn.edu.iuh.dto.admin.v1.req.CreateRoomDTO;
+import vn.edu.iuh.dto.admin.v1.room.req.CreateRoomRequest;
 import vn.edu.iuh.dto.admin.v1.req.RoomDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateRoomDTO;
+import vn.edu.iuh.dto.admin.v1.room.req.UpdateRoomRequest;
 import vn.edu.iuh.models.*;
 import vn.edu.iuh.models.enums.SeatType;
 import vn.edu.iuh.repositories.*;
@@ -84,7 +84,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public RoomDTO createRoom(CreateRoomDTO dto) {
+    public RoomDTO createRoom(CreateRoomRequest dto) {
         Cinema cinema = cinemaRepository.findById(dto.getCinemaId())
                 .orElseThrow(() -> new RuntimeException("Cinema not found with id: " + dto.getCinemaId()));
 
@@ -101,7 +101,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public RoomDTO updateRoom(int id, UpdateRoomDTO dto) {
+    public RoomDTO updateRoom(int id, UpdateRoomRequest dto) {
         Room room = roomRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(() -> new RuntimeException("Room not found with id: " + id));
 

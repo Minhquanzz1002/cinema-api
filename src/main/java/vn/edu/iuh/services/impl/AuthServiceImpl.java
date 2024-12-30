@@ -9,10 +9,14 @@ import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.req.*;
-import vn.edu.iuh.dto.res.SuccessResponse;
-import vn.edu.iuh.dto.res.UserAuthResponseDTO;
-import vn.edu.iuh.dto.res.UserResponseDTO;
+import vn.edu.iuh.dto.client.v1.auth.req.RegisterRequest;
+import vn.edu.iuh.dto.client.v1.auth.req.VerifyOtpRequest;
+import vn.edu.iuh.dto.common.auth.req.ChangePasswordRequest;
+import vn.edu.iuh.dto.common.auth.req.LoginRequest;
+import vn.edu.iuh.dto.common.auth.req.UpdateProfileRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
+import vn.edu.iuh.dto.common.auth.res.UserAuthResponse;
+import vn.edu.iuh.dto.common.auth.res.UserResponse;
 import vn.edu.iuh.exceptions.*;
 import vn.edu.iuh.models.Role;
 import vn.edu.iuh.models.User;
@@ -45,17 +49,17 @@ public class AuthServiceImpl implements AuthService {
     private final OTPService otpService;
 
     @Override
-    public SuccessResponse<?> register(RegisterRequestDTO registerRequestDTO) {
-        String email = registerRequestDTO.getEmail();
+    public void register(RegisterRequest request) {
+        String email = request.getEmail();
         if (userRepository.existsByEmailAndDeleted(email, false)) {
             throw new IllegalArgumentException("Email đã tồn tại");
         }
 
-        if (userRepository.existsByPhoneAndDeleted(registerRequestDTO.getPhone(), false)) {
+        if (userRepository.existsByPhoneAndDeleted(request.getPhone(), false)) {
             throw new IllegalArgumentException("Số điện thoại đã tồn tại");
         }
 
-        User user = modelMapper.map(registerRequestDTO, User.class);
+        User user = modelMapper.map(request, User.class);
         Role role = roleRepository.findByName("ROLE_CLIENT").orElseThrow(() -> new InternalServerErrorException("Role ROLE_CLIENT không tồn tại"));
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -65,14 +69,12 @@ public class AuthServiceImpl implements AuthService {
         String otp = generateOTP();
         otpService.saveOTP(email, otp);
         emailService.sendEmail(email, "Xác thực tài khoản", "Mã xác thực OTP của bạn là: " + otp);
-        log.info("[Auth Service] Registration successful!");
-        return new SuccessResponse<>(200, "success", "Tạo tài khoản thành công", null);
     }
 
     @Override
-    public SuccessResponse<?> confirmRegister(RegistrationConfirmationRequestDTO registrationConfirmationRequestDTO) {
-        User user = getUserByEmail(registrationConfirmationRequestDTO.getEmail());
-        boolean isValid = otpService.validateOTP(user.getEmail(), registrationConfirmationRequestDTO.getOtp());
+    public SuccessResponse<?> confirmRegister(VerifyOtpRequest request) {
+        User user = getUserByEmail(request.getEmail());
+        boolean isValid = otpService.validateOTP(user.getEmail(), request.getOtp());
         if (!isValid) {
             throw new OTPMismatchException("OTP không khớp hoặc không tìm thấy");
         } else {
@@ -83,11 +85,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserAuthResponseDTO login(LoginRequestDTO loginRequestDTO, boolean isAdminLogin) {
-        User user = getUserByEmail(loginRequestDTO.getEmail());
+    public UserAuthResponse login(LoginRequest request, boolean isAdminLogin) {
+        User user = getUserByEmail(request.getEmail());
         validateUserStatus(user.getStatus());
 
-        if (!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new UnauthorizedException("Tài khoản hoặc mật khẩu không đúng. Hãy nhập lại");
         }
 
@@ -106,21 +108,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public SuccessResponse<UserResponseDTO> getProfile(UserPrincipal userPrincipal) {
+    public UserResponse getProfile(UserPrincipal userPrincipal) {
         User user = getUserByEmail(userPrincipal.getEmail());
-        UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-        return new SuccessResponse<>(200, "success", "Thành công", userResponseDTO);
+        return modelMapper.map(user, UserResponse.class);
     }
 
     @Override
-    public UserResponseDTO updateProfile(UserPrincipal principal, UpdateProfileRequestDTO request) {
+    public UserResponse updateProfile(UserPrincipal principal, UpdateProfileRequest request) {
         User user = getUserByEmail(principal.getEmail());
         user.setName(request.getName());
         user.setPhone(request.getPhone());
         user.setGender(request.getGender());
         user.setBirthday(request.getBirthday());
         user = userRepository.save(user);
-        return modelMapper.map(user, UserResponseDTO.class);
+        return modelMapper.map(user, UserResponse.class);
     }
 
     @Override
@@ -137,13 +138,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public SuccessResponse<UserAuthResponseDTO> changePassword(UserPrincipal userPrincipal, ChangePasswordRequestDTO changePasswordRequestDTO) {
+    public SuccessResponse<UserAuthResponse> changePassword(UserPrincipal userPrincipal, ChangePasswordRequest request) {
         User user = getUserByEmail(userPrincipal.getEmail());
-        if (!passwordEncoder.matches(changePasswordRequestDTO.getCurrentPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new BadRequestException("Mật khẩu không khớp");
         }
 
-        user.setPassword(passwordEncoder.encode(changePasswordRequestDTO.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setInvalidateBefore(LocalDateTime.now());
         user = userRepository.save(user);
 
@@ -199,8 +200,8 @@ public class AuthServiceImpl implements AuthService {
         return passwordGenerator.generatePassword(8, List.of(lowerCaseRule, upperCaseRule, digitRule, specialCharRule, new CharacterRule(EnglishCharacterData.Alphabetical, 4)));
     }
 
-    private UserAuthResponseDTO createAuthResponse(User user) {
-        UserAuthResponseDTO userAuthResponseDTO = modelMapper.map(user, UserAuthResponseDTO.class);
+    private UserAuthResponse createAuthResponse(User user) {
+        UserAuthResponse userAuthResponseDTO = modelMapper.map(user, UserAuthResponse.class);
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         userAuthResponseDTO.setAccessToken(jwtUtil.generateAccessToken(userPrincipal));
         userAuthResponseDTO.setRefreshToken(jwtUtil.generateRefreshToken(userPrincipal));

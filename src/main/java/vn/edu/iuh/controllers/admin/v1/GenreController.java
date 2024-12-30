@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.constant.RouterConstant.AdminPaths;
 import vn.edu.iuh.constant.SwaggerConstant.AdminSwagger;
-import vn.edu.iuh.dto.admin.v1.req.CreateGenreRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.genre.req.CreateGenreRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Genre;
 import vn.edu.iuh.services.GenreService;
 
@@ -26,7 +26,7 @@ public class GenreController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<Genre> createGenre(
-            @RequestBody @Valid CreateGenreRequestDTO request
+            @RequestBody @Valid CreateGenreRequest request
     ) {
         return new SuccessResponse<>(
                 201,

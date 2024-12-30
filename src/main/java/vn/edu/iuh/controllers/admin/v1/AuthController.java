@@ -8,13 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.req.ChangePasswordRequestDTO;
-import vn.edu.iuh.dto.req.EmailRequestDTO;
-import vn.edu.iuh.dto.req.LoginRequestDTO;
-import vn.edu.iuh.dto.req.UpdateProfileRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
-import vn.edu.iuh.dto.res.UserAuthResponseDTO;
-import vn.edu.iuh.dto.res.UserResponseDTO;
+import vn.edu.iuh.dto.common.auth.req.ChangePasswordRequest;
+import vn.edu.iuh.dto.client.v1.auth.req.ForgotPasswordRequest;
+import vn.edu.iuh.dto.common.auth.req.LoginRequest;
+import vn.edu.iuh.dto.common.auth.req.UpdateProfileRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
+import vn.edu.iuh.dto.common.auth.res.UserAuthResponse;
+import vn.edu.iuh.dto.common.auth.res.UserResponse;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
@@ -31,14 +31,14 @@ public class AuthController {
 
     @Operation(summary = AdminSwagger.Auth.LOGIN_SUM, description = POST_LOGIN_DESC)
     @PostMapping(AdminPaths.Auth.LOGIN)
-    public SuccessResponse<UserAuthResponseDTO> login(
-            @RequestBody @Valid LoginRequestDTO loginRequestDTO
+    public SuccessResponse<UserAuthResponse> login(
+            @RequestBody @Valid LoginRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Thành công",
-                authService.login(loginRequestDTO, true)
+                authService.login(request, true)
         );
     }
 
@@ -50,8 +50,13 @@ public class AuthController {
             }
     )
     @GetMapping(AdminPaths.Auth.PROFILE)
-    public SuccessResponse<?> profile(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return authService.getProfile(userPrincipal);
+    public SuccessResponse<UserResponse> profile(@AuthenticationPrincipal UserPrincipal principal) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                authService.getProfile(principal)
+        );
     }
 
     @Operation(
@@ -62,9 +67,9 @@ public class AuthController {
             }
     )
     @PutMapping(AdminPaths.Auth.UPDATE_PROFILE)
-    public SuccessResponse<UserResponseDTO> changeProfile(
+    public SuccessResponse<UserResponse> changeProfile(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody @Valid UpdateProfileRequestDTO request
+            @RequestBody @Valid UpdateProfileRequest request
     ) {
         return new SuccessResponse<>(
                 200,
@@ -78,13 +83,13 @@ public class AuthController {
             summary = AdminSwagger.Auth.FORGOT_PASSWORD_SUM,
             description = "Gửi mật khẩu mới (8 ký tự) tới email")
     @PostMapping(AdminPaths.Auth.FORGOT_PASSWORD)
-    public SuccessResponse<?> forgotPassword(@RequestBody @Valid EmailRequestDTO emailRequestDTO) {
-        return authService.forgotPassword(emailRequestDTO.getEmail());
+    public SuccessResponse<?> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
+        return authService.forgotPassword(request.getEmail());
     }
 
     @Operation(summary = AdminSwagger.Auth.LOGOUT_SUM)
     @PostMapping(AdminPaths.Auth.LOGOUT)
-    public SuccessResponse<UserAuthResponseDTO> logout() {
+    public SuccessResponse<UserAuthResponse> logout() {
         return null;
     }
 
@@ -92,10 +97,11 @@ public class AuthController {
             summary = AdminSwagger.Auth.CHANGE_PASSWORD_SUM,
             security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping("/change-password")
-    public SuccessResponse<UserAuthResponseDTO> changePassword(
+    public SuccessResponse<UserAuthResponse> changePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody @Valid ChangePasswordRequestDTO changePasswordRequestDTO) {
-        return authService.changePassword(userPrincipal, changePasswordRequestDTO);
+            @RequestBody @Valid ChangePasswordRequest request
+    ) {
+        return authService.changePassword(userPrincipal, request);
     }
 
 }

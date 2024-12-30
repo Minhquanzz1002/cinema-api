@@ -3,8 +3,7 @@ package vn.edu.iuh.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionDetailRequestDTO;
+import vn.edu.iuh.dto.admin.v1.promotion.detail.req.UpdatePromotionDetailRequest;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.PromotionDetail;
@@ -32,11 +31,11 @@ public class PromotionDetailServiceImpl implements PromotionDetailService {
     }
 
     @Override
-    public void updatePromotionDetailById(int id, UpdatePromotionDetailRequestDTO updatePromotionDetailRequestDTO) {
+    public void updatePromotionDetailById(int id, UpdatePromotionDetailRequest request) {
         PromotionDetail detail = promotionDetailRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(() -> new DataNotFoundException("Không tìm thấy chi tiết chương trình giảm giá"));
 
-        modelMapper.map(updatePromotionDetailRequestDTO, detail);
+        modelMapper.map(request, detail);
         promotionDetailRepository.save(detail);
     }
 }

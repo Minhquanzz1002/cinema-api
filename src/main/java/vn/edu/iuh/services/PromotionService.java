@@ -2,11 +2,11 @@ package vn.edu.iuh.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionLineRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionRequestDTO;
+import vn.edu.iuh.dto.admin.v1.promotion.line.req.CreatePromotionLineRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.req.CreatePromotionRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.req.UpdatePromotionRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminPromotionResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Promotion;
 import vn.edu.iuh.models.PromotionLine;
 import vn.edu.iuh.models.enums.BaseStatus;
@@ -42,13 +42,13 @@ public interface PromotionService {
             LocalDate endDate
     );
 
-    Promotion createPromotion(CreatePromotionRequestDTO createPromotionRequestDTO);
+    Promotion createPromotion(CreatePromotionRequest request);
 
     void deletePromotionById(int id);
 
-    Promotion updatePromotion(int id, UpdatePromotionRequestDTO updatePromotionRequestDTO);
+    Promotion updatePromotion(int id, UpdatePromotionRequest request);
 
     Promotion getPromotionById(int id);
 
-    PromotionLine createPromotionLine(int promotionId, CreatePromotionLineRequestDTO createPromotionLineRequestDTO);
+    PromotionLine createPromotionLine(int promotionId, CreatePromotionLineRequest request);
 }

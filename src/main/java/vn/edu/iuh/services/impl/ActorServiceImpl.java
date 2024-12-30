@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreateActorRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateActorRequestDTO;
+import vn.edu.iuh.dto.admin.v1.actor.req.CreateActorRequest;
+import vn.edu.iuh.dto.admin.v1.actor.req.UpdateActorRequest;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Actor;
@@ -54,8 +54,8 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public Actor createActor(CreateActorRequestDTO createActorRequestDTO) {
-        String code = createActorRequestDTO.getCode();
+    public Actor createActor(CreateActorRequest request) {
+        String code = request.getCode();
         if (code != null && !code.isEmpty()) {
             Optional<Actor> actorOptional = actorRepository.findByCode(code);
             if (actorOptional.isPresent()) {
@@ -63,7 +63,7 @@ public class ActorServiceImpl implements ActorService {
             }
         }
 
-        Actor actor = modelMapper.map(createActorRequestDTO, Actor.class);
+        Actor actor = modelMapper.map(request, Actor.class);
         log.info("actor: {}", actor);
         String newCode = generateNextActorCode();
         actor.setCode(newCode);
@@ -81,9 +81,9 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public Actor updateActor(int id, UpdateActorRequestDTO updateActorRequestDTO) {
+    public Actor updateActor(int id, UpdateActorRequest request) {
         Actor existingActor = getActorById(id);
-        modelMapper.map(updateActorRequestDTO, existingActor);
+        modelMapper.map(request, existingActor);
         return actorRepository.save(existingActor);
     }
 

@@ -4,10 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import vn.edu.iuh.dto.admin.v1.res.AdminShowTimeResponseDTO;
-import vn.edu.iuh.dto.res.UserAuthResponseDTO;
-import vn.edu.iuh.dto.res.UserResponseDTO;
-import vn.edu.iuh.models.ShowTime;
+import vn.edu.iuh.dto.common.auth.res.UserAuthResponse;
+import vn.edu.iuh.dto.common.auth.res.UserResponse;
 import vn.edu.iuh.models.User;
 
 @Configuration
@@ -19,12 +17,12 @@ public class ModelMapperConfig {
                 .setSkipNullEnabled(true)
                 .setMatchingStrategy(MatchingStrategies.STRICT);
 
-        modelMapper.typeMap(User.class, UserAuthResponseDTO.class).addMappings(mapper -> {
-            mapper.map(src -> src.getRole().getName(), UserAuthResponseDTO::setRole);
+        modelMapper.typeMap(User.class, UserAuthResponse.class).addMappings(mapper -> {
+            mapper.map(src -> src.getRole().getName(), UserAuthResponse::setRole);
         });
 
-        modelMapper.typeMap(User.class, UserResponseDTO.class).addMappings(mapper -> {
-            mapper.map(src -> src.getRole().getName(), UserResponseDTO::setRole);
+        modelMapper.typeMap(User.class, UserResponse.class).addMappings(mapper -> {
+            mapper.map(src -> src.getRole().getName(), UserResponse::setRole);
         });
 
         return modelMapper;

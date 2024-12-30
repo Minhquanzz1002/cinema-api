@@ -10,13 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateOrderRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.RefundOrderRequestDTO;
+import vn.edu.iuh.dto.admin.v1.order.req.CreateOrderRequest;
+import vn.edu.iuh.dto.admin.v1.order.req.RefundOrderRequest;
 import vn.edu.iuh.dto.admin.v1.req.UpdateCustomerInOrderRequestDTO;
 import vn.edu.iuh.dto.admin.v1.res.AdminOrderResponseDTO;
-import vn.edu.iuh.dto.req.OrderUpdateProductRequestDTO;
-import vn.edu.iuh.dto.req.OrderUpdateSeatRequestDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.client.v1.order.req.UpdateOrderProductRequest;
+import vn.edu.iuh.dto.client.v1.order.req.UpdateOrderSeatRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.enums.OrderStatus;
 import vn.edu.iuh.projections.admin.v1.AdminOrderOverviewProjection;
 import vn.edu.iuh.projections.admin.v1.AdminOrderProjection;
@@ -40,7 +40,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<AdminOrderProjection> createOrderByEmployee(
-            @RequestBody CreateOrderRequestDTO dto
+            @RequestBody CreateOrderRequest dto
     ) {
         return new SuccessResponse<>(
                 201,
@@ -83,13 +83,13 @@ public class OrderController {
     @PutMapping(AdminPaths.Order.UPDATE_PRODUCTS)
     public SuccessResponse<AdminOrderProjection> updateProductsInOrderByEmployee(
             @PathVariable UUID orderId,
-            @RequestBody OrderUpdateProductRequestDTO orderUpdateProductRequestDTO
+            @RequestBody UpdateOrderProductRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Thành công",
-                orderService.updateOrderProductsByEmployee(orderId, orderUpdateProductRequestDTO)
+                orderService.updateOrderProductsByEmployee(orderId, request)
         );
     }
 
@@ -97,7 +97,7 @@ public class OrderController {
     @PutMapping(AdminPaths.Order.UPDATE_SEATS)
     public SuccessResponse<AdminOrderProjection> updateSeatsInOrderByEmployee(
             @PathVariable UUID orderId,
-            @RequestBody OrderUpdateSeatRequestDTO dto
+            @RequestBody UpdateOrderSeatRequest dto
     ) {
         return new SuccessResponse<>(
                 200,
@@ -136,9 +136,9 @@ public class OrderController {
     @PutMapping(AdminPaths.Order.REFUND)
     public SuccessResponse<Void> refundOrder(
             @PathVariable UUID orderId,
-            @RequestBody RefundOrderRequestDTO refundOrderRequestDTO
+            @RequestBody RefundOrderRequest request
     ) {
-        orderService.refundOrder(orderId, refundOrderRequestDTO);
+        orderService.refundOrder(orderId, request);
         return new SuccessResponse<>(
                 200,
                 "success",

@@ -7,11 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionLineRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.CreatePromotionRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdatePromotionRequestDTO;
+import vn.edu.iuh.dto.admin.v1.promotion.line.req.CreatePromotionLineRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.req.CreatePromotionRequest;
+import vn.edu.iuh.dto.admin.v1.promotion.req.UpdatePromotionRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminPromotionResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.exceptions.BadRequestException;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.Product;
@@ -71,8 +71,8 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public Promotion createPromotion(CreatePromotionRequestDTO createPromotionRequestDTO) {
-        Promotion promotion = modelMapper.map(createPromotionRequestDTO, Promotion.class);
+    public Promotion createPromotion(CreatePromotionRequest request) {
+        Promotion promotion = modelMapper.map(request, Promotion.class);
         return promotionRepository.save(promotion);
     }
 
@@ -88,10 +88,10 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public Promotion updatePromotion(int id, UpdatePromotionRequestDTO updatePromotionRequestDTO) {
+    public Promotion updatePromotion(int id, UpdatePromotionRequest request) {
         Promotion promotion = getPromotionById(id);
-        LocalDate newStartDate = updatePromotionRequestDTO.getStartDate();
-        LocalDate newEndDate = updatePromotionRequestDTO.getEndDate();
+        LocalDate newStartDate = request.getStartDate();
+        LocalDate newEndDate = request.getEndDate();
 
         if (promotion.getStatus() == BaseStatus.ACTIVE) {
             if (newEndDate.isBefore(promotion.getStartDate())) {
@@ -99,7 +99,7 @@ public class PromotionServiceImpl implements PromotionService {
             }
             promotion.setEndDate(newEndDate);
         } else {
-            BaseStatus newStatus = updatePromotionRequestDTO.getStatus();
+            BaseStatus newStatus = request.getStatus();
             if (newStatus == BaseStatus.ACTIVE) {
                 boolean hasOverlap = promotionRepository.existsByDeletedAndStatusAndIdNotAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                         false,
@@ -112,7 +112,7 @@ public class PromotionServiceImpl implements PromotionService {
                     throw new BadRequestException("Đã tồn tại chiến dịch trong khoảng thời gian này");
                 }
             }
-            modelMapper.map(updatePromotionRequestDTO, promotion);
+            modelMapper.map(request, promotion);
         }
         return promotionRepository.save(promotion);
     }
@@ -124,27 +124,27 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Transactional
     @Override
-    public PromotionLine createPromotionLine(int promotionId, CreatePromotionLineRequestDTO createPromotionLineRequestDTO) {
+    public PromotionLine createPromotionLine(int promotionId, CreatePromotionLineRequest request) {
         Promotion promotion = getPromotionById(promotionId);
 //        if (promotion.getStatus() == BaseStatus.ACTIVE) {
 //            throw new BadRequestException("Chiến dịch đang hoạt động không thể thêm chương trình");
 //        }
 
-        PromotionLineType type = createPromotionLineRequestDTO.getType();
+        PromotionLineType type = request.getType();
 
         PromotionLine promotionLine = PromotionLine.builder()
                 .promotion(promotion)
-                .code(createPromotionLineRequestDTO.getCode())
-                .name(createPromotionLineRequestDTO.getName())
+                .code(request.getCode())
+                .name(request.getName())
                 .type(type)
-                .startDate(createPromotionLineRequestDTO.getStartDate())
-                .endDate(createPromotionLineRequestDTO.getEndDate())
-                .status(createPromotionLineRequestDTO.getStatus())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .status(request.getStatus())
                 .promotionDetails(new ArrayList<>())
                 .build();
 
         switch (type) {
-            case CASH_REBATE -> createPromotionLineRequestDTO.getPromotionDetails().forEach(detail -> {
+            case CASH_REBATE -> request.getPromotionDetails().forEach(detail -> {
                 PromotionDetail promotionDetail = PromotionDetail.builder()
                         .discountValue(detail.getDiscountValue())
                         .minOrderValue(detail.getMinOrderValue())
@@ -153,7 +153,7 @@ public class PromotionServiceImpl implements PromotionService {
                         .build();
                 promotionLine.addPromotionDetail(promotionDetail);
             });
-            case PRICE_DISCOUNT -> createPromotionLineRequestDTO.getPromotionDetails().forEach(detail -> {
+            case PRICE_DISCOUNT -> request.getPromotionDetails().forEach(detail -> {
                 PromotionDetail promotionDetail = PromotionDetail.builder()
                         .discountValue(detail.getDiscountValue())
                         .minOrderValue(detail.getMinOrderValue())
@@ -163,7 +163,7 @@ public class PromotionServiceImpl implements PromotionService {
                         .build();
                 promotionLine.addPromotionDetail(promotionDetail);
             });
-            case BUY_TICKETS_GET_PRODUCTS -> createPromotionLineRequestDTO.getPromotionDetails().forEach(detail -> {
+            case BUY_TICKETS_GET_PRODUCTS -> request.getPromotionDetails().forEach(detail -> {
                 Product product = productRepository.findByIdAndDeletedAndStatus(detail.getGiftProduct(), false, ProductStatus.ACTIVE).orElseThrow(() -> new DataNotFoundException("Không tìm thấy sản phẩm"));
 
                 PromotionDetail promotionDetail = PromotionDetail.builder()
@@ -176,7 +176,7 @@ public class PromotionServiceImpl implements PromotionService {
                         .build();
                 promotionLine.addPromotionDetail(promotionDetail);
             });
-            case BUY_TICKETS_GET_TICKETS -> createPromotionLineRequestDTO.getPromotionDetails().forEach(detail -> {
+            case BUY_TICKETS_GET_TICKETS -> request.getPromotionDetails().forEach(detail -> {
                 PromotionDetail promotionDetail = PromotionDetail.builder()
                         .requiredSeatType(detail.getRequiredSeatType())
                         .requiredSeatQuantity(detail.getRequiredSeatQuantity())

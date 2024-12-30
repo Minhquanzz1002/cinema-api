@@ -12,10 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateEmployeeDTO;
+import vn.edu.iuh.dto.admin.v1.employee.req.CreateEmployeeRequest;
 import vn.edu.iuh.dto.admin.v1.req.EmployeeResponseDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateEmployeeDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.employee.req.UpdateEmployeeRequest;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.enums.UserStatus;
 import vn.edu.iuh.services.EmployeeService;
 
@@ -37,7 +37,7 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "Created successfully")
     public SuccessResponse<EmployeeResponseDTO> createEmployee(
-            @Valid @RequestBody CreateEmployeeDTO dto) {
+            @Valid @RequestBody CreateEmployeeRequest dto) {
         EmployeeResponseDTO newEmployee = employeeService.createEmployee(dto);
         return new SuccessResponse<>(
                 HttpStatus.CREATED.value(),
@@ -85,7 +85,7 @@ public class EmployeeController {
     @ApiResponse(responseCode = "200", description = "Updated successfully")
     public SuccessResponse<EmployeeResponseDTO> updateEmployee(
             @Parameter(description = "ID nhân viên") @PathVariable UUID id,
-            @Valid @RequestBody UpdateEmployeeDTO dto) {
+            @Valid @RequestBody UpdateEmployeeRequest dto) {
         EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(id, dto);
         return new SuccessResponse<>(
                 HttpStatus.OK.value(),

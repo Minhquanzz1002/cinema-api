@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.dto.admin.v1.req.CreateMovieRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateMovieRequestDTO;
+import vn.edu.iuh.dto.admin.v1.movie.req.CreateMovieRequest;
+import vn.edu.iuh.dto.admin.v1.movie.req.UpdateMovieRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminMovieResponseDTO;
-import vn.edu.iuh.dto.admin.v1.res.MovieFiltersResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.movie.res.AdminMovieFilterResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.exceptions.DataNotFoundException;
 import vn.edu.iuh.models.*;
 import vn.edu.iuh.models.enums.AgeRating;
@@ -58,17 +58,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieFiltersResponseDTO getMovieFilters() {
+    public AdminMovieFilterResponse getMovieFilters() {
         List<GenreProjection> genres = genreRepository.findAllByStatusAndDeleted(BaseStatus.ACTIVE, false, GenreProjection.class);
         List<ProducerProjection> producers = producerRepository.findAllByStatusAndDeleted(BaseStatus.ACTIVE, false, ProducerProjection.class);
         List<ActorProjection> actors = actorRepository.findAllByStatusAndDeleted(BaseStatus.ACTIVE, false, ActorProjection.class);
         List<DirectorProjection> directors = directorRepository.findAllByStatusAndDeleted(BaseStatus.ACTIVE, false, DirectorProjection.class);
-        return MovieFiltersResponseDTO.builder()
-                .genres(genres)
-                .producers(producers)
-                .actors(actors)
-                .directors(directors)
-                .build();
+        return AdminMovieFilterResponse.builder()
+                                       .genres(genres)
+                                       .producers(producers)
+                                       .actors(actors)
+                                       .directors(directors)
+                                       .build();
     }
 
     @Override
@@ -104,28 +104,28 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie createMovie(CreateMovieRequestDTO createMovieRequestDTO) {
-        List<Actor> actors = actorRepository.findAllById(createMovieRequestDTO.getActors());
-        if (actors.size() != createMovieRequestDTO.getActors().size()) {
+    public Movie createMovie(CreateMovieRequest request) {
+        List<Actor> actors = actorRepository.findAllById(request.getActors());
+        if (actors.size() != request.getActors().size()) {
             throw new DataNotFoundException("Không tìm thấy diễn viên");
         }
 
-        List<Producer> producers = producerRepository.findAllById(createMovieRequestDTO.getProducers());
-        if (producers.size() != createMovieRequestDTO.getProducers().size()) {
+        List<Producer> producers = producerRepository.findAllById(request.getProducers());
+        if (producers.size() != request.getProducers().size()) {
             throw new DataNotFoundException("Không tìm thấy nhà sản xuất");
         }
 
-        List<Genre> genres = genreRepository.findAllById(createMovieRequestDTO.getGenres());
-        if (genres.size() != createMovieRequestDTO.getGenres().size()) {
+        List<Genre> genres = genreRepository.findAllById(request.getGenres());
+        if (genres.size() != request.getGenres().size()) {
             throw new DataNotFoundException("Không tìm thấy thể loại");
         }
 
-        List<Director> directors = directorRepository.findAllById(createMovieRequestDTO.getDirectors());
-        if (directors.size() != createMovieRequestDTO.getDirectors().size()) {
+        List<Director> directors = directorRepository.findAllById(request.getDirectors());
+        if (directors.size() != request.getDirectors().size()) {
             throw new DataNotFoundException("Không tìm thấy đạo diễn");
         }
 
-        Movie movie = modelMapper.map(createMovieRequestDTO, Movie.class);
+        Movie movie = modelMapper.map(request, Movie.class);
         String slug = slugifyService.generateSlug(movie.getTitle());
         while (movieRepository.existsBySlug(slug)) {
             slug = slugifyService.generateUniqueSlug(movie.getTitle());
@@ -140,29 +140,29 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie updateMovie(int id, UpdateMovieRequestDTO updateMovieRequestDTO) {
-        List<Actor> actors = actorRepository.findAllById(updateMovieRequestDTO.getActors());
-        if (actors.size() != updateMovieRequestDTO.getActors().size()) {
+    public Movie updateMovie(int id, UpdateMovieRequest request) {
+        List<Actor> actors = actorRepository.findAllById(request.getActors());
+        if (actors.size() != request.getActors().size()) {
             throw new DataNotFoundException("Không tìm thấy diễn viên");
         }
 
-        List<Producer> producers = producerRepository.findAllById(updateMovieRequestDTO.getProducers());
-        if (producers.size() != updateMovieRequestDTO.getProducers().size()) {
+        List<Producer> producers = producerRepository.findAllById(request.getProducers());
+        if (producers.size() != request.getProducers().size()) {
             throw new DataNotFoundException("Không tìm thấy nhà sản xuất");
         }
 
-        List<Genre> genres = genreRepository.findAllById(updateMovieRequestDTO.getGenres());
-        if (genres.size() != updateMovieRequestDTO.getGenres().size()) {
+        List<Genre> genres = genreRepository.findAllById(request.getGenres());
+        if (genres.size() != request.getGenres().size()) {
             throw new DataNotFoundException("Không tìm thấy thể loại");
         }
 
-        List<Director> directors = directorRepository.findAllById(updateMovieRequestDTO.getDirectors());
-        if (directors.size() != updateMovieRequestDTO.getDirectors().size()) {
+        List<Director> directors = directorRepository.findAllById(request.getDirectors());
+        if (directors.size() != request.getDirectors().size()) {
             throw new DataNotFoundException("Không tìm thấy đạo diễn");
         }
 
         Movie movie = getMovieById(id);
-        modelMapper.map(updateMovieRequestDTO, movie);
+        modelMapper.map(request, movie);
         movie.setActors(actors);
         movie.setProducers(producers);
         movie.setGenres(genres);

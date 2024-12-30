@@ -10,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.dto.admin.v1.req.CreateMovieRequestDTO;
-import vn.edu.iuh.dto.admin.v1.req.UpdateMovieRequestDTO;
+import vn.edu.iuh.dto.admin.v1.movie.req.CreateMovieRequest;
+import vn.edu.iuh.dto.admin.v1.movie.req.UpdateMovieRequest;
 import vn.edu.iuh.dto.admin.v1.res.AdminMovieResponseDTO;
-import vn.edu.iuh.dto.admin.v1.res.MovieFiltersResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
+import vn.edu.iuh.dto.admin.v1.movie.res.AdminMovieFilterResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
 import vn.edu.iuh.models.Movie;
 import vn.edu.iuh.models.enums.AgeRating;
 import vn.edu.iuh.models.enums.MovieStatus;
@@ -37,13 +37,13 @@ public class MovieController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public SuccessResponse<Movie> createMovie(
-            @RequestBody @Valid CreateMovieRequestDTO createMovieRequestDTO
+            @RequestBody @Valid CreateMovieRequest request
     ) {
         return new SuccessResponse<>(
                 201,
                 "success",
                 "Thêm phim thành công",
-                movieService.createMovie(createMovieRequestDTO)
+                movieService.createMovie(request)
         );
     }
 
@@ -76,7 +76,7 @@ public class MovieController {
 
     @Operation(summary = AdminSwagger.Movie.FILTER_SUM)
     @GetMapping(AdminPaths.Movie.FILTER)
-    public SuccessResponse<MovieFiltersResponseDTO> getMovieFilters() {
+    public SuccessResponse<AdminMovieFilterResponse> getMovieFilters() {
         return new SuccessResponse<>(
                 200,
                 "success",
@@ -100,13 +100,13 @@ public class MovieController {
     @PutMapping(AdminPaths.Movie.UPDATE)
     public SuccessResponse<Movie> updateMovie(
             @PathVariable int id,
-            @RequestBody @Valid UpdateMovieRequestDTO updateMovieRequestDTO
+            @RequestBody @Valid UpdateMovieRequest request
     ) {
         return new SuccessResponse<>(
                 200,
                 "success",
                 "Cập nhật phim thành công",
-                movieService.updateMovie(id, updateMovieRequestDTO)
+                movieService.updateMovie(id, request)
         );
     }
 

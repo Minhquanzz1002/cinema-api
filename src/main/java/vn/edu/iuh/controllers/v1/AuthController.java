@@ -10,10 +10,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.constant.RouterConstant.ClientPaths;
 import vn.edu.iuh.constant.SwaggerConstant.ClientSwagger;
-import vn.edu.iuh.dto.req.*;
-import vn.edu.iuh.dto.res.UserAuthResponseDTO;
-import vn.edu.iuh.dto.res.SuccessResponse;
-import vn.edu.iuh.dto.res.UserResponseDTO;
+import vn.edu.iuh.dto.client.v1.auth.req.RegisterRequest;
+import vn.edu.iuh.dto.client.v1.auth.req.VerifyOtpRequest;
+import vn.edu.iuh.dto.common.auth.req.ChangePasswordRequest;
+import vn.edu.iuh.dto.client.v1.auth.req.ForgotPasswordRequest;
+import vn.edu.iuh.dto.common.auth.req.LoginRequest;
+import vn.edu.iuh.dto.common.auth.req.UpdateProfileRequest;
+import vn.edu.iuh.dto.common.auth.res.UserAuthResponse;
+import vn.edu.iuh.dto.common.SuccessResponse;
+import vn.edu.iuh.dto.common.auth.res.UserResponse;
 import vn.edu.iuh.security.UserPrincipal;
 import vn.edu.iuh.services.AuthService;
 
@@ -25,26 +30,35 @@ import vn.edu.iuh.services.AuthService;
 public class AuthController {
     private final AuthService authService;
 
-    @Operation(
-            summary = "Xác thực đăng ký"
-    )
-    @PostMapping("/register/validate-otp")
-    public SuccessResponse<?> confirmRegistration(@RequestBody RegistrationConfirmationRequestDTO confirmationRequestDTO) {
+    @Operation(summary = ClientSwagger.Auth.CONFIRM_REGISTER_SUM)
+    @PostMapping(ClientPaths.Auth.CONFIRM_REGISTER)
+    public SuccessResponse<?> confirmRegistration(
+            @RequestBody VerifyOtpRequest confirmationRequestDTO
+    ) {
         return authService.confirmRegister(confirmationRequestDTO);
     }
 
-    @Operation(
-            summary = "Đăng ký"
-    )
-    @PostMapping("/register")
-    public SuccessResponse<?> register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO) {
-        return authService.register(registerRequestDTO);
+    @Operation(summary = ClientSwagger.Auth.REGISTER_SUM)
+    @PostMapping(ClientPaths.Auth.REGISTER)
+    public SuccessResponse<Void> register(@RequestBody @Valid RegisterRequest request) {
+        authService.register(request);
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Tạo tài khoản thành công",
+                null
+        );
     }
 
     @Operation(summary = ClientSwagger.Auth.LOGIN_SUM)
     @PostMapping(ClientPaths.Auth.LOGIN)
-    public SuccessResponse<UserAuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
-        return new SuccessResponse<>(200, "success", "Thành công", authService.login(loginRequestDTO, false));
+    public SuccessResponse<UserAuthResponse> login(@RequestBody @Valid LoginRequest request) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Đăng nhập thành công.",
+                authService.login(request, false)
+        );
     }
 
     @Operation(
@@ -55,8 +69,13 @@ public class AuthController {
             }
     )
     @GetMapping(ClientPaths.Auth.PROFILE)
-    public SuccessResponse<?> profile(@AuthenticationPrincipal UserPrincipal principal) {
-        return authService.getProfile(principal);
+    public SuccessResponse<UserResponse> profile(@AuthenticationPrincipal UserPrincipal principal) {
+        return new SuccessResponse<>(
+                200,
+                "success",
+                "Thành công",
+                authService.getProfile(principal)
+        );
     }
 
     @Operation(
@@ -67,9 +86,9 @@ public class AuthController {
             }
     )
     @PutMapping(ClientPaths.Auth.UPDATE_PROFILE)
-    public SuccessResponse<UserResponseDTO> changeProfile(
+    public SuccessResponse<UserResponse> changeProfile(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody @Valid UpdateProfileRequestDTO request
+            @RequestBody @Valid UpdateProfileRequest request
     ) {
         return new SuccessResponse<>(
                 200,
@@ -84,13 +103,13 @@ public class AuthController {
             description = "Gửi mật khẩu mới (8 ký tự) tới email"
     )
     @PostMapping(ClientPaths.Auth.FORGOT_PASSWORD)
-    public SuccessResponse<?> forgotPassword(@RequestBody @Valid EmailRequestDTO emailRequestDTO) {
-        return authService.forgotPassword(emailRequestDTO.getEmail());
+    public SuccessResponse<?> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
+        return authService.forgotPassword(request.getEmail());
     }
 
     @Operation(summary = ClientSwagger.Auth.LOGOUT_SUM)
     @PostMapping(ClientPaths.Auth.LOGOUT)
-    public SuccessResponse<UserAuthResponseDTO> logout() {
+    public SuccessResponse<UserAuthResponse> logout() {
         return null;
     }
 
@@ -100,12 +119,12 @@ public class AuthController {
                     @SecurityRequirement(name = "bearerAuth")
             }
     )
-    @PostMapping("/change-password")
-    public SuccessResponse<UserAuthResponseDTO> changePassword(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody @Valid ChangePasswordRequestDTO changePasswordRequestDTO
+    @PostMapping(ClientPaths.Auth.CHANGE_PASSWORD)
+    public SuccessResponse<UserAuthResponse> changePassword(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestBody @Valid ChangePasswordRequest request
     ) {
-        return authService.changePassword(userPrincipal, changePasswordRequestDTO);
+        return authService.changePassword(principal, request);
     }
 
 }
